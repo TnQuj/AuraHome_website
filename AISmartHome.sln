@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AISmartHome", "AISmartHome\AISmartHome.csproj", "{13D77D69-BD00-4B8A-8EBF-B750265C6931}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{13D77D69-BD00-4B8A-8EBF-B750265C6931}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13D77D69-BD00-4B8A-8EBF-B750265C6931}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13D77D69-BD00-4B8A-8EBF-B750265C6931}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13D77D69-BD00-4B8A-8EBF-B750265C6931}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {240E9F64-9BBD-4DB2-B93F-8ACCF3D6977E}
+	EndGlobalSection
+EndGlobal

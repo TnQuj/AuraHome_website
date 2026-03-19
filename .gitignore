@@ -1,0 +1,16 @@
+## Tránh các file rác của Visual Studio
+.vs/
+[Bb]in/
+[Ob]j/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.db
+*.vsidx
+
+## Tránh các file biên dịch của .NET
+*.dll
+*.exe
+*.pdb
+*.ignore

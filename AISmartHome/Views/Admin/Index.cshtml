@@ -1,0 +1,13 @@
+﻿@model IEnumerable<AISmartHome.Models.YeuCauLapDat>
+@{
+    // Dòng này cực kỳ quan trọng để chạy _AdminLayout
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Bảng điều khiển quản trị";
+}
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-brand-cyan">
+        <p class="text-gray-500 text-sm uppercase font-bold">Tổng doanh thu</p>
+        <p class="text-2xl font-bold">@(((decimal)ViewBag.TotalRevenue).ToString("#,##0")) VNĐ</p>
+    </div>
+</div>

@@ -1,0 +1,97 @@
+﻿@model AISmartHome.Models.SanPham
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Chi tiết Thiết bị";
+}
+
+<style>
+    /* Hiệu ứng viền sáng (Glow) cho nút Cyan */
+    .btn-cyan-glow:hover {
+        box-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
+    }
+</style>
+
+<div class="p-6 bg-slate-50 min-h-screen">
+    <div class="max-w-5xl mx-auto">
+
+        <div class="mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-[#001F3F] flex items-center gap-2">
+                    <svg class="w-8 h-8 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Thông tin Thiết bị AI
+                </h1>
+                <p class="text-sm text-gray-500 mt-1 pl-10">Mã thiết bị: #@Model?.MaSanPham</p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a asp-action="Index" class="flex items-center gap-2 text-[#001F3F] bg-white border border-gray-200 px-4 py-2 rounded-xl font-medium hover:bg-gray-50 transition-colors shadow-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    Quay lại
+                </a>
+                <a asp-action="Edit" asp-route-id="@Model?.MaSanPham" class="btn-cyan-glow flex items-center gap-2 bg-[#00E5FF] text-[#001F3F] px-6 py-2 rounded-xl font-bold transition-all duration-300">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    Chỉnh sửa ngay
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden flex flex-col md:flex-row">
+
+            <div class="w-full md:w-2/5 bg-gray-50 p-8 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-gray-100 relative">
+                <div class="absolute top-4 left-4">
+                    @if (Model?.SoLuong > 10)
+                    {
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold border border-green-200">Còn hàng (@Model.SoLuong)</span>
+                    }
+                    else if (Model?.SoLuong > 0)
+                    {
+                        <span class="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-bold border border-orange-200">Sắp hết (@Model.SoLuong)</span>
+                    }
+                    else
+                    {
+                        <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold border border-red-200">Hết hàng</span>
+                    }
+                </div>
+
+                <div class="w-full aspect-square bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center p-4">
+                    <img src="~/img/@Model?.HinhAnh" alt="@Model?.TenSanPham" class="max-w-full max-h-full object-contain hover:scale-105 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/300?text=No+Image'" />
+                </div>
+                <p class="text-xs text-gray-400 mt-4">Tên file: @Model?.HinhAnh</p>
+            </div>
+
+            <div class="w-full md:w-3/5 p-8">
+                <div class="mb-3">
+                    <span class="inline-flex items-center gap-1.5 bg-[#001F3F]/5 text-[#001F3F] px-3 py-1 rounded-lg text-sm font-semibold border border-[#001F3F]/10">
+                        <svg class="w-4 h-4 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
+                        @(Model?.MaDanhMucNavigation?.TenDanhMuc ?? "Chưa phân loại")
+                    </span>
+                </div>
+
+                <h2 class="text-3xl font-bold text-[#001F3F] mb-4">@Model?.TenSanPham</h2>
+
+                <div class="mb-8">
+                    <p class="text-sm font-semibold text-gray-500 mb-1">Giá bán hiện tại</p>
+                    <div class="inline-flex items-center gap-2 bg-[#001F3F] text-[#00E5FF] px-5 py-2.5 rounded-xl shadow-md">
+                        <span class="text-2xl font-bold">@Model?.GiaBan.ToString("#,##0")</span>
+                        <span class="text-sm font-medium">VNĐ</span>
+                    </div>
+                </div>
+
+                <hr class="border-gray-100 mb-6" />
+
+                <div>
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-gray-400 mb-3 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
+                        Mô tả thông số kỹ thuật
+                    </h3>
+
+                    <div class="bg-slate-50 p-5 rounded-xl border border-gray-100 text-slate-700 leading-relaxed whitespace-pre-line text-sm">
+                        @(string.IsNullOrEmpty(Model?.MoTa) ? "Chưa có thông tin mô tả cho thiết bị này." : Model?.MoTa)
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

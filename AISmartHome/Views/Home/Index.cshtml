@@ -1,0 +1,490 @@
+﻿
+@model AISmartHome.Models.HomeViewModel
+
+@{
+    ViewData["Title"] = "Trang chủ - Thiết bị Smart Home";
+}
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "surface-variant": "#e0e3e5",
+                "surface-container-low": "#f2f4f6",
+                "surface-tint": "#476083",
+                "error-container": "#ffdad6",
+                "surface-container-highest": "#e0e3e5",
+                "outline-variant": "#c4c6cf",
+                "tertiary": "#00070a",
+                "on-surface": "#191c1e",
+                "on-secondary-fixed-variant": "#004f58",
+                "on-primary": "#ffffff",
+                "on-primary-fixed": "#001c3a",
+                "surface-bright": "#f7f9fb",
+                "on-secondary": "#ffffff",
+                "inverse-on-surface": "#eff1f3",
+                "surface-container": "#eceef0",
+                "on-tertiary-fixed": "#001f24",
+                "on-secondary-fixed": "#001f24",
+                "tertiary-fixed": "#9cf0ff",
+                "inverse-primary": "#afc8f0",
+                "tertiary-fixed-dim": "#00daf3",
+                "tertiary-container": "#002328",
+                "error": "#ba1a1a",
+                "on-secondary-container": "#00616d",
+                "on-background": "#191c1e",
+                "secondary": "#006875",
+                "on-tertiary": "#ffffff",
+                "on-error": "#ffffff",
+                "surface-dim": "#d8dadc",
+                "on-tertiary-fixed-variant": "#004f58",
+                "surface-container-high": "#e6e8ea",
+                "surface": "#f7f9fb",
+                "secondary-container": "#00e3fd",
+                "primary-container": "#001f3f",
+                "secondary-fixed-dim": "#00daf3",
+                "on-surface-variant": "#43474e",
+                "on-primary-container": "#6f88ad",
+                "primary-fixed-dim": "#afc8f0",
+                "secondary-fixed": "#9cf0ff",
+                "surface-container-lowest": "#ffffff",
+                "primary-fixed": "#d4e3ff",
+                "outline": "#74777f",
+                "inverse-surface": "#2d3133",
+                "background": "#f7f9fb",
+                "on-tertiary-container": "#0094a6",
+                "primary": "#000613",
+                "on-error-container": "#93000a",
+                "on-primary-fixed-variant": "#2f486a"
+              },
+              fontFamily: {
+                "headline": ["Manrope"],
+                "body": ["Inter"],
+                "label": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(0, 31, 63, 0.95) 0%, rgba(0, 104, 117, 0.4) 100%);
+        }
+
+        .text-glow {
+            text-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+        }
+
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+    <!-- Menu điều hướng các trang-->
+    <header class="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
+        <div class="container mx-auto px-4 h-20 flex items-center justify-between relative">
+
+            <div class="flex-1 flex justify-start items-center gap-2">
+                <div class="w-10 h-10 bg-brand-navy rounded-custom flex items-center justify-center">
+                    <svg class="h-6 w-6 text-brand-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    </svg>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-brand-navy">AuraHome</span>
+            </div>
+
+            <nav class="hidden lg:flex items-center justify-center space-x-8 text-sm font-medium">
+                <a class="hover:text-brand-cyan transition-colors" href="#">Thiết Bị Thông Minh</a>
+                <a class="hover:text-brand-cyan transition-colors" href="#">Tin Tức</a>
+                <a class="hover:text-brand-cyan transition-colors" href="#">Hướng Dẫn Sữ Dụng</a>
+            </nav>
+
+            <div class="flex-1 flex items-center justify-end gap-6">
+
+                <a class="hidden xl:flex items-center gap-1.5 text-sm font-medium text-brand-navy hover:text-brand-cyan transition-colors whitespace-nowrap ml-2 pl-6" href="#">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                        <path d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1h2m4-1v-4a1 1 0 00-1-1h-3m-1 0v6m4-1h1a1 1 0 001-1v-2l-2-3h-3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    </svg>
+                    Tra cứu đơn hàng
+                </a>
+
+                <div class="hidden xl:flex items-center relative ml-4">
+                    <input class="pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-full text-sm focus:ring-2 focus:ring-brand-cyan/20 focus:border-brand-cyan transition-all w-48 focus:w-64 outline-none text-gray-700" placeholder="Tìm kiếm sản phẩm..." type="text" />
+                    <svg class="h-5 w-5 text-gray-400 absolute left-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    </svg>
+                </div>
+
+                <div class="flex items-center gap-4 pl-4 ml-2">
+                    <button class="text-brand-navy hover:text-brand-cyan transition-colors" title="Account">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                        </svg>
+                    </button>
+                    <button class="text-brand-navy hover:text-brand-cyan transition-colors relative" title="Cart">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                        </svg>
+                        <span class="absolute -top-1 -right-1 bg-brand-cyan text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">0</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </header>
+    <main class="pt-0">
+        <!-- Banner -->
+        <section class="relative h-[921px] flex items-center overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <img class="w-full h-full object-cover" data-alt="Futuristic architectural villa at dusk with cyan lighting accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEdcb91KsnEvgSTxKC14zs19-3UGHIpy5Taax25QnZY0xuReFq4A-Sb514HkGtZ0r4wtxZcGOkDJzCqaSIH8n1pvOqExOpWe2trz5DWmci1JvMCiDWuBmRHPv1vRVbcZobQLVtuIXCOMwkGx59jYNTQ5jurXc3dk7NwBCroj2jQ14kGLAWxu0ELY0XrMQZ6I48IsdUpeoPUC2rumEH_-44X5EJrzMvTC4dYfK1npB14wJGIq7bvQql7GwJGJxFMl-HM1PotBW91u8J" />
+                <div class="absolute inset-0 hero-gradient"></div>
+            </div>
+            <div class="relative z-10 max-w-7xl mx-auto px-8 w-full">
+                <div class="max-w-3xl">
+                    <h1 class="text-6xl md:text-8xl font-headline font-extrabold text-white leading-tight tracking-tighter mb-6">Kỷ Nguyên<br /><span class="text-secondary-container text-glow" style="font-size: 6rem; letter-spacing: -0.05em;">Kết Nối</span></h1>
+                    <p class="text-xl text-primary-fixed-dim font-light mb-10 max-w-xl leading-relaxed text-justify">
+                        Nâng tầm không gian sống với hệ điều hành tàng hình đầu tiên cho ngôi nhà của bạn. AuraHome tự động điều chỉnh môi trường để hòa nhịp cùng cuộc sống nhờ hệ thống AI vượt trội.
+                    </p>
+                    <div class="flex gap-4">
+                        <button class="bg-gradient-to-r from-secondary to-secondary-container text-on-primary font-bold px-10 py-5 rounded-md hover:scale-105 transition-transform">Khám phá hệ thống</button>
+                        <button class="backdrop-blur-md bg-white/10 border border-white/20 text-white font-bold px-10 py-5 rounded-md hover:bg-white/20 transition-all">Trãi nghiệm thực tế</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Thông tin -->
+        <section class="py-20 bg-surface-container-low">
+            <div class="max-w-7xl mx-auto px-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+
+                    <div class="group p-8 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-2xl hover:shadow-[#00E5FF]/15 hover:border-[#00E5FF]/40 transition-all duration-500 relative overflow-hidden cursor-pointer">
+
+                        <div class="absolute -right-10 -top-10 w-40 h-40 bg-[#00E5FF]/10 rounded-full blur-3xl group-hover:bg-[#00E5FF]/20 transition-all duration-500"></div>
+
+                        <div class="relative z-10">
+                            <div class="w-14 h-14 bg-[#001F3F] rounded-2xl flex items-center justify-center mb-6 shadow-md group-hover:-translate-y-1 group-hover:shadow-lg group-hover:shadow-[#001F3F]/30 transition-all duration-300">
+                                <span class="material-symbols-outlined text-[#00E5FF] text-3xl" data-icon="security">security</span>
+                            </div>
+
+                            <h3 class="font-bold text-[#001F3F] text-xl mb-3 group-hover:text-[#00E5FF] transition-colors duration-300">
+                                An ninh Thông minh
+                            </h3>
+
+                            <p class="text-gray-500 text-sm leading-relaxed text-justify group-hover:text-gray-600 transition-colors duration-300">
+                                Tiên đoán rủi ro và bảo vệ tuyệt đối với hệ thống nhận diện khuôn mặt được mã hóa nhiều lớp.
+                            </p>
+                        </div>
+
+                        <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#00E5FF] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    </div>
+
+                    <div class="group p-8 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-2xl hover:shadow-[#00E5FF]/15 hover:border-[#00E5FF]/40 transition-all duration-500 relative overflow-hidden cursor-pointer">
+                        <div class="absolute -right-10 -top-10 w-40 h-40 bg-[#00E5FF]/10 rounded-full blur-3xl group-hover:bg-[#00E5FF]/20 transition-all duration-500"></div>
+
+                        <div class="relative z-10">
+                            <div class="w-14 h-14 bg-[#001F3F] rounded-2xl flex items-center justify-center mb-6 shadow-md group-hover:-translate-y-1 group-hover:shadow-lg group-hover:shadow-[#001F3F]/30 transition-all duration-300">
+                                <span class="material-symbols-outlined text-[#00E5FF] text-3xl" data-icon="energy_savings_leaf">energy_savings_leaf</span>
+                            </div>
+
+                            <h3 class="font-bold text-[#001F3F] text-xl mb-3 group-hover:text-[#00E5FF] transition-colors duration-300">
+                                Tối ưu Năng lượng
+                            </h3>
+
+                            <p class="text-gray-500 text-sm leading-relaxed text-justify group-hover:text-gray-600 transition-colors duration-300">
+                                Quản lý điện năng qua mạng lưới nơ-ron, giúp cắt giảm đến 45% lượng điện hao phí mỗi ngày.
+                            </p>
+                        </div>
+
+                        <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#00E5FF] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    </div>
+
+                    <div class="group p-8 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-2xl hover:shadow-[#00E5FF]/15 hover:border-[#00E5FF]/40 transition-all duration-500 relative overflow-hidden cursor-pointer">
+                        <div class="absolute -right-10 -top-10 w-40 h-40 bg-[#00E5FF]/10 rounded-full blur-3xl group-hover:bg-[#00E5FF]/20 transition-all duration-500"></div>
+
+                        <div class="relative z-10">
+                            <div class="w-14 h-14 bg-[#001F3F] rounded-2xl flex items-center justify-center mb-6 shadow-md group-hover:-translate-y-1 group-hover:shadow-lg group-hover:shadow-[#001F3F]/30 transition-all duration-300">
+                                <span class="material-symbols-outlined text-[#00E5FF] text-3xl" data-icon="psychology">psychology</span>
+                            </div>
+
+                            <h3 class="font-bold text-[#001F3F] text-xl mb-3 group-hover:text-[#00E5FF] transition-colors duration-300">
+                                Tích hợp AI
+                            </h3>
+
+                            <p class="text-gray-500 text-sm leading-relaxed text-justify group-hover:text-gray-600 transition-colors duration-300">
+                                Trí tuệ nhân tạo xuyên suốt các thiết bị, thấu hiểu và đáp ứng nhu cầu của bạn một cách liền mạch.
+                            </p>
+                        </div>
+
+                        <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#00E5FF] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    </div>
+
+                    <div class="group p-8 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-2xl hover:shadow-[#00E5FF]/15 hover:border-[#00E5FF]/40 transition-all duration-500 relative overflow-hidden cursor-pointer">
+                        <div class="absolute -right-10 -top-10 w-40 h-40 bg-[#00E5FF]/10 rounded-full blur-3xl group-hover:bg-[#00E5FF]/20 transition-all duration-500"></div>
+
+                        <div class="relative z-10">
+                            <div class="w-14 h-14 bg-[#001F3F] rounded-2xl flex items-center justify-center mb-6 shadow-md group-hover:-translate-y-1 group-hover:shadow-lg group-hover:shadow-[#001F3F]/30 transition-all duration-300">
+                                <span class="material-symbols-outlined text-[#00E5FF] text-3xl" data-icon="settings_input_component">settings_input_component</span>
+                            </div>
+
+                            <h3 class="font-bold text-[#001F3F] text-xl mb-3 group-hover:text-[#00E5FF] transition-colors duration-300">
+                                Tự động hóa Nhà ở
+                            </h3>
+
+                            <p class="text-gray-500 text-sm leading-relaxed text-justify group-hover:text-gray-600 transition-colors duration-300">
+                                Thiết lập các kịch bản kích hoạt thông minh dựa trên sự hiện diện và dữ liệu môi trường.
+                            </p>
+                        </div>
+
+                        <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#00E5FF] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+        <!-- Giới thiệu sản phẩm -->
+       <section class="py-16 bg-surface">
+    <div class="max-w-7xl mx-auto px-8">
+                <div class="mb-10">
+                    <span class="flex items-center gap-2 text-[#00E5FF] font-bold tracking-[0.2em] text-sm uppercase mb-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                        Hệ sinh thái thiết bị AI tiên tiến nhất
+                    </span>
+
+                    <h2 class="text-5xl font-extrabold tracking-tighter mt-2 text-[#001F3F]">
+                        Sản Phẩm Hot Sale
+                    </h2>
+                </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            @if (Model.SanPhams != null && Model.SanPhams.Any())
+            {
+                // Dùng .Take(3) để giới hạn vòng lặp chỉ chạy qua 3 sản phẩm đầu tiên
+                foreach (var product in Model.SanPhams.Take(3))
+                {
+                    <div class="group cursor-pointer">
+                        <div class="aspect-[4/5] overflow-hidden rounded-xl mb-6 bg-surface-container">
+                            <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                 alt="@product.TenSanPham"
+                                         src="~/img/@product.HinhAnh" />
+                        </div>
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-headline font-bold text-2xl">@product.TenSanPham</h4>
+                                <p class="text-on-surface-variant text-sm mt-1">@product.MoTa</p>
+                            </div>
+                            <span class="text-xl font-bold font-headline">@product.GiaBan.ToString("C0", new System.Globalization.CultureInfo("en-US"))</span>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-span-3 text-center text-gray-500 py-10">
+                    Chưa có sản phẩm nào được hiển thị.
+                </div>
+            }
+        </div>
+
+        @if (Model.SanPhams != null && Model.SanPhams.Count() > 3)
+        {
+            <div class="mt-14 flex justify-center">
+                        <a asp-controller="Customers" asp-action="Index" class="px-8 py-3 rounded-full border-2 border-secondary text-secondary font-bold hover:bg-secondary hover:text-white transition-colors flex items-center gap-2">
+                    Xem thêm sản phẩm
+                    <span class="material-symbols-outlined">expand_more</span>
+                </a>
+            </div>
+        }
+    </div>
+</section>
+        <!-- Thông tin 2 -->
+        <section class="mt-0 bg-primary-container text-white overflow-hidden">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center">
+                <div class="w-full md:w-1/2 p-12 md:p-24 order-2 md:order-1">
+                    <h2 class="text-5xl font-headline font-bold mb-8 leading-tight">Cơ sở Hạ tầng Thông minh</h2>
+                    <ul class="space-y-8">
+                        <li class="flex gap-4">
+                            <span class="material-symbols-outlined text-secondary-container" data-icon="bolt">bolt</span>
+                            <div>
+                                <h5 class="font-bold text-lg">Phản hồi không độ trễ</h5>
+                                <p class="text-on-primary-container text-sm">Công nghệ Edge computing giúp ngôi nhà phản ứng trong chưa đầy 15ms trước mọi biến đổi môi trường.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-4">
+                            <span class="material-symbols-outlined text-secondary-container" data-icon="privacy_tip">privacy_tip</span>
+                            <div>
+                                <h5 class="font-bold text-lg">Bảo mật cấp độ Quantum</h5>
+                                <p class="text-on-primary-container text-sm">Mã hóa nội bộ đầu cuối. Dữ liệu của bạn không bao giờ rời khỏi không gian vật lý của Atrium.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-4">
+                            <span class="material-symbols-outlined text-secondary-container" data-icon="auto_awesome">auto_awesome</span>
+                            <div>
+                                <h5 class="font-bold text-lg">Học máy thích ứng</h5>
+                                <p class="text-on-primary-container text-sm">Hệ thống nghiên cứu sở thích của bạn trong 30 ngày để xây dựng thói quen hoàn hảo nhất.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-1/2 h-[600px] relative order-1 md:order-2">
+                    <img class="w-full h-full object-cover" data-alt="3D render of a glowing glass device with internal fiber optic lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSn9bMh_k8dm6poXfmcAK77zey7F9thIkyh2qQM_2sBjFYPKJmb09uUP6y5nwwRKP4EyGsNQIZwvhidPe9b8VBU48TYQ2DTtmrFx451gRfYrJVc6VgNOLmvVdVo9hoETH17abIxq6Z-Bz9WBCbJR7aC3gROjxMRqZleGeCqGi0M2-yrt25PF2ctoH4Zuj4hiVyhyrvTKu4rFoZW7-bcP5594ZO8znOHT2_yWrno0I1CeXpq8JRqrN9cTAORI8T3fZzfy6PJbtqn14u" />
+                    <div class="absolute inset-0 bg-gradient-to-l from-transparent to-primary-container/30"></div>
+                </div>
+            </div>
+        </section>
+        <!-- Product Categories Bento Grid -->
+        <section class="py-20 bg-surface-container-low">
+            <div class="max-w-7xl mx-auto px-8">
+                <h2 class="text-4xl font-headline font-extrabold mb-16 text-center">Giải pháp cho mọi góc nhà</h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 h-[700px]">
+                    <div class="md:col-span-2 md:row-span-2 relative group overflow-hidden rounded-2xl">
+                        <img class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Modern living room with atmospheric blue lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDw606Lq7NnIj1SHaJhF18tWCey_X3BGCEsHto8oqqjXNAUReM-n88aYinaV5ZP5iTXzWKEANPfuMxULDpCE2efS31bULMHiFyQQ0kQ25t4S5z92ZNtwZYjlXPTHJTctEVKUN8De8r6XkC1s0eAQ7N52nmwHs2hGgkRDZ1UO2fijygM6RTfoKr4DX7KWet_kd0ELNPtEj938mmnmrOEY66NctJOjcslN4TANxznREwCDUrMF7mNOW1K6E91REuaGlHskTJZ5hu8gtJJ" />
+                        <div class="absolute inset-0 bg-black/40 p-10 flex flex-col justify-end">
+                            <h3 class="text-3xl font-bold text-white mb-2">Chiếu sáng</h3>
+                            <p class="text-white/80">Động cơ Ánh sáng Thích ứng</p>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 relative group overflow-hidden rounded-2xl">
+                        <img class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Front door entrance with glowing smart security panel" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDq8HK3XqIEcIJySze740Gwas5P-NfpPgtEfTA-UTkQdKOQaJD30nZ_HUq4hy2E8ZCjTp6m1cIxuYGV8VYh0777dvwpBw5KpKEisHEhdFCrWOEURC-pH4Qbh-7ahkIxfm3bq8HHWWoNFEVYH2YUHKVTHYXjkbRXItu4M7G57W97l53hqpjLKMdyYEVDxrKRIbXCq4i9SONxS2-hw6NYZV36fh41CfxxmCtcIhgnxrjxnGofwVMH3PY9q1S2B2QkNdaAR5smkavueY6U" />
+                        <div class="absolute inset-0 bg-black/40 p-10 flex flex-col justify-end">
+                            <h3 class="text-2xl font-bold text-white mb-2">An ninh</h3>
+                            <p class="text-white/80">Trí tuệ Bảo vệ Chu vi</p>
+                        </div>
+                    </div>
+                    <div class="relative group overflow-hidden rounded-2xl">
+                        <img class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Abstract visualization of warm and cool air currents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1NfYXknkqOzbrMXGW9mPgjhtc6fRTIinvoi8CbkITWK1XBY-Vqj-owj1r0iDCjPRzCSpY9hX5wa7nnhfcvYmO_VjCUwFq49E1-DJOErtK-dijWE0AxQwtjbsndqmTvdEmSN7zLhjK9u1UuFSEXu3oBOxbjsGrlokURSNsNGPkMHlPwb3Ma_D68IIluNjq7piYCk7lHu0RTqt55bqOk9SlcfAFMJ66NYDVpcGf3S2ihgwJ6EknklWM8UJedelbFTw8cQ5Ttw3rKjhz" />
+                        <div class="absolute inset-0 bg-black/40 p-8 flex flex-col justify-end">
+                            <h3 class="text-xl font-bold text-white mb-1">Khí hậu</h3>
+                            <p class="text-white/80 text-sm">Lưới Nhiệt Neural</p>
+                        </div>
+                    </div>
+                    <div class="relative group overflow-hidden rounded-2xl">
+                        <img class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="High-end kitchen with built-in smart appliances" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDV8D1cycDN_3Ok10m44OHZjWNWKDbWzNh5blWL9fInVtOCVblzAJcAy0GNO1yL-5UNKhkEdZ-whoeUIdJSLlBpdJIsmrEMJH0eM0AV2wOBhBUU0CFnsrJVs8tR50C7rnaN-6cQpeoGTBeol3vfOm6yoPtuOpr27UF4ypIgkcjxULLefwRD55mFytSgNusyf_IUeeJrPX9KDyKuhbi1KG5pN3qlD0MoJ-F6VbkE5tQghWLXADhyBDQnCYxLOji7sBIEmUuzfQBQkdPD" />
+                        <div class="absolute inset-0 bg-black/40 p-8 flex flex-col justify-end">
+                            <h3 class="text-xl font-bold text-white mb-1">Gia dụng</h3>
+                            <p class="text-white/80 text-sm">Tiện ích Tự vận hành</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- AI Insights / Blog -->
+        <section class="py-24">
+            <div class="max-w-7xl mx-auto px-8">
+                <div class="flex justify-between items-center mb-16">
+                    <h2 class="text-4xl font-headline font-extrabold tracking-tighter">Tạp chí Atrium</h2>
+                    <span class="text-on-surface-variant font-medium">Bên trong Trí tuệ Thông minh</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                    <article class="space-y-6">
+                        <div class="aspect-video overflow-hidden rounded-lg bg-surface-container">
+                            <img class="w-full h-full object-cover hover:opacity-90 transition-opacity" data-alt="Digital representation of neural networks connecting a home" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeskYT30Dy_NHLmF_DTCeiCXXn014Dr5Nm5B0GVUeaTbR46baLALxaXCmGxzWY52MFIGrLaIHwcKzhrR12E3cUdHNuXNRdc0E1NJGaKlKCyjPwIzJiquhqdqXnW61BEZkYTA4errzNXWCJBDvYbxwU7IZPVrLegBAb5XaSwcH3uaxEYQyAQXScdlBkOvljeq9Ojsov-cxSbrD_mNe2LShLt2ATcMBIN5ujptYiNA0VfekbPNs-mw_8tAVssb5-yoiFGqlPZZaa4Mwq" />
+                        </div>
+                        <span class="text-secondary font-bold text-xs tracking-widest uppercase">Nghiên cứu</span>
+                        <h4 class="text-2xl font-headline font-bold leading-tight">Sự Tiến hóa của Điện toán Môi trường năm 2025</h4>
+                        <p class="text-on-surface-variant text-sm">Cách AI đang chuyển dịch từ các mệnh lệnh chủ động sang sự thấu hiểu môi trường thụ động.</p>
+                    </article>
+                    <article class="space-y-6">
+                        <div class="aspect-video overflow-hidden rounded-lg bg-surface-container">
+                            <img class="w-full h-full object-cover hover:opacity-90 transition-opacity" data-alt="Data visualization of energy consumption patterns" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWYsU4fdN_PSz981lFxhRW29_sihqpmEWWfRxvqO9Tx-DxyW3Ef9ZXGaBQOaYukV_1TzU2eE_XFsH1KpSEF_nz3oIGuIlVVwxv3EWLHtzYbd44-2wyJ680zUcoq_p3MiZ5bLOgQwqY_wOI9stiAZ052snkkxdjkQ8rxq6BMejBUp3DSdB0N9XIjvy5Ih9T7FFCT8ss56D8wbw6cK34MFfexeP9CAnERGk9hDQYmM4J9hAoVVfw0YwAYIpTNlGh4AK_xHstpJJ13zd5" />
+                        </div>
+                        <span class="text-secondary font-bold text-xs tracking-widest uppercase">Tối ưu hóa</span>
+                        <h4 class="text-2xl font-headline font-bold leading-tight">Giảm lượng Carbon toàn cầu với Lưới điện Neural</h4>
+                        <p class="text-on-surface-variant text-sm">Tác động của việc quản lý năng lượng bằng AI đối với sự bền vững của khu dân cư.</p>
+                    </article>
+                    <article class="space-y-6">
+                        <div class="aspect-video overflow-hidden rounded-lg bg-surface-container">
+                            <img class="w-full h-full object-cover hover:opacity-90 transition-opacity" data-alt="Futuristic security badge icon on a glass surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwM8hsWeU10hrbfR4TZZOSriuOvdLBsrlBVq6HqYvsnqxpwI5ENVpo2LE62Qlhy6Ga7BgG6yfvOPQbzNPowDF448QEt49Np4lFYSTz262mEHH4lQz0Cw8RrXMFG3zSWx6AJwA4lO6khG4ZnZ5YkrBCkf8Fsp-Vv9gm_sXE6Iv83rGyAs_oetUcw9926KSs8-Qg5u2nVbUkwo4U6sHpi6J2D0J0s6tvaHaFNFK0nyeFGkuWPLqohXtkAstB47F8coEdi7oobTHhJB1g" />
+                        </div>
+                        <span class="text-secondary font-bold text-xs tracking-widest uppercase">An ninh</span>
+                        <h4 class="text-2xl font-headline font-bold leading-tight">Quyền riêng tư trong Kỷ nguyên Kết nối Toàn diện</h4>
+                        <p class="text-on-surface-variant text-sm">Tìm hiểu về mã hóa ưu tiên nội bộ và lý do tại sao dữ liệu là tài sản của riêng bạn.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+        <!-- Customer Success Stories -->
+        <section class="py-20 bg-primary text-white">
+            <div class="max-w-7xl mx-auto px-8 flex flex-col items-center text-center">
+                <span class="material-symbols-outlined text-secondary-container text-5xl mb-12" data-icon="format_quote" style='font-variation-settings: "FILL" 1;'>format_quote</span>
+                <p class="text-3xl md:text-5xl font-headline font-extralight italic max-w-4xl mb-16 leading-tight">"AuraHome không chỉ thay đổi cách tôi sử dụng ngôi nhà; nó thay đổi cách ngôi nhà hỗ trợ cuộc sống của tôi. Đây là công nghệ đầu tiên tôi sử dụng mà mang lại cảm giác nhân bản."</p>
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-secondary-container">
+                        <img class="w-full h-full object-cover" data-alt="Professional portrait of a middle-aged male homeowner" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWJ4orlsJRbNn6wc2Pixh-5SegD3da4zD1vfm1q6juyOZBfkor3frIWtIrTRAsCQQuv0dzbwmX766ONmOC5GyVTJk_vGXCkrKyUSL8Ft8RtTwl_QTwq8e0DtN0ifDP4Bqz3UB7unxlgJBwB5opOA-7nLl_KZY5Yt20yeRWmL3aBxhXAcpIOvgoDHmQSq9dO8jscvkYbkJNyarbnQz33H_iS60Uf-9oEyr_chHD-qtQ3s6jTgKDsN5FrvjCydeiaPvsjWeH3qjJyNDi" />
+                    </div>
+                    <div class="text-left">
+                        <p class="font-bold text-lg">Julian Voss</p>
+                        <p class="text-on-primary-container text-sm">CEO, NeuralArchitects</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Contact / Newsletter -->
+        <section class="py-24 bg-surface">
+            <div class="max-w-7xl mx-auto px-8">
+                <div class="bg-surface-container-highest rounded-3xl p-12 md:p-24 flex flex-col md:flex-row justify-between items-center gap-12">
+                    <div class="max-w-lg">
+                        <h2 class="text-4xl font-headline font-extrabold tracking-tighter mb-4">Khởi tạo không gian Atrium của bạn</h2>
+                        <p class="text-on-surface-variant">Cập nhật những đợt phát hành phần cứng neural mới nhất và mẹo tối ưu hóa AI.</p>
+                    </div>
+                    <form class="w-full md:w-auto flex flex-col sm:flex-row gap-4">
+                        <input class="bg-surface-container-lowest border-none rounded-md px-6 py-4 w-full md:w-80 focus:ring-2 focus:ring-secondary/20 transition-all" placeholder="Địa chỉ email của bạn" type="email" />
+                        <button class="bg-primary text-white font-bold px-10 py-4 rounded-md hover:bg-on-primary-fixed transition-colors">Đăng ký</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-slate-50 dark:bg-slate-900/50 w-full">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 px-8 py-20 max-w-7xl mx-auto font-inter text-sm text-slate-500 dark:text-slate-400">
+            <div class="space-y-6">
+                <div class="text-lg font-bold text-slate-900 dark:text-white">AuraHome</div>
+                <p>© 2026 Thai Ngoc Qui. Bản quyền thuộc hệ sinh thái AuraHome</p>
+            </div>
+            <div class="space-y-4">
+                <h5 class="font-bold text-slate-900 dark:text-white">Trải nghiệm</h5>
+                <ul class="space-y-2">
+                    <li><a class="hover:text-cyan-500 transition-colors" href="#">Đạo đức Thiết kế</a></li>
+                    <li><a class="hover:text-cyan-500 transition-colors" href="#">Chính sách bảo mật</a></li>
+                    <li><a class="hover:text-cyan-500 transition-colors" href="#">Đạo đức AI</a></li>
+                </ul>
+            </div>
+            <div class="space-y-4">
+                <h5 class="font-bold text-slate-900 dark:text-white">Hỗ trợ</h5>
+                <ul class="space-y-2">
+                    <li><a class="hover:text-cyan-500 transition-colors" href="#">Vận chuyển</a></li>
+                    <li><a class="hover:text-cyan-500 transition-colors" href="#">Hoàn trả</a></li>
+                    <li><a class="hover:text-cyan-500 transition-colors" href="#">Điều khoản dịch vụ</a></li>
+                </ul>
+            </div>
+            <div class="space-y-4">
+                <h5 class="font-bold text-slate-900 dark:text-white">Kết nối</h5>
+                <div class="flex gap-4">
+                    <span class="material-symbols-outlined hover:text-cyan-500 cursor-pointer" data-icon="share">share</span>
+                    <span class="material-symbols-outlined hover:text-cyan-500 cursor-pointer" data-icon="public">public</span>
+                    <span class="material-symbols-outlined hover:text-cyan-500 cursor-pointer" data-icon="forum">forum</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

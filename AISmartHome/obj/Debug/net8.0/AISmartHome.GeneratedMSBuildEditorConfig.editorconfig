@@ -32,6 +32,46 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/BaiViets/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmFpVmlldHNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/BaiViets/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmFpVmlldHNcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/BaiViets/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmFpVmlldHNcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/BaiViets/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmFpVmlldHNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/BaiViets/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmFpVmlldHNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/ChiTietDonHangs/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hpVGlldERvbkhhbmdzXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/ChiTietDonHangs/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hpVGlldERvbkhhbmdzXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/ChiTietDonHangs/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hpVGlldERvbkhhbmdzXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/ChiTietDonHangs/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hpVGlldERvbkhhbmdzXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/ChiTietDonHangs/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hpVGlldERvbkhhbmdzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/Customers/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -56,12 +96,92 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFuaE11Y1NhblBoYW1zXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/DonHangs/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9uSGFuZ3NcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/DonHangs/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9uSGFuZ3NcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/DonHangs/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9uSGFuZ3NcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/DonHangs/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9uSGFuZ3NcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/DonHangs/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9uSGFuZ3NcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/HuongDanSuDungs/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSHVvbmdEYW5TdUR1bmdzXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/HuongDanSuDungs/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSHVvbmdEYW5TdUR1bmdzXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/HuongDanSuDungs/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSHVvbmdEYW5TdUR1bmdzXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/HuongDanSuDungs/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSHVvbmdEYW5TdUR1bmdzXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/HuongDanSuDungs/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSHVvbmdEYW5TdUR1bmdzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/KhachHangs/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2hhY2hIYW5nc1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/KhachHangs/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2hhY2hIYW5nc1xEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/KhachHangs/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2hhY2hIYW5nc1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/KhachHangs/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2hhY2hIYW5nc1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/KhachHangs/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2hhY2hIYW5nc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/NhanViens/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTmhhblZpZW5zXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/NhanViens/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTmhhblZpZW5zXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/NhanViens/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTmhhblZpZW5zXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/NhanViens/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTmhhblZpZW5zXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/NhanViens/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTmhhblZpZW5zXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AISmartHome/Views/SanPhams/Create.cshtml]

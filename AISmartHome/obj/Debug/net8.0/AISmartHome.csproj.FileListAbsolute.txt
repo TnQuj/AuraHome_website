@@ -506,7 +506,6 @@ E:\ThucTapCuoiKhoa\AISmartHome_webiste\VS2022\AISmartHome\AISmartHome\obj\Debug\
 E:\ThucTapCuoiKhoa\AISmartHome_webiste\VS2022\AISmartHome\AISmartHome\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.AISmartHome.props
 E:\ThucTapCuoiKhoa\AISmartHome_webiste\VS2022\AISmartHome\AISmartHome\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.AISmartHome.props
 E:\ThucTapCuoiKhoa\AISmartHome_webiste\VS2022\AISmartHome\AISmartHome\obj\Debug\net8.0\staticwebassets.pack.json
-E:\ThucTapCuoiKhoa\AISmartHome_webiste\VS2022\AISmartHome\AISmartHome\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 E:\ThucTapCuoiKhoa\AISmartHome_webiste\VS2022\AISmartHome\AISmartHome\obj\Debug\net8.0\AISmartH.437ECF32.Up2Date
 E:\ThucTapCuoiKhoa\AISmartHome_webiste\VS2022\AISmartHome\AISmartHome\obj\Debug\net8.0\AISmartHome.dll
 E:\ThucTapCuoiKhoa\AISmartHome_webiste\VS2022\AISmartHome\AISmartHome\obj\Debug\net8.0\refint\AISmartHome.dll
@@ -521,3 +520,5 @@ E:\ThucTapCuoiKhoa\AISmartHome_webiste\VS2022\AISmartHome\AISmartHome\bin\Debug\
 E:\ThucTapCuoiKhoa\AISmartHome_webiste\VS2022\AISmartHome\AISmartHome\bin\Debug\net8.0\RBush.dll
 E:\ThucTapCuoiKhoa\AISmartHome_webiste\VS2022\AISmartHome\AISmartHome\bin\Debug\net8.0\SixLabors.Fonts.dll
 E:\ThucTapCuoiKhoa\AISmartHome_webiste\VS2022\AISmartHome\AISmartHome\bin\Debug\net8.0\System.IO.Packaging.dll
+E:\ThucTapCuoiKhoa\AISmartHome_webiste\VS2022\AISmartHome\AISmartHome\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+E:\ThucTapCuoiKhoa\AISmartHome_webiste\VS2022\AISmartHome\AISmartHome\bin\Debug\net8.0\CodeHollow.FeedReader.dll

@@ -34,4 +34,7 @@ public partial class BaiViet
     [ForeignKey("MaTaiKhoan")]
     [InverseProperty("BaiViets")]
     public virtual TaiKhoan? MaTaiKhoanNavigation { get; set; }
+    // Trong Models/BaiViet.cs
+    public bool IsApproved { get; set; } = false; // Mặc định là chưa duyệt
+    public string? NguonTin { get; set; } // Lưu link gốc để đối chiếu
 }

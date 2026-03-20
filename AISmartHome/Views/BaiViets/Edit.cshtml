@@ -1,0 +1,118 @@
+﻿@model AISmartHome.Models.BaiViet
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Chỉnh sửa bài viết";
+}
+
+<style>
+    .btn-cyan-glow:hover {
+        box-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
+    }
+    /* Tùy chỉnh độ cao của CKEditor để khớp với layout */
+    .ck-editor__editable_inline {
+        min-height: 400px;
+        border-bottom-left-radius: 0.75rem !关键 !important;
+        border-bottom-right-radius: 0.75rem !important;
+    }
+
+    .ck.ck-editor__main > .ck-editor__editable:not(.ck-focused) {
+        border-color: #e2e8f0;
+    }
+</style>
+
+<div class="p-6 bg-slate-50 min-h-screen">
+    <div class="max-w-6xl mx-auto">
+        <div class="mb-6 flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-[#001F3F] flex items-center gap-2">
+                    <svg class="w-8 h-8 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    Trình Biên Tập Nội Dung AI
+                </h1>
+                <p class="text-sm text-gray-500 mt-1 pl-10">Sử dụng công cụ định dạng để bài viết chuyên nghiệp hơn</p>
+            </div>
+            <a asp-action="Index" class="flex items-center gap-2 text-[#001F3F] bg-white border border-gray-200 px-4 py-2 rounded-xl font-medium hover:bg-gray-50 transition-colors shadow-sm">
+                Quay lại
+            </a>
+        </div>
+
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4 text-sm font-medium bg-red-50 p-3 rounded-lg"></div>
+            <input type="hidden" asp-for="MaBaiViet" />
+
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <div class="lg:col-span-3 space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <label asp-for="TieuDe" class="block text-sm font-bold text-[#001F3F] mb-2">Tiêu đề bài viết</label>
+                        <input asp-for="TieuDe" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#00E5FF]/20 focus:border-[#00E5FF] transition-all text-lg font-bold text-slate-700" placeholder="Nhập tiêu đề bài viết..." />
+                        <span asp-validation-for="TieuDe" class="text-red-500 text-xs mt-1"></span>
+
+                        <div class="mt-6">
+                            <label asp-for="NoiDung" class="block text-sm font-bold text-[#001F3F] mb-2">Nội dung chi tiết</label>
+                            <textarea asp-for="NoiDung" id="editor"></textarea>
+                            <span asp-validation-for="NoiDung" class="text-red-500 text-xs mt-1"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                        <label class="block text-sm font-bold text-[#001F3F] mb-3 text-center uppercase tracking-wider">Ảnh đại diện</label>
+                        <div class="relative group aspect-square rounded-xl overflow-hidden border-2 border-dashed border-gray-200 hover:border-[#00E5FF] transition-colors mb-4">
+                            <img id="previewImg" src="~/img/@Model.HinhAnh" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/300x300?text=Upload+Image'" />
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer">
+                                <span class="text-white text-xs font-bold">Thay đổi ảnh</span>
+                            </div>
+                        </div>
+                        <input type="hidden" asp-for="HinhAnh" />
+                        <input type="file" name="HinhAnhUpload" id="fileInput" accept="image/*" class="hidden" />
+                        <button type="button" onclick="document.getElementById('fileInput').click()" class="w-full py-2 border border-gray-200 rounded-lg text-xs font-bold text-gray-600 hover:bg-gray-50 transition-colors">Chọn tệp ảnh</button>
+                    </div>
+
+                    <div class="bg-[#001F3F] p-5 rounded-2xl shadow-lg text-white space-y-4">
+                        <div>
+                            <label asp-for="MaDanhMucBaiViet" class="block text-xs font-bold text-[#00E5FF] uppercase mb-2">Danh mục</label>
+                            <select asp-for="MaDanhMucBaiViet" class="w-full bg-[#002b5a] border-none rounded-lg text-sm p-2.5 focus:ring-1 focus:ring-[#00E5FF]" asp-items="ViewBag.MaDanhMucBaiViet"></select>
+                        </div>
+                        <div>
+                            <label asp-for="NgayDang" class="block text-xs font-bold text-[#00E5FF] uppercase mb-2">Ngày đăng</label>
+                            <input asp-for="NgayDang" type="date" class="w-full bg-[#002b5a] border-none rounded-lg text-sm p-2.5 focus:ring-1 focus:ring-[#00E5FF]" />
+                        </div>
+                        <hr class="border-white/10" />
+                        <button type="submit" class="btn-cyan-glow w-full bg-[#00E5FF] text-[#001F3F] py-3 rounded-xl font-black transition-all">
+                            CẬP NHẬT BÀI VIẾT
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+
+    <script>
+        // Khởi tạo CKEditor
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo' ],
+                placeholder: 'Bắt đầu soạn thảo nội dung bài viết của bạn tại đây...'
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        // Xử lý xem trước ảnh khi chọn file
+        document.getElementById('fileInput').onchange = evt => {
+            const [file] = document.getElementById('fileInput').files
+            if (file) {
+                document.getElementById('previewImg').src = URL.createObjectURL(file)
+            }
+        }
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

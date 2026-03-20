@@ -1,39 +1,86 @@
-@model AISmartHome.Models.DanhMucSanPham
+﻿@model AISmartHome.Models.DanhMucSanPham
 
 @{
-    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Chỉnh sửa Danh mục";
 }
 
-<h1>Edit</h1>
+<style>
+    /* Hiệu ứng viền sáng (Glow) cho nút Cyan */
+    .btn-cyan-glow:hover {
+        box-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
+    }
 
-<h4>DanhMucSanPham</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="MaDanhMuc" />
-            <div class="form-group">
-                <label asp-for="TenDanhMuc" class="control-label"></label>
-                <input asp-for="TenDanhMuc" class="form-control" />
-                <span asp-validation-for="TenDanhMuc" class="text-danger"></span>
+    /* Màu tùy chỉnh cho input khi focus */
+    .input-focus-cyan:focus {
+        outline: none;
+        border-color: #00E5FF;
+        box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.2);
+    }
+</style>
+
+<div class="p-6 bg-slate-50 min-h-screen">
+    <div class="max-w-4xl mx-auto">
+
+        <div class="mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-[#001F3F] flex items-center gap-2">
+                    <svg class="w-8 h-8 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                    Chỉnh sửa Danh mục
+                </h1>
+                <p class="text-sm text-gray-500 mt-1 pl-10">Thay đổi tên nhóm hoặc cập nhật mô tả</p>
             </div>
-            <div class="form-group">
-                <label asp-for="MoTa" class="control-label"></label>
-                <input asp-for="MoTa" class="form-control" />
-                <span asp-validation-for="MoTa" class="text-danger"></span>
+            <a asp-action="Index" class="flex items-center gap-2 text-[#001F3F] bg-white border border-gray-200 px-4 py-2 rounded-xl font-medium hover:bg-gray-50 transition-colors shadow-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Quay lại
+            </a>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <div class="bg-[#001F3F] px-6 py-4">
+                <h3 class="text-white font-semibold flex items-center gap-2">
+                    <svg class="w-5 h-5 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Thông tin Danh mục (Mã: #@Model.MaDanhMuc)
+                </h3>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+
+            <form asp-action="Edit" class="p-6">
+                <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4 text-sm font-medium bg-red-50 p-3 rounded-lg"></div>
+
+                <input type="hidden" asp-for="MaDanhMuc" />
+
+                <div class="grid grid-cols-1 gap-6">
+
+                    <div>
+                        <label asp-for="TenDanhMuc" class="block text-sm font-bold text-[#001F3F] mb-2">Tên danh mục <span class="text-red-500">*</span></label>
+                        <input asp-for="TenDanhMuc" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 bg-slate-50 focus:bg-white font-semibold" placeholder="VD: Khóa cửa thông minh" />
+                        <span asp-validation-for="TenDanhMuc" class="text-red-500 text-xs mt-1 block"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="MoTa" class="block text-sm font-bold text-[#001F3F] mb-2">Mô tả nhóm thiết bị</label>
+                        <textarea asp-for="MoTa" rows="4" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 bg-slate-50 focus:bg-white" placeholder="Mô tả công dụng chung của các thiết bị trong nhóm này..."></textarea>
+                        <span asp-validation-for="MoTa" class="text-red-500 text-xs mt-1 block"></span>
+                    </div>
+
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-gray-100 flex items-center justify-end gap-4">
+                    <a asp-action="Index" class="px-6 py-2.5 rounded-xl font-bold text-gray-600 hover:bg-gray-100 transition-colors">
+                        Hủy bỏ
+                    </a>
+                    <button type="submit" class="btn-cyan-glow flex items-center gap-2 bg-[#00E5FF] text-[#001F3F] px-8 py-2.5 rounded-xl font-bold transition-all duration-300">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                        Lưu Thay Đổi
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

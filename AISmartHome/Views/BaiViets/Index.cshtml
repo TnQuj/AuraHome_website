@@ -1,0 +1,126 @@
+﻿@model IEnumerable<AISmartHome.Models.BaiViet>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Quản lý & Thu thập Bài viết";
+}
+
+<div class="p-6 bg-slate-50 min-h-screen">
+    <div class="max-w-7xl mx-auto">
+
+        <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-[#001F3F] flex items-center gap-2">
+                    <svg class="w-8 h-8 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    Trung tâm Nội dung & Crawler
+                </h1>
+                <p class="text-sm text-gray-500 mt-1 pl-10">Tự động thu thập và phê duyệt tin tức công nghệ</p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="startScanning()" id="scanBtn" class="flex items-center gap-2 bg-emerald-500 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-900/10">
+                    <svg id="scanIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    <span id="scanText">Quét tin mới</span>
+                </button>
+
+                <a asp-action="Create" class="flex items-center gap-2 bg-[#001F3F] text-white px-5 py-2.5 rounded-xl font-bold hover:bg-[#002b5a] transition-all shadow-lg shadow-blue-900/10">
+                    <svg class="w-5 h-5 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                    Viết bài mới
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4">
+                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-400 font-bold uppercase">Tổng bài viết</p>
+                    <p class="text-xl font-black text-[#001F3F]">@Model.Count()</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-[#001F3F] text-white">
+                            <th class="px-6 py-4 text-sm font-semibold uppercase tracking-wider w-1/3">Nội dung bài viết</th>
+                            <th class="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Nguồn & Danh mục</th>
+                            <th class="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Ngày đăng</th>
+                            <th class="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Trạng thái</th>
+                            <th class="px-6 py-4 text-sm font-semibold uppercase tracking-wider text-right">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @foreach (var item in Model)
+                        {
+                            <tr class="hover:bg-slate-50 transition-colors group">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-20 h-14 rounded-lg bg-gray-100 overflow-hidden shrink-0 border border-gray-100 shadow-sm">
+                                            <img src="~/img/@item.HinhAnh" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/150?text=AI+News'" />
+                                        </div>
+                                        <div class="max-w-xs">
+                                            <div class="font-bold text-[#001F3F] line-clamp-1 group-hover:text-blue-600 transition-colors" title="@item.TieuDe">
+                                                @item.TieuDe
+                                            </div>
+                                            <div class="text-xs text-gray-400 line-clamp-1 mt-1">
+                                                @System.Text.RegularExpressions.Regex.Replace(item.NoiDung ?? "", "<.*?>", string.Empty)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-col gap-1">
+                                        <span class="text-[10px] font-black text-blue-500 uppercase">@item.MaDanhMucBaiVietNavigation?.TenDanhMuc</span>
+                                        <span class="text-[9px] text-gray-400 italic">Nguồn: Tự động hệ thống</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-500 font-medium">
+                                    @item.NgayDang?.ToString("dd/MM/yyyy")
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-100 uppercase">
+                                        Đã xuất bản
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex justify-end gap-1">
+                                        <a asp-action="Edit" asp-route-id="@item.MaBaiViet" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.MaBaiViet" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function startScanning() {
+        const btn = document.getElementById('scanBtn');
+        const icon = document.getElementById('scanIcon');
+        const text = document.getElementById('scanText');
+
+        // Hiệu ứng đang chạy
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+        icon.classList.add('animate-spin');
+        text.innerText = "Đang quét dữ liệu...";
+
+        // Giả lập gọi API thu thập tin tức (Crawler Service)
+        setTimeout(() => {
+            alert("Đã thu thập xong 5 tin tức mới! Vui lòng làm mới trang để phê duyệt.");
+            location.reload();
+        }, 3000);
+    }
+</script>

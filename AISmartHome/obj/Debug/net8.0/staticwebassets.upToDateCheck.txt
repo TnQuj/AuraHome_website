@@ -4,13 +4,20 @@ wwwroot\img\1019fccf-6b7d-447d-baab-44a9aef7d3b4.png
 wwwroot\img\103e6a20-8152-4dc9-b079-4a86ed2cbbfb.jpg
 wwwroot\img\5a20f825-83a2-4a69-9762-d9bf5f7f5d54.jpg
 wwwroot\img\a338e1ed-149b-4f26-9773-b1e5fd8a7150.jpg
+wwwroot\img\b8336f1a-b793-46e2-95d1-307aba51b0e1.jpg
 wwwroot\img\camera1.jpg
 wwwroot\img\camera2.jpg
+wwwroot\img\d056ae94-7169-4119-843a-de1ae50453e8.jpg
 wwwroot\img\default-product.png
+wwwroot\img\e6acdc84-e43c-48e3-bf40-22844fc4403b.jpg
+wwwroot\img\ee371b88-f575-4c4b-a37a-6c90bf4e7a90.jpg
 wwwroot\img\export.png
 wwwroot\img\f6ffdcf1-b334-4ec6-a777-4df553e37372.png
 wwwroot\img\kie_nano-banana-2-edit_6b86f249-a61a-4e29-9d89-1a1cacb70cb0_0.png
 wwwroot\img\thongtin1.jpg
+wwwroot\img\unnamed (1).jpg
+wwwroot\img\unnamed (2).jpg
+wwwroot\img\unnamed (3).jpg
 wwwroot\img\unnamed.jpg
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap.css

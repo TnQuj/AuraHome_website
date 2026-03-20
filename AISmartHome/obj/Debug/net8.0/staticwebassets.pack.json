@@ -29,6 +29,10 @@
       "PackagePath": "staticwebassets\\img\\a338e1ed-149b-4f26-9773-b1e5fd8a7150.jpg"
     },
     {
+      "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AISmartHome\\wwwroot\\img\\b8336f1a-b793-46e2-95d1-307aba51b0e1.jpg",
+      "PackagePath": "staticwebassets\\img\\b8336f1a-b793-46e2-95d1-307aba51b0e1.jpg"
+    },
+    {
       "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AISmartHome\\wwwroot\\img\\camera1.jpg",
       "PackagePath": "staticwebassets\\img\\camera1.jpg"
     },
@@ -37,8 +41,20 @@
       "PackagePath": "staticwebassets\\img\\camera2.jpg"
     },
     {
+      "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AISmartHome\\wwwroot\\img\\d056ae94-7169-4119-843a-de1ae50453e8.jpg",
+      "PackagePath": "staticwebassets\\img\\d056ae94-7169-4119-843a-de1ae50453e8.jpg"
+    },
+    {
       "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AISmartHome\\wwwroot\\img\\default-product.png",
       "PackagePath": "staticwebassets\\img\\default-product.png"
+    },
+    {
+      "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AISmartHome\\wwwroot\\img\\e6acdc84-e43c-48e3-bf40-22844fc4403b.jpg",
+      "PackagePath": "staticwebassets\\img\\e6acdc84-e43c-48e3-bf40-22844fc4403b.jpg"
+    },
+    {
+      "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AISmartHome\\wwwroot\\img\\ee371b88-f575-4c4b-a37a-6c90bf4e7a90.jpg",
+      "PackagePath": "staticwebassets\\img\\ee371b88-f575-4c4b-a37a-6c90bf4e7a90.jpg"
     },
     {
       "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AISmartHome\\wwwroot\\img\\export.png",
@@ -55,6 +71,18 @@
     {
       "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AISmartHome\\wwwroot\\img\\thongtin1.jpg",
       "PackagePath": "staticwebassets\\img\\thongtin1.jpg"
+    },
+    {
+      "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AISmartHome\\wwwroot\\img\\unnamed (1).jpg",
+      "PackagePath": "staticwebassets\\img\\unnamed (1).jpg"
+    },
+    {
+      "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AISmartHome\\wwwroot\\img\\unnamed (2).jpg",
+      "PackagePath": "staticwebassets\\img\\unnamed (2).jpg"
+    },
+    {
+      "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AISmartHome\\wwwroot\\img\\unnamed (3).jpg",
+      "PackagePath": "staticwebassets\\img\\unnamed (3).jpg"
     },
     {
       "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AISmartHome\\wwwroot\\img\\unnamed.jpg",

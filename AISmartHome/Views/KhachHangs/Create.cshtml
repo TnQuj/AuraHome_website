@@ -1,0 +1,96 @@
+﻿@model AISmartHome.Models.KhachHang
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Thêm Khách hàng mới";
+}
+
+<style>
+    /* Hiệu ứng viền sáng cho nút tạo mới */
+    .btn-cyan-glow:hover {
+        box-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
+    }
+
+    /* Style cho input khi focus */
+    .input-focus-cyan:focus {
+        outline: none;
+        border-color: #00E5FF;
+        box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.2);
+    }
+</style>
+
+<div class="p-6 bg-slate-50 min-h-screen">
+    <div class="max-w-4xl mx-auto">
+
+        <div class="mb-6 flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-[#001F3F] flex items-center gap-2">
+                    <svg class="w-8 h-8 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Đăng ký Khách hàng mới
+                </h1>
+                <p class="text-sm text-gray-500 mt-1 pl-10">Tạo hồ sơ người dùng mới trong hệ thống AI Smart Home</p>
+            </div>
+            <a asp-action="Index" class="flex items-center gap-2 text-[#001F3F] bg-white border border-gray-200 px-4 py-2 rounded-xl font-medium hover:bg-gray-50 transition-colors shadow-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Quay lại
+            </a>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <div class="bg-[#001F3F] px-6 py-4">
+                <h3 class="text-white font-semibold flex items-center gap-2">
+                    <svg class="w-5 h-5 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    Thông tin định danh khách hàng
+                </h3>
+            </div>
+
+            <form asp-action="Create" class="p-6">
+                <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4 text-sm font-medium bg-red-50 p-3 rounded-lg"></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <div class="md:col-span-2">
+                        <label asp-for="TenKhachHang" class="block text-sm font-bold text-[#001F3F] mb-2">Họ và Tên <span class="text-red-500">*</span></label>
+                        <input asp-for="TenKhachHang" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 bg-slate-50 focus:bg-white" placeholder="VD: Trần Văn Bình" />
+                        <span asp-validation-for="TenKhachHang" class="text-red-500 text-xs mt-1 block"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="SoDienThoai" class="block text-sm font-bold text-[#001F3F] mb-2">Số điện thoại</label>
+                        <input asp-for="SoDienThoai" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 bg-slate-50 focus:bg-white" placeholder="09xx xxx xxx" />
+                        <span asp-validation-for="SoDienThoai" class="text-red-500 text-xs mt-1 block"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="Email" class="block text-sm font-bold text-[#001F3F] mb-2">Địa chỉ Email</label>
+                        <input asp-for="Email" type="email" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 bg-slate-50 focus:bg-white" placeholder="email@example.com" />
+                        <span asp-validation-for="Email" class="text-red-500 text-xs mt-1 block"></span>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label asp-for="DiaChi" class="block text-sm font-bold text-[#001F3F] mb-2">Địa chỉ thường trú</label>
+                        <textarea asp-for="DiaChi" rows="3" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 bg-slate-50 focus:bg-white" placeholder="Số nhà, tên đường, khu vực..."></textarea>
+                        <span asp-validation-for="DiaChi" class="text-red-500 text-xs mt-1 block"></span>
+                    </div>
+
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-gray-100 flex items-center justify-end gap-4">
+                    <a asp-action="Index" class="px-6 py-2.5 rounded-xl font-bold text-gray-600 hover:bg-gray-100 transition-colors">
+                        Hủy bỏ
+                    </a>
+                    <button type="submit" class="btn-cyan-glow flex items-center gap-2 bg-[#00E5FF] text-[#001F3F] px-8 py-2.5 rounded-xl font-bold transition-all duration-300">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                        Tạo hồ sơ
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

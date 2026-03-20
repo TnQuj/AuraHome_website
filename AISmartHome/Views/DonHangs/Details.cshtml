@@ -1,0 +1,98 @@
+﻿@model AISmartHome.Models.DonHang
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Chi tiết Đơn hàng";
+}
+
+<div class="p-6 bg-slate-50 min-h-screen">
+    <div class="max-w-4xl mx-auto">
+
+        <div class="mb-6 flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-[#001F3F] flex items-center gap-2">
+                    <svg class="w-8 h-8 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Thông tin Đơn hàng chi tiết
+                </h1>
+                <p class="text-sm text-gray-500 mt-1 pl-10">Xem lại lịch sử và thông tin vận chuyển</p>
+            </div>
+            <div class="flex gap-3">
+                <a asp-action="Index" class="flex items-center gap-2 text-gray-600 bg-white border border-gray-200 px-4 py-2 rounded-xl font-medium hover:bg-gray-50 transition-colors shadow-sm">
+                    Quay lại
+                </a>
+                <a asp-action="Edit" asp-route-id="@Model.MaDonHang" class="flex items-center gap-2 text-white bg-[#001F3F] px-4 py-2 rounded-xl font-medium hover:bg-[#002b5a] transition-colors shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                    Chỉnh sửa
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <div class="bg-[#001F3F] px-6 py-4 flex justify-between items-center">
+                <h3 class="text-white font-semibold flex items-center gap-2">
+                    <svg class="w-5 h-5 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                    Mã đơn hàng: #@Model.MaDonHang
+                </h3>
+                <span class="px-3 py-1 rounded-full text-xs font-bold bg-[#00E5FF]/20 text-[#00E5FF] border border-[#00E5FF]/30">
+                    @Model.TrangThaiDonHang
+                </span>
+            </div>
+
+            <div class="p-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Thông tin khách hàng</h4>
+                            <div class="bg-slate-50 p-4 rounded-xl border border-gray-100">
+                                <p class="text-sm text-gray-500">Họ tên người nhận</p>
+                                <p class="text-base font-bold text-[#001F3F]">@Model.TenKhachHang</p>
+
+                                <div class="mt-4">
+                                    <p class="text-sm text-gray-500">Số điện thoại</p>
+                                    <p class="text-base font-semibold text-[#001F3F]">@Model.SoDienThoai</p>
+                                </div>
+
+                                <div class="mt-4">
+                                    <p class="text-sm text-gray-500">ID Tài khoản hệ thống</p>
+                                    <p class="text-sm font-mono text-blue-600">#@Model.MaKhachHangNavigation.MaKhachHang</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Ngày thực hiện</h4>
+                            <div class="flex items-center gap-3 text-[#001F3F]">
+                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                <span class="font-medium">@Model.NgayDatHang?.ToString("dd/MM/yyyy HH:mm")</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Địa chỉ giao hàng</h4>
+                            <div class="flex gap-3">
+                                <svg class="w-5 h-5 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                <p class="text-[#001F3F] leading-relaxed">@Model.DiaChiGiaoHang</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100">
+                            <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">Tổng cộng đơn hàng</h4>
+                            <p class="text-3xl font-black text-blue-700">
+                                @Model.TongTien?.ToString("N0") <span class="text-lg font-bold">VNĐ</span>
+                            </p>
+                            <p class="text-xs text-blue-500 mt-2 font-medium italic">* Đã bao gồm thuế và phí vận chuyển (nếu có)</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="bg-slate-50 px-8 py-4 border-t border-gray-100 text-center">
+                <p class="text-xs text-gray-400 italic">Đơn hàng được khởi tạo tự động bởi hệ thống AI Smart Home</p>
+            </div>
+        </div>
+    </div>
+</div>

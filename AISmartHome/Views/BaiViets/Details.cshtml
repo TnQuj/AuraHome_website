@@ -1,0 +1,71 @@
+﻿@model AISmartHome.Models.BaiViet
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Xem trước Bài viết";
+}
+
+<div class="p-6 bg-slate-50 min-h-screen">
+    <div class="max-w-5xl mx-auto">
+
+        <div class="mb-6 flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-[#001F3F] flex items-center gap-2">
+                    <svg class="w-8 h-8 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    Xem trước nội dung
+                </h1>
+                <p class="text-sm text-gray-500 mt-1 pl-10">Kiểm tra hiển thị của bài viết trước khi công khai</p>
+            </div>
+            <div class="flex gap-3">
+                <a asp-action="Index" class="flex items-center gap-2 text-gray-600 bg-white border border-gray-200 px-4 py-2 rounded-xl font-medium hover:bg-gray-50 transition-colors shadow-sm">
+                    Quay lại
+                </a>
+                <a asp-action="Edit" asp-route-id="@Model.MaBaiViet" class="flex items-center gap-2 text-white bg-[#001F3F] px-4 py-2 rounded-xl font-medium hover:bg-[#002b5a] transition-colors shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                    Sửa nội dung
+                </a>
+            </div>
+        </div>
+
+        <article class="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
+
+            <div class="relative h-80 w-full overflow-hidden">
+                <img src="~/img/@Model.HinhAnh" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/1200x600?text=AI+Smart+Home+Article'" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                    <div class="p-8">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-[#00E5FF] text-[#001F3F] uppercase tracking-wider">
+                            @Model.MaDanhMucBaiVietNavigation?.TenDanhMuc
+                        </span>
+                        <h2 class="text-3xl font-black text-white mt-3 leading-tight">@Model.TieuDe</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-8 py-4 border-b border-gray-50 bg-slate-50/50 flex flex-wrap items-center gap-6 text-sm text-gray-500">
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <span>Ngày đăng: <strong>@Model.NgayDang?.ToString("dd/MM/yyyy")</strong></span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    <span>Tác giả: <strong>@Model.MaTaiKhoanNavigation?.MaTaiKhoan</strong></span>
+                </div>
+            </div>
+
+            <div class="p-8 md:p-12">
+                <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed">
+                    @* Quan trọng: Sử dụng Html.Raw để render nội dung từ CKEditor *@
+                    @Html.Raw(Model.NoiDung)
+                </div>
+            </div>
+
+            <div class="px-8 py-6 bg-slate-50 border-t border-gray-100 flex justify-between items-center">
+                <p class="text-xs text-gray-400 italic">ID Bài viết: #@Model.MaBaiViet</p>
+                <div class="flex gap-2">
+                    <span class="w-3 h-3 rounded-full bg-green-400"></span>
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Đã kiểm duyệt nội dung</span>
+                </div>
+            </div>
+        </article>
+    </div>
+</div>

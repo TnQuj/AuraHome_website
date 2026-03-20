@@ -1,0 +1,118 @@
+﻿@model AISmartHome.Models.DonHang
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Cập nhật Đơn hàng";
+}
+
+<style>
+    /* Hiệu ứng viền sáng (Glow) cho nút Cyan */
+    .btn-cyan-glow:hover {
+        box-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
+    }
+
+    /* Màu tùy chỉnh cho input khi focus */
+    .input-focus-cyan:focus {
+        outline: none;
+        border-color: #00E5FF;
+        box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.2);
+    }
+</style>
+
+<div class="p-6 bg-slate-50 min-h-screen">
+    <div class="max-w-4xl mx-auto">
+
+        <div class="mb-6 flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-[#001F3F] flex items-center gap-2">
+                    <svg class="w-8 h-8 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                    Quản lý Đơn hàng
+                </h1>
+                <p class="text-sm text-gray-500 mt-1 pl-10">Cập nhật thông tin vận chuyển và trạng thái thanh toán</p>
+            </div>
+            <a asp-action="Index" class="flex items-center gap-2 text-[#001F3F] bg-white border border-gray-200 px-4 py-2 rounded-xl font-medium hover:bg-gray-50 transition-colors shadow-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Quay lại danh sách
+            </a>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <div class="bg-[#001F3F] px-6 py-4">
+                <h3 class="text-white font-semibold flex items-center gap-2">
+                    <svg class="w-5 h-5 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Chi tiết Đơn hàng (Mã: #@Model.MaDonHang)
+                </h3>
+            </div>
+
+            <form asp-action="Edit" class="p-6">
+                <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4 text-sm font-medium bg-red-50 p-3 rounded-lg"></div>
+                <input type="hidden" asp-for="MaDonHang" />
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <div>
+                        <label asp-for="MaKhachHang" class="block text-sm font-bold text-[#001F3F] mb-2">Tài khoản đặt hàng</label>
+                        <select asp-for="MaKhachHang" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 bg-slate-50 focus:bg-white appearance-none cursor-pointer" asp-items="ViewBag.MaKhachHang"></select>
+                        <span asp-validation-for="MaKhachHang" class="text-red-500 text-xs mt-1 block"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="TenKhachHang" class="block text-sm font-bold text-[#001F3F] mb-2">Họ tên người nhận <span class="text-red-500">*</span></label>
+                        <input asp-for="TenKhachHang" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 bg-slate-50 focus:bg-white" placeholder="Nhập tên người nhận hàng" />
+                        <span asp-validation-for="TenKhachHang" class="text-red-500 text-xs mt-1 block"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="SoDienThoai" class="block text-sm font-bold text-[#001F3F] mb-2">Số điện thoại liên lạc</label>
+                        <input asp-for="SoDienThoai" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 bg-slate-50 focus:bg-white" />
+                        <span asp-validation-for="SoDienThoai" class="text-red-500 text-xs mt-1 block"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="NgayDatHang" class="block text-sm font-bold text-[#001F3F] mb-2">Ngày lập đơn</label>
+                        <input asp-for="NgayDatHang" type="datetime-local" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 bg-slate-50 focus:bg-white" />
+                        <span asp-validation-for="NgayDatHang" class="text-red-500 text-xs mt-1 block"></span>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label asp-for="DiaChiGiaoHang" class="block text-sm font-bold text-[#001F3F] mb-2">Địa chỉ giao hàng chi tiết</label>
+                        <input asp-for="DiaChiGiaoHang" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 bg-slate-50 focus:bg-white" placeholder="Số nhà, tên đường, phường/xã..." />
+                        <span asp-validation-for="DiaChiGiaoHang" class="text-red-500 text-xs mt-1 block"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="TongTien" class="block text-sm font-bold text-[#001F3F] mb-2">Tổng giá trị (VNĐ)</label>
+                        <div class="relative">
+                            <input asp-for="TongTien" class="w-full pl-4 pr-12 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 font-bold text-red-600 bg-slate-50 focus:bg-white" type="number" />
+                            <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500 font-bold">đ</span>
+                        </div>
+                        <span asp-validation-for="TongTien" class="text-red-500 text-xs mt-1 block"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="TrangThaiDonHang" class="block text-sm font-bold text-[#001F3F] mb-2">Trạng thái đơn hàng</label>
+                        <input asp-for="TrangThaiDonHang" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 bg-slate-50 focus:bg-white" placeholder="Mới, Đang xử lý, Hoàn thành..." />
+                        <span asp-validation-for="TrangThaiDonHang" class="text-red-500 text-xs mt-1 block"></span>
+                    </div>
+
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-gray-100 flex items-center justify-end gap-4">
+                    <a asp-action="Index" class="px-6 py-2.5 rounded-xl font-bold text-gray-600 hover:bg-gray-100 transition-colors">
+                        Hủy bỏ
+                    </a>
+                    <button type="submit" class="btn-cyan-glow flex items-center gap-2 bg-[#00E5FF] text-[#001F3F] px-8 py-2.5 rounded-xl font-bold transition-all duration-300">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                        Lưu Thay Đổi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

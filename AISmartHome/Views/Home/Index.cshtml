@@ -12,6 +12,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script id="tailwind-config">
         tailwind.config = {
@@ -95,28 +96,94 @@
             text-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
         }
 
+        header {
+            position: sticky !important;
+            z-index: 9999 !important;
+        }
+
+        .group:hover .group-hover\:visible {
+            visibility: visible !important;
+        }
     </style>
 </head>
 <body class="bg-surface font-body text-on-surface">
     <!-- Menu điều hướng các trang-->
-    <header class="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
+    <header class="sticky top-0 z-[9999] bg-white border-b border-gray-100 shadow-sm">
         <div class="container mx-auto px-4 h-20 flex items-center justify-between relative">
 
             <div class="flex-1 flex justify-start items-center gap-2">
-                <div class="w-10 h-10 bg-brand-navy rounded-custom flex items-center justify-center">
-                    <svg class="h-6 w-6 text-brand-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <div class="w-10 h-10 bg-brand-navy rounded-xl flex items-center justify-center">
+                    <svg class="h-6 w-6 text-brand-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
                     </svg>
                 </div>
                 <span class="text-xl font-bold tracking-tight text-brand-navy">AuraHome</span>
             </div>
 
-            <nav class="hidden lg:flex items-center justify-center space-x-8 text-sm font-medium">
-                <a class="hover:text-brand-cyan transition-colors" href="#">Thiết Bị Thông Minh</a>
-                <a class="hover:text-brand-cyan transition-colors" href="#">Tin Tức</a>
-                <a class="hover:text-brand-cyan transition-colors" href="#">Hướng Dẫn Sữ Dụng</a>
-            </nav>
+            <nav class="hidden lg:flex items-center justify-center space-x-8 text-sm font-medium h-full">
+                <div class="relative group h-full flex items-center">
+                    <button class="flex items-center gap-1 hover:text-brand-cyan transition-colors py-8 outline-none font-bold">
+                        Thiết Bị Thông Minh
+                        <svg class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
 
+                    <div class="absolute left-0 top-full w-72 bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-gray-100 invisible opacity-0 translate-y-4 group-hover:!visible group-hover:!opacity-100 group-hover:!translate-y-0 transition-all duration-300 z-[10000] overflow-hidden">
+
+                        <div class="p-3">
+                            <ul class="space-y-1">
+                                <li>
+                                    <a href="/SanPhams?category=1" class="flex items-center justify-between px-3 py-3 text-gray-600 hover:bg-slate-50 hover:text-brand-cyan rounded-xl transition-all group/link">
+                                        <span class="flex items-center gap-3 font-semibold">
+                                            <i class="fa-solid fa-lightbulb text-indigo-500 w-5 text-center text-lg"></i>
+                                            Chiếu sáng thông minh
+                                        </span>
+                                        <i class="fa-solid fa-chevron-right text-[10px] opacity-0 group-hover/link:opacity-100 transition-opacity"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/SanPhams?category=2" class="flex items-center justify-between px-3 py-3 text-gray-600 hover:bg-slate-50 hover:text-brand-cyan rounded-xl transition-all group/link">
+                                        <span class="flex items-center gap-3 font-semibold">
+                                            <i class="fa-solid fa-shield-halved text-emerald-500 w-5 text-center text-lg"></i>
+                                            An ninh & Camera
+                                        </span>
+                                        <i class="fa-solid fa-chevron-right text-[10px] opacity-0 group-hover/link:opacity-100 transition-opacity"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/SanPhams?category=3" class="flex items-center justify-between px-3 py-3 text-gray-600 hover:bg-slate-50 hover:text-brand-cyan rounded-xl transition-all group/link">
+                                        <span class="flex items-center gap-3 font-semibold">
+                                            <i class="fa-solid fa-temperature-half text-orange-500 w-5 text-center text-lg"></i>
+                                            Khí hậu & Nhiệt độ
+                                        </span>
+                                        <i class="fa-solid fa-chevron-right text-[10px] opacity-0 group-hover/link:opacity-100 transition-opacity"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/SanPhams?category=4" class="flex items-center justify-between px-3 py-3 text-gray-600 hover:bg-slate-50 hover:text-brand-cyan rounded-xl transition-all group/link">
+                                        <span class="flex items-center gap-3 font-semibold">
+                                            <i class="fa-solid fa-plug text-rose-500 w-5 text-center text-lg"></i>
+                                            Phụ kiện Smart
+                                        </span>
+                                        <i class="fa-solid fa-chevron-right text-[10px] opacity-0 group-hover/link:opacity-100 transition-opacity"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-gray-50/80 p-3.5 text-center border-t border-gray-100">
+                            <a href="/SanPhams" class="text-[11px] font-bold text-gray-400 hover:text-brand-cyan uppercase tracking-[0.2em] transition-colors flex items-center justify-center gap-2">
+                                Xem tất cả thiết bị
+                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <a class="hover:text-brand-cyan transition-colors font-bold text-gray-600" href="/TinTucs">Tin Tức</a>
+                <a class="hover:text-brand-cyan transition-colors font-bold text-gray-600" href="/HuongDanSuDungs">Hướng Dẫn Sử Dụng</a>
+            </nav>
             <div class="flex-1 flex items-center justify-end gap-6">
 
                 <a class="hidden xl:flex items-center gap-1.5 text-sm font-medium text-brand-navy hover:text-brand-cyan transition-colors whitespace-nowrap ml-2 pl-6" href="#">
@@ -151,11 +218,11 @@
             </div>
         </div>
     </header>
-    <main class="pt-0">
+    <main class="pt-0 relative">
         <!-- Banner -->
-        <section class="relative h-[921px] flex items-center overflow-hidden">
+        <section class="relative h-[921px] flex items-center shadow-inner">
             <div class="absolute inset-0 z-0">
-                <img class="w-full h-full object-cover" data-alt="Futuristic architectural villa at dusk with cyan lighting accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEdcb91KsnEvgSTxKC14zs19-3UGHIpy5Taax25QnZY0xuReFq4A-Sb514HkGtZ0r4wtxZcGOkDJzCqaSIH8n1pvOqExOpWe2trz5DWmci1JvMCiDWuBmRHPv1vRVbcZobQLVtuIXCOMwkGx59jYNTQ5jurXc3dk7NwBCroj2jQ14kGLAWxu0ELY0XrMQZ6I48IsdUpeoPUC2rumEH_-44X5EJrzMvTC4dYfK1npB14wJGIq7bvQql7GwJGJxFMl-HM1PotBW91u8J" />
+                <img class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop" alt="AuraHome Smart Villa" />
                 <div class="absolute inset-0 hero-gradient"></div>
             </div>
             <div class="relative z-10 max-w-7xl mx-auto px-8 w-full">

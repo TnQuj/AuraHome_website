@@ -1,45 +1,78 @@
-@model AISmartHome.Models.HuongDanSuDung
+﻿@model AISmartHome.Models.HuongDanSuDung
 
 @{
-    ViewData["Title"] = "Delete";
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Xác nhận xóa hướng dẫn";
 }
 
-<h1>Delete</h1>
+<div class="p-4 sm:p-6 bg-slate-50 min-h-screen flex items-center justify-center font-sans">
+    <div class="max-w-2xl w-full">
+        <div class="bg-white rounded-3xl shadow-2xl border border-rose-100 overflow-hidden transition-all">
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>HuongDanSuDung</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TieuDe)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TieuDe)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NoiDung)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NoiDung)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VideoUrl)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VideoUrl)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MaSanPhamNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MaSanPhamNavigation.MaSanPham)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="MaHuongDan" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+            <div class="bg-rose-50 p-6 border-b border-rose-100 flex items-center gap-5">
+                <div class="w-14 h-14 bg-rose-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-rose-200 shrink-0 transform rotate-3">
+                    <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-rose-900 leading-tight">Xác nhận xóa tài liệu?</h2>
+                    <p class="text-rose-600 text-sm font-medium">Lưu ý: Hành động này sẽ gỡ bỏ dữ liệu vĩnh viễn khỏi hệ thống.</p>
+                </div>
+            </div>
+
+            <div class="p-8 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="col-span-1 md:col-span-2 space-y-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Tiêu đề hướng dẫn</label>
+                        <p class="text-lg font-bold text-slate-800 leading-tight">@Model.TieuDe</p>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Sản phẩm liên quan</label>
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-1 bg-indigo-50 text-indigo-700 rounded-md text-[10px] font-bold border border-indigo-100 uppercase">
+                                <i class="fa-solid fa-box-archive mr-1"></i>
+                                @(Model.MaSanPhamNavigation?.TenSanPham ?? "Sản phẩm #" + Model.MaSanPham)
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Video minh họa</label>
+                        <p class="text-slate-700 font-semibold text-sm">
+                            @if (!string.IsNullOrEmpty(Model.VideoUrl))
+                            {
+                                <span class="text-rose-500"><i class="fa-brands fa-youtube mr-1 text-lg align-middle"></i> Có link video</span>
+                            }
+                            else
+                            {
+                                <span class="text-slate-400"><i class="fa-solid fa-video-slash mr-1 align-middle"></i> Không có</span>
+                            }
+                        </p>
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2 space-y-1 bg-slate-50 p-5 rounded-2xl border border-slate-100 shadow-inner">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Nội dung tóm lược</label>
+                        <p class="text-slate-500 text-sm italic leading-relaxed line-clamp-3">
+                            <i class="fa-solid fa-quote-left mr-2 text-slate-300"></i>
+                            @Model.NoiDung
+                        </p>
+                    </div>
+                </div>
+
+                <form asp-action="Delete" class="mt-10 flex flex-col sm:flex-row items-center justify-end gap-3 pt-6 border-t border-slate-50">
+                    <input type="hidden" asp-for="MaHuongDan" />
+
+                    <a asp-action="Index" class="w-full sm:w-auto px-6 py-3 text-slate-500 font-bold hover:bg-slate-100 rounded-xl transition-all text-center flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-xmark"></i>
+                        Hủy bỏ, quay lại
+                    </a>
+
+                    <button type="submit" class="w-full sm:w-auto px-10 py-3 bg-rose-600 text-white font-bold rounded-xl hover:bg-rose-700 shadow-xl shadow-rose-200 transition-all flex items-center justify-center gap-2 active:scale-95">
+                        <i class="fa-solid fa-trash-can"></i>
+                        Xác nhận xóa ngay
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

@@ -1,47 +1,99 @@
-@model AISmartHome.Models.HuongDanSuDung
+﻿@model AISmartHome.Models.HuongDanSuDung
 
 @{
-    ViewData["Title"] = "Create";
+    Layout = "_AdminLayout"; // Đảm bảo dùng Layout Admin của bạn
+    ViewData["Title"] = "Soạn thảo Hướng dẫn";
 }
 
-<h1>Create</h1>
+<div class="p-4 sm:p-6 bg-slate-50 min-h-screen font-sans">
+    <div class="mb-8">
+        <nav class="flex text-sm text-slate-500 mb-2 items-center gap-2">
+            <a asp-action="Index" class="hover:text-indigo-600 transition-colors flex items-center gap-1">
+                <i class="fa-solid fa-book-open"></i> Hướng dẫn sử dụng
+            </a>
+            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            <span class="text-slate-900 font-semibold">Tạo tài liệu mới</span>
+        </nav>
+        <h1 class="text-2xl font-bold text-slate-800">Soạn thảo hướng dẫn mới</h1>
+        <p class="text-sm text-slate-500">Cung cấp các bước vận hành chi tiết để hỗ trợ người dùng tốt hơn.</p>
+    </div>
 
-<h4>HuongDanSuDung</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="MaSanPham" class="control-label"></label>
-                <select asp-for="MaSanPham" class ="form-control" asp-items="ViewBag.MaSanPham"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="TieuDe" class="control-label"></label>
-                <input asp-for="TieuDe" class="form-control" />
-                <span asp-validation-for="TieuDe" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NoiDung" class="control-label"></label>
-                <input asp-for="NoiDung" class="form-control" />
-                <span asp-validation-for="NoiDung" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="VideoUrl" class="control-label"></label>
-                <input asp-for="VideoUrl" class="form-control" />
-                <span asp-validation-for="VideoUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+    <div class="max-w-4xl">
+        <form asp-action="Create" class="space-y-6">
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div asp-validation-summary="ModelOnly" class="p-4 mb-4 text-sm text-rose-700 bg-rose-50 rounded-xl border border-rose-100 flex items-center gap-3">
+                    <i class="fa-solid fa-circle-exclamation text-lg"></i>
+                    <span>Vui lòng hoàn thiện các trường dữ liệu còn thiếu.</span>
+                </div>
+            }
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <div class="space-y-2">
+                        <label asp-for="MaSanPham" class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                            <i class="fa-solid fa-box text-indigo-500"></i> Gắn cho sản phẩm
+                        </label>
+                        <div class="relative">
+                            <select asp-for="MaSanPham" class="w-full px-4 py-2.5 bg-slate-50 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none appearance-none font-medium text-slate-700" asp-items="ViewBag.MaSanPham">
+                                <option value="">-- Chọn sản phẩm liên quan --</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-xs"></i>
+                        </div>
+                        <span asp-validation-for="MaSanPham" class="text-xs text-rose-500 italic"></span>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label asp-for="VideoUrl" class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                            <i class="fa-brands fa-youtube text-rose-500"></i> Video (YouTube Link)
+                        </label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400 group-focus-within:text-rose-500 transition-colors">
+                                <i class="fa-solid fa-link text-sm"></i>
+                            </div>
+                            <input asp-for="VideoUrl" class="w-full pl-11 pr-4 py-2.5 bg-slate-50 rounded-xl border border-slate-200 focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10 transition-all outline-none font-medium text-slate-700" placeholder="https://www.youtube.com/watch?v=..." />
+                        </div>
+                        <span asp-validation-for="VideoUrl" class="text-xs text-rose-500 italic"></span>
+                    </div>
+
+                    <div class="space-y-2 col-span-1 md:col-span-2">
+                        <label asp-for="TieuDe" class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                            <i class="fa-solid fa-heading text-indigo-500"></i> Tiêu đề bài hướng dẫn
+                        </label>
+                        <input asp-for="TieuDe" class="w-full px-4 py-2.5 bg-slate-50 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none font-bold text-slate-800" placeholder="Ví dụ: 5 bước kết nối Robot hút bụi với ứng dụng điện thoại..." />
+                        <span asp-validation-for="TieuDe" class="text-xs text-rose-500 italic"></span>
+                    </div>
+
+                    <div class="space-y-2 col-span-1 md:col-span-2">
+                        <label asp-for="NoiDung" class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                            <i class="fa-solid fa-align-left text-indigo-500"></i> Nội dung hướng dẫn chi tiết
+                        </label>
+                        <textarea asp-for="NoiDung" rows="12" class="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none resize-none leading-relaxed text-slate-700 shadow-inner" placeholder="Bắt đầu viết nội dung hướng dẫn tại đây (có thể xuống dòng để phân tách các bước)..."></textarea>
+                        <span asp-validation-for="NoiDung" class="text-xs text-rose-500 italic"></span>
+                    </div>
+                </div>
+
+                <div class="mt-10 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <a asp-action="Index" class="text-slate-500 hover:text-indigo-600 font-semibold flex items-center gap-2 transition-colors order-2 sm:order-1">
+                        <i class="fa-solid fa-arrow-left"></i> Hủy bỏ, quay về
+                    </a>
+                    <div class="flex gap-3 w-full sm:w-auto order-1 sm:order-2">
+                        <button type="reset" class="flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-slate-500 font-bold hover:bg-slate-100 transition-all">
+                            Làm mới Form
+                        </button>
+                        <button type="submit" class="flex-1 sm:flex-none bg-indigo-600 text-white px-10 py-2.5 rounded-xl hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-200 font-bold flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i> Xuất bản ngay
+                        </button>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

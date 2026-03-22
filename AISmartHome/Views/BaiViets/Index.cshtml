@@ -61,7 +61,15 @@
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-4">
                                         <div class="w-20 h-14 rounded-lg bg-gray-100 overflow-hidden shrink-0 border border-gray-100 shadow-sm">
-                                            <img src="~/img/@item.HinhAnh" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/150?text=AI+News'" />
+                                            @if (!string.IsNullOrEmpty(item.HinhAnh) && item.HinhAnh != "news-default.jpg")
+                                            {
+                                                <img src="~/img/@item.HinhAnh" class="w-full h-full object-cover"
+                                                     onerror="this.onerror=null;this.src='/img/news-default.jpg';" />
+                                            }
+                                            else
+                                            {
+                                                <img src="~/img/news-default.jpg" class="w-full h-full object-cover" />
+                                            }
                                         </div>
                                         <div class="max-w-xs">
                                             <div class="font-bold text-[#001F3F] line-clamp-1 group-hover:text-blue-600 transition-colors" title="@item.TieuDe">
@@ -88,12 +96,18 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <div class="flex justify-end gap-1">
-                                        <a asp-action="Edit" asp-route-id="@item.MaBaiViet" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                                    <div class="flex justify-end gap-2">
+                                        @if (!item.IsApproved)
+                                        {
+                                            <form asp-action="Approve" asp-route-id="@item.MaBaiViet" method="post">
+                                                <button type="submit" class="p-2 text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-all shadow-sm" title="Duyệt bài này">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                </button>
+                                            </form>
+                                        }
+
+                                        <a asp-action="Edit" asp-route-id="@item.MaBaiViet" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                        </a>
-                                        <a asp-action="Delete" asp-route-id="@item.MaBaiViet" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                         </a>
                                     </div>
                                 </td>
@@ -106,21 +120,42 @@
     </div>
 </div>
 
-<script>
-    function startScanning() {
-        const btn = document.getElementById('scanBtn');
-        const icon = document.getElementById('scanIcon');
-        const text = document.getElementById('scanText');
+@section Scripts {
+    <script>
+        function startScanning() {
+            // Lấy các phần tử giao diện bằng ID
+            const btn = document.getElementById('scanBtn');
+            const text = document.getElementById('scanText');
 
-        // Hiệu ứng đang chạy
-        btn.classList.add('opacity-50', 'cursor-not-allowed');
-        icon.classList.add('animate-spin');
-        text.innerText = "Đang quét dữ liệu...";
+            // 1. Vô hiệu hóa nút để tránh người dùng bấm liên tục
+            btn.disabled = true;
+            text.innerText = "Đang quét...";
 
-        // Giả lập gọi API thu thập tin tức (Crawler Service)
-        setTimeout(() => {
-            alert("Đã thu thập xong 5 tin tức mới! Vui lòng làm mới trang để phê duyệt.");
-            location.reload();
-        }, 3000);
-    }
-</script>
+            // 2. Gọi hàm CrawlNews từ Controller
+            fetch('/BaiViets/CrawlNews', {
+                method: 'POST',
+                // Nếu dự án yêu cầu AntiForgeryToken, hãy bỏ comment dòng dưới:
+                // headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // 3. Thông báo kết quả
+                    alert(data.message);
+                    // 4. Reload lại trang để hiện 5 bài viết mới
+                    window.location.reload();
+                } else {
+                    alert("Lỗi: " + data.message);
+                    btn.disabled = false;
+                    text.innerText = "Quét tin mới";
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Lỗi kết nối server!");
+                btn.disabled = false;
+                text.innerText = "Quét tin mới";
+            });
+        }
+    </script>
+}   

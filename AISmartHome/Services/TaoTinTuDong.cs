@@ -13,7 +13,6 @@ namespace AISmartHome.Services
         {
             var danhSach = new List<BaiViet>();
 
-            // Đọc dữ liệu từ đường dẫn RSS
             var feed = await FeedReader.ReadAsync(url);
 
             foreach (var item in feed.Items)
@@ -21,11 +20,14 @@ namespace AISmartHome.Services
                 danhSach.Add(new BaiViet
                 {
                     TieuDe = item.Title,
-                    // Description thường chứa nội dung tóm tắt của bài báo
-                    NoiDung = item.Description,
+                    
+                    NoiDung = System.Text.RegularExpressions.Regex.Replace(item.Description, "<.*?>", string.Empty),
                     NgayDang = item.PublishingDate ?? DateTime.Now,
-                    HinhAnh = "news-default.jpg", // Tạm thời để ảnh mặc định
-                    IsApproved = false // Chờ Admin duyệt mới hiện lên trang chủ
+                    HinhAnh = "news-default.jpg",
+                    IsApproved = false, 
+                    NguonTin = item.Link, 
+                    MaDanhMucBaiViet = 1, 
+                    MaTaiKhoan = 1       
                 });
             }
 

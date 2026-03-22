@@ -7,6 +7,9 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<AISmartHomeDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<AISmartHome.Services.TaoTinTuDong>();
+
 var app = builder.Build();
 
 // Thêm dòng này vào khu vực builder.Services
@@ -28,6 +31,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Admin}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

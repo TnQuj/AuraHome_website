@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "RlwTn92xfGg=",
+  "dgSpecHash": "tMGBg7Cvxrg=",
   "success": true,
-  "projectFilePath": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AISmartHome\\AISmartHome.csproj",
+  "projectFilePath": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\AISmartHome.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ACER\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

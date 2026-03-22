@@ -1,42 +1,107 @@
-@model AISmartHome.Models.HuongDanSuDung
+﻿@model AISmartHome.Models.HuongDanSuDung
 
 @{
-    ViewData["Title"] = "Details";
+    Layout = "_AdminLayout"; // Đảm bảo dùng Layout Admin của bạn
+    ViewData["Title"] = "Chi tiết Hướng dẫn";
 }
 
-<h1>Details</h1>
+<div class="p-4 sm:p-6 bg-slate-50 min-h-screen font-sans">
+    <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+        <div>
+            <nav class="flex text-sm text-slate-500 mb-2 items-center gap-2">
+                <a asp-action="Index" class="hover:text-indigo-600 transition-colors flex items-center gap-1">
+                    <i class="fa-solid fa-book-open"></i> Hướng dẫn sử dụng
+                </a>
+                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-semibold">Chi tiết tài liệu</span>
+            </nav>
+            <h1 class="text-2xl font-bold text-slate-800">@Model.TieuDe</h1>
+        </div>
+        <div class="flex gap-3 w-full md:w-auto">
+            <a asp-action="Index" class="flex-1 md:flex-none px-4 py-2 text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all font-bold flex items-center justify-center gap-2">
+                <i class="fa-solid fa-arrow-left"></i> Quay lại
+            </a>
+            <a asp-action="Edit" asp-route-id="@Model?.MaHuongDan" class="flex-1 md:flex-none px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 font-bold flex items-center justify-center gap-2">
+                <i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa
+            </a>
+        </div>
+    </div>
 
-<div>
-    <h4>HuongDanSuDung</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TieuDe)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TieuDe)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NoiDung)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NoiDung)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VideoUrl)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VideoUrl)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MaSanPhamNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MaSanPhamNavigation.MaSanPham)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.MaHuongDan">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
+                <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                        <i class="fa-solid fa-align-left text-sm"></i>
+                    </div>
+                    Nội dung hướng dẫn chi tiết
+                </h3>
+
+                <div class="prose prose-slate max-w-none">
+                    <div class="text-slate-600 leading-relaxed text-base whitespace-pre-line border-l-4 border-indigo-100 pl-6 italic">
+                        @Model.NoiDung
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-1 space-y-6">
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-box"></i> Sản phẩm liên quan
+                </h3>
+                <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100 group hover:border-indigo-200 transition-all">
+                    <div class="w-12 h-12 bg-indigo-600 rounded-xl text-white flex items-center justify-center shadow-lg shadow-indigo-100">
+                        <i class="fa-solid fa-microchip text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold text-slate-800">@(Model.MaSanPhamNavigation?.TenSanPham ?? "Sản phẩm #" + Model.MaSanPham)</div>
+                        <div class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded mt-1 inline-block uppercase">
+                            Mã SP: @Model.MaSanPham
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <i class="fa-brands fa-youtube text-rose-500"></i> Video hướng dẫn
+                </h3>
+
+                @if (!string.IsNullOrEmpty(Model.VideoUrl))
+                {
+                    <div class="aspect-video rounded-xl overflow-hidden bg-slate-900 shadow-inner border border-slate-200">
+                        @{
+                            var videoUrl = Model.VideoUrl;
+                            if (videoUrl.Contains("watch?v="))
+                            {
+                                videoUrl = videoUrl.Replace("watch?v=", "embed/");
+                            }
+                            else if (videoUrl.Contains("youtu.be/"))
+                            {
+                                videoUrl = videoUrl.Replace("youtu.be/", "youtube.com/embed/");
+                            }
+                        }
+                        <iframe class="w-full h-full" src="@videoUrl" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
+                    </div>
+                    <a href="@Model.VideoUrl" target="_blank" class="mt-4 flex items-center justify-between p-3 bg-slate-50 rounded-lg group">
+                        <span class="text-[10px] font-bold text-slate-400 truncate pr-4">@Model.VideoUrl</span>
+                        <i class="fa-solid fa-external-link text-slate-300 group-hover:text-rose-500 transition-colors text-xs"></i>
+                    </a>
+                }
+                else
+                {
+                    <div class="py-12 text-center border-2 border-dashed border-slate-100 rounded-2xl bg-slate-50/50">
+                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm">
+                            <i class="fa-solid fa-video-slash text-slate-200 text-lg"></i>
+                        </div>
+                        <p class="text-xs text-slate-400 font-medium">Chưa có video minh họa cho bài hướng dẫn này</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 </div>

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Quản trị BADO</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
     <script>
         tailwind.config = {
             theme: { extend: { colors: { brand: { navy: '#001f3d', cyan: '#00e5ff' } } } }
@@ -16,7 +17,7 @@
     <div class="flex h-screen overflow-hidden">
         <aside class="w-64 bg-brand-navy text-white flex-shrink-0">
             <div class="p-6 text-xl font-bold border-b border-white/10">
-                Admin <span class="text-brand-cyan">BADO</span>
+                Admin <span class="text-brand-cyan">Xin chào</span>
             </div>
             <nav class="mt-6">
                 <a asp-controller="Admin" asp-action="Index" class="block py-3 px-6 hover:bg-white/10 transition">Bảng điều khiển</a>
@@ -26,6 +27,7 @@
                 <a asp-controller="KhachHangs" asp-action="Index" class="block py-3 px-6 hover:bg-white/10 transition">Quản lý khách hàng</a>
                 <a asp-controller="NhanViens" asp-action="Index" class="block py-3 px-6 hover:bg-white/10 transition">Quản lý nhân viên</a>
                 <a asp-controller="BaiViets" asp-action="Index" class="block py-3 px-6 hover:bg-white/10 transition">Quản lý bài viết</a>
+                <a asp-controller="HuongDanSuDungs" asp-action="Index" class="block py-3 px-6 hover:bg-white/10 transition">Hướng dẫn sản phẩm</a>
 
                 <hr class="border-white/10 my-4" />
                 <a asp-controller="Home" asp-action="Index" class="block py-3 px-6 hover:bg-white/10 transition">Quay lại Website</a>

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AISmartHome.Models.SanPham>
+﻿@model AISmartHome.Models.HomeViewModel
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -47,337 +47,366 @@
 </head>
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
     <!-- Top Navigation Bar -->
-    <header class="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
-            <div class="flex items-center gap-8">
-                <a class="flex items-center gap-2" href="#">
-                    <div class="bg-primary p-1.5 rounded-lg text-white">
-                        <span class="material-symbols-outlined block">rocket_launch</span>
+    <header class="sticky top-0 z-[9999] bg-white border-b border-gray-100 shadow-sm">
+        <div class="container mx-auto px-4 h-20 flex items-center justify-between relative">
+
+            <div class="flex-1 flex justify-start items-center gap-2">
+                <div class="w-10 h-10 bg-brand-navy rounded-xl flex items-center justify-center">
+                    <svg class="h-6 w-6 text-brand-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    </svg>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-brand-navy">AuraHome</span>
+            </div>
+            <nav class="hidden lg:flex items-center justify-center space-x-10 text-[15px] font-semibold h-full relative">
+
+                <div class="relative group h-full flex items-center">
+                    <a asp-controller="Customers" asp-action="Index" class="flex items-center gap-2 hover:text-brand-cyan transition-colors py-8 outline-none text-brand-navy font-bold tracking-wide">
+                        Thiết Bị Thông Minh
+                        <svg class="w-4 h-4 text-brand-navy/60 transition-transform duration-300 group-hover:rotate-180 group-hover:text-brand-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </a>
+
+                    <div class="absolute top-[60%] left-1/2 -translate-x-1/2 w-[340px] h-10 bg-transparent z-[9999]"></div>
+
+                    <div class="absolute left-1/2 -translate-x-1/2 top-[80%] w-[350px]
+                    bg-white/95 backdrop-blur-2xl rounded-3xl
+                    border border-gray-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)]
+                    invisible opacity-0 translate-y-3 scale-95
+                    group-hover:!visible group-hover:!opacity-100 group-hover:!translate-y-0 group-hover:!scale-100
+                    transition-all duration-300 ease-out z-[10000] overflow-hidden">
+
+                        <div class="p-3 space-y-1 relative z-10">
+
+                            <a href="/SanPhams?category=1" class="flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 group/link hover:bg-slate-50 hover:shadow-sm">
+                                <span class="flex items-center gap-4 font-bold text-[15px] text-brand-navy group-hover/link:text-brand-cyan transition-colors">
+                                    <span class="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-50 text-indigo-500 group-hover/link:bg-indigo-100 group-hover/link:shadow-[0_0_15px_rgba(99,102,241,0.3)] group-hover/link:scale-110 transition-all duration-300">
+                                        <i class="fa-solid fa-lightbulb text-[16px]"></i>
+                                    </span>
+                                    Camera AI
+                                </span>
+                                <i class="fa-solid fa-chevron-right text-[12px] text-brand-cyan opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-300"></i>
+                            </a>
+
+                            <a href="/SanPhams?category=2" class="flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 group/link hover:bg-slate-50 hover:shadow-sm">
+                                <span class="flex items-center gap-4 font-bold text-[15px] text-brand-navy group-hover/link:text-brand-cyan transition-colors">
+                                    <span class="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-50 text-emerald-500 group-hover/link:bg-emerald-100 group-hover/link:shadow-[0_0_15px_rgba(16,185,129,0.3)] group-hover/link:scale-110 transition-all duration-300">
+                                        <i class="fa-solid fa-shield-halved text-[16px]"></i>
+                                    </span>
+                                    Khóa cửa thông minh
+                                </span>
+                                <i class="fa-solid fa-chevron-right text-[12px] text-brand-cyan opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-300"></i>
+                            </a>
+
+                            <a href="/SanPhams?category=3" class="flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 group/link hover:bg-slate-50 hover:shadow-sm">
+                                <span class="flex items-center gap-4 font-bold text-[15px] text-brand-navy group-hover/link:text-brand-cyan transition-colors">
+                                    <span class="flex items-center justify-center w-10 h-10 rounded-full bg-orange-50 text-orange-500 group-hover/link:bg-orange-100 group-hover/link:shadow-[0_0_15px_rgba(249,115,22,0.3)] group-hover/link:scale-110 transition-all duration-300">
+                                        <i class="fa-solid fa-temperature-half text-[16px]"></i>
+                                    </span>
+                                    Robot hút bụi
+                                </span>
+                                <i class="fa-solid fa-chevron-right text-[12px] text-brand-cyan opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-300"></i>
+                            </a>
+
+                            <a href="/SanPhams?category=4" class="flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 group/link hover:bg-slate-50 hover:shadow-sm">
+                                <span class="flex items-center gap-4 font-bold text-[15px] text-brand-navy group-hover/link:text-brand-cyan transition-colors">
+                                    <span class="flex items-center justify-center w-10 h-10 rounded-full bg-cyan-50 text-cyan-500 group-hover/link:bg-cyan-100 group-hover/link:shadow-[0_0_15px_rgba(6,182,212,0.3)] group-hover/link:scale-110 transition-all duration-300">
+                                        <i class="fa-solid fa-microchip text-[16px]"></i>
+                                    </span>
+                                    Cảm biến thông minh
+                                </span>
+                                <i class="fa-solid fa-chevron-right text-[12px] text-brand-cyan opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-300"></i>
+                            </a>
+
+                            <a href="/SanPhams?category=5" class="flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 group/link hover:bg-slate-50 hover:shadow-sm">
+                                <span class="flex items-center gap-4 font-bold text-[15px] text-brand-navy group-hover/link:text-brand-cyan transition-colors">
+                                    <span class="flex items-center justify-center w-10 h-10 rounded-full bg-purple-50 text-purple-500 group-hover/link:bg-purple-100 group-hover/link:shadow-[0_0_15px_rgba(168,85,247,0.3)] group-hover/link:scale-110 transition-all duration-300">
+                                        <i class="fa-solid fa-battery-full text-[16px]"></i>
+                                    </span>
+                                    Thiết bị chiếu sáng
+                                </span>
+                                <i class="fa-solid fa-chevron-right text-[12px] text-brand-cyan opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-300"></i>
+                            </a>
+                        </div>
+
+                        <div class="bg-slate-50/80 p-4 text-center border-t border-slate-100 group/footer cursor-pointer hover:bg-slate-100 transition-colors">
+                            <a href="/SanPhams" class="text-[12px] font-bold text-gray-500 group-hover/footer:text-brand-cyan uppercase tracking-[0.15em] transition-colors flex items-center justify-center gap-2">
+                                Xem tất cả thiết bị
+                                <i class="fa-solid fa-arrow-right text-[11px] text-brand-cyan opacity-0 -translate-x-2 group-hover/footer:opacity-100 group-hover/footer:translate-x-0 transition-all duration-300"></i>
+                            </a>
+                        </div>
                     </div>
-                    <span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">AI Smart Home</span>
+                </div>
+
+                <a class="hover:text-brand-cyan transition-colors text-brand-navy font-bold tracking-wide" href="/TinTucs">Tin Tức</a>
+                <a class="hover:text-brand-cyan transition-colors text-brand-navy font-bold tracking-wide" href="/HuongDanSuDungs">Hướng Dẫn Sử Dụng</a>
+            </nav>
+            <div class="flex-1 flex items-center justify-end gap-6">
+
+                <a href="/TraCuuDonHang" class="flex items-center gap-2 hover:text-brand-cyan transition-colors text-brand-navy font-bold tracking-wide outline-none whitespace-nowrap ml-6">
+                    <svg ml-1 class="h-5 w-5 text-brand-navy shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1h2m4-1v-4a1 1 0 00-1-1h-3m-1 0v6m4-1h1a1 1 0 001-1v-2l-2-3h-3"></path>
+                    </svg>
+                    <span>Tra cứu đơn hàng</span>
                 </a>
-                <nav class="hidden md:flex items-center gap-6">
-                    <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Home</a>
-                    <a class="text-sm font-medium text-primary" href="#">Products</a>
-                    <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Solutions</a>
-                    <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Support</a>
-                </nav>
-            </div>
-            <div class="flex-1 max-w-md hidden sm:block">
-                <div class="relative group">
-                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
-                    <input class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-xl py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/50 transition-all" placeholder="Search smart devices..." type="text" />
+
+                <div class="hidden xl:flex items-center relative ml-4">
+                    <input class="pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-full text-sm focus:ring-2 focus:ring-brand-cyan/20 focus:border-brand-cyan transition-all w-48 focus:w-64 outline-none text-gray-700" placeholder="Tìm kiếm sản phẩm..." type="text" />
+                    <svg class="h-5 w-5 text-gray-400 absolute left-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    </svg>
                 </div>
-            </div>
-            <div class="flex items-center gap-2">
-                <button class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors relative">
-                    <span class="material-symbols-outlined">shopping_cart</span>
-                    <span class="absolute top-1 right-1 size-4 bg-primary text-white text-[10px] flex items-center justify-center rounded-full">2</span>
-                </button>
-                <button class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                    <span class="material-symbols-outlined">person</span>
-                </button>
-                <div class="size-9 rounded-full bg-primary/10 overflow-hidden border border-slate-200 dark:border-slate-700">
-                    <img class="w-full h-full object-cover" data-alt="User profile avatar smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1J-8FHiSc92P7rxmtkXD4XQOCqrheeUvyeFL0AT-6048P4q-t6VlvUOFqCQnHnOjMMzNuMsvD6dwvdOe61l69izEQRbDYNgHussE8xS6eL16F_oUVF4gXswdvm-w28xs6Swp4bKjOPFQvqGJsusuBq1stwa8sM_MXiYH42lFjnUd-tlBKypebUYdNJJ0OuRo09NS4nsuRiUvni9e2VPH6ebKgRLEW8st9GNNKHOwLh3nRErOGoFbf2_5_ieC41cvRLcoTYheEbek5" />
+
+                <div class="flex items-center gap-4 pl-4 ml-2">
+                    <button class="text-brand-navy hover:text-brand-cyan transition-colors" title="Account">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                        </svg>
+                    </button>
+                    <button class="text-brand-navy hover:text-brand-cyan transition-colors relative" title="Cart">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                        </svg>
+                        <span class="absolute -top-1 -right-1 bg-brand-cyan text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full"></span>
+                    </button>
                 </div>
+
             </div>
         </div>
     </header>
-    <main class="max-w-7xl mx-auto px-4 py-6">
-        <!-- Breadcrumbs -->
+    <main class="pt-4 relative px-4 md:px-8 lg:px-16 max-w-[1600px] mx-auto pb-20">
         <nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-            <a class="hover:text-primary" href="#">Home</a>
+            <a class="hover:text-cyan-500 transition-colors" asp-controller="Home" asp-action="Index">Trang chủ</a>
             <span class="material-symbols-outlined text-xs">chevron_right</span>
-            <a class="hover:text-primary" href="#">Products</a>
-            <span class="material-symbols-outlined text-xs">chevron_right</span>
-            <span class="text-slate-900 dark:text-slate-100 font-medium">Smart Devices</span>
+            <a class="text-cyan-600 dark:text-cyan-400 font-semibold" asp-controller="Customers" asp-action="Index">Thiết bị thông minh</a>
         </nav>
+
         <div class="flex flex-col lg:flex-row gap-8 items-start">
-            <!-- Sidebar Filters - Fixed/Sticky on Desktop -->
-            <aside class="w-full lg:w-64 flex-shrink-0 space-y-8 lg:sticky lg:top-24 max-h-[calc(100vh-8rem)] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
-                <!-- Categories -->
-                <div>
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4">Categories</h3>
-                    <div class="space-y-1">
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-xl bg-primary text-white font-medium shadow-md shadow-primary/20" href="#">
-                            <span class="material-symbols-outlined">lightbulb</span>
-                            <span class="text-sm">Smart Lighting</span>
+
+            <aside class="w-full lg:w-[340px] xl:w-[400px] flex-shrink-0 space-y-8 lg:sticky lg:top-24 max-h-[calc(100vh-6rem)] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
+                <div class="relative bg-white dark:bg-slate-800/50 p-5 rounded-3xl border border-slate-100 dark:border-slate-700/50 shadow-sm">
+                    <div class="absolute -top-10 -left-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none z-0"></div>
+
+                    <h3 class="text-xs font-black uppercase tracking-[0.2em] flex items-center gap-3 mb-6 relative z-10">
+                        <span class="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.8)] animate-pulse"></span>
+                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-purple-600">Danh Mục</span>
+                    </h3>
+
+                    @{
+                        var currentCategoryId = Context.Request.Query["category"].ToString();
+                        bool isAllActive = string.IsNullOrEmpty(currentCategoryId);
+
+                        var styles = new[] {
+                    new { ActiveBg = "bg-gradient-to-r from-indigo-500/15 to-transparent border border-indigo-500/30", ActiveLine = "bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.8)]", ActiveText = "text-indigo-600 dark:text-indigo-400", ActiveIcon = "bg-indigo-500 text-white shadow-[0_0_20px_rgba(99,102,241,0.6)] scale-110", HoverIcon = "group-hover/link:bg-indigo-500/20 group-hover/link:text-indigo-500", Icon = "fa-lightbulb", Badge = "bg-indigo-100 text-indigo-600" },
+                    new { ActiveBg = "bg-gradient-to-r from-emerald-500/15 to-transparent border border-emerald-500/30", ActiveLine = "bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.8)]", ActiveText = "text-emerald-600 dark:text-emerald-400", ActiveIcon = "bg-emerald-500 text-white shadow-[0_0_20px_rgba(16,185,129,0.6)] scale-110", HoverIcon = "group-hover/link:bg-emerald-500/20 group-hover/link:text-emerald-500", Icon = "fa-shield-halved", Badge = "bg-emerald-100 text-emerald-600" },
+                    new { ActiveBg = "bg-gradient-to-r from-orange-500/15 to-transparent border border-orange-500/30", ActiveLine = "bg-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.8)]", ActiveText = "text-orange-600 dark:text-orange-400", ActiveIcon = "bg-orange-500 text-white shadow-[0_0_20px_rgba(249,115,22,0.6)] scale-110", HoverIcon = "group-hover/link:bg-orange-500/20 group-hover/link:text-orange-500", Icon = "fa-temperature-half", Badge = "bg-orange-100 text-orange-600" },
+                    new { ActiveBg = "bg-gradient-to-r from-cyan-500/15 to-transparent border border-cyan-500/30", ActiveLine = "bg-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.8)]", ActiveText = "text-cyan-600 dark:text-cyan-400", ActiveIcon = "bg-cyan-500 text-white shadow-[0_0_20px_rgba(6,182,212,0.6)] scale-110", HoverIcon = "group-hover/link:bg-cyan-500/20 group-hover/link:text-cyan-500", Icon = "fa-microchip", Badge = "bg-cyan-100 text-cyan-600" },
+                    new { ActiveBg = "bg-gradient-to-r from-purple-500/15 to-transparent border border-purple-500/30", ActiveLine = "bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.8)]", ActiveText = "text-purple-600 dark:text-purple-400", ActiveIcon = "bg-purple-500 text-white shadow-[0_0_20px_rgba(168,85,247,0.6)] scale-110", HoverIcon = "group-hover/link:bg-purple-500/20 group-hover/link:text-purple-500", Icon = "fa-battery-full", Badge = "bg-purple-100 text-purple-600" }
+                    };
+                    }
+
+                    <div class="space-y-3 relative z-10">
+                        @if (Model.DanhMucs != null && Model.DanhMucs.Any())
+                        {
+                            <a href="/SanPhams" class="relative flex items-center px-3 py-3 rounded-2xl transition-all duration-300 group/link bg-white dark:bg-slate-800/80 border shadow-sm hover:shadow-md @(isAllActive ? "bg-gradient-to-r from-cyan-500/15 to-transparent border-cyan-400/50" : "border-slate-100 dark:border-slate-700/50 hover:border-cyan-300")">
+
+                                @if (isAllActive)
+                                {
+                                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.8)] rounded-l-2xl"></div>
+                                }
+
+                                <div class="flex items-center gap-3 flex-1">
+                                    <span class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 @(isAllActive ? "bg-cyan-500 text-white shadow-[0_0_20px_rgba(6,182,212,0.6)] scale-105" : "bg-slate-100 dark:bg-slate-800 text-slate-500 group-hover/link:bg-cyan-500/20 group-hover/link:text-cyan-500 group-hover/link:shadow-[0_0_20px_rgba(6,182,212,0.4)]")">
+                                        <i class="fa-solid fa-layer-group text-[15px]"></i>
+                                    </span>
+
+                                    <span class="font-bold text-[14px] whitespace-nowrap @(isAllActive ? "text-cyan-600 dark:text-cyan-400" : "text-slate-600 dark:text-slate-400 group-hover/link:text-cyan-600 dark:group-hover/link:text-white") transition-colors duration-300">
+                                        Tất cả thiết bị
+                                    </span>
+                                </div>
+
+                                <span class="ml-auto flex-shrink-0 px-2.5 py-1 min-w-[32px] text-center rounded-full text-[12px] font-bold transition-colors @(isAllActive ? "bg-cyan-500 text-white" : "bg-slate-100 dark:bg-slate-700 text-slate-500 group-hover/link:bg-cyan-100 group-hover/link:text-cyan-600")">
+                                    24
+                                </span>
+                            </a>
+
+                            int index = 0;
+                            foreach (var danhmuc in Model.DanhMucs)
+                            {
+                                bool isActive = currentCategoryId == danhmuc.MaDanhMuc.ToString();
+                                var style = styles[index % styles.Length];
+                                index++;
+
+                                <a href="/SanPhams?category=@danhmuc.MaDanhMuc" class="relative flex items-center px-3 py-3 rounded-2xl transition-all duration-300 group/link bg-white dark:bg-slate-800/80 border shadow-sm hover:shadow-md @(isActive ? style.ActiveBg : "border-slate-100 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600")">
+
+                                    @if (isActive)
+                                    {
+                                        <div class="absolute left-0 top-0 bottom-0 w-1 @style.ActiveLine rounded-l-2xl"></div>
+                                    }
+
+                                    <div class="flex items-center gap-3 flex-1">
+                                        <span class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 @(isActive ? style.ActiveIcon : $"bg-slate-100 dark:bg-slate-800 text-slate-500 {style.HoverIcon}")">
+                                            <i class="fa-solid @style.Icon text-[15px]"></i>
+                                        </span>
+
+                                        <span class="font-bold text-[14px] whitespace-nowrap @(isActive ? style.ActiveText : "text-slate-600 dark:text-slate-400 group-hover/link:text-slate-900 dark:group-hover/link:text-white") transition-colors duration-300">
+                                            @danhmuc.TenDanhMuc
+                                        </span>
+                                    </div>
+
+                                    <span class="ml-auto flex-shrink-0 px-2.5 py-1 min-w-[32px] text-center rounded-full text-[12px] font-bold transition-colors @(isActive ? "bg-cyan-500 text-white" : "bg-slate-100 dark:bg-slate-700 text-slate-500 group-hover/link:bg-cyan-50 group-hover/link:text-cyan-600")">
+                                        5
+                                    </span>
+                                </a>
+                            }
+                        }
+                    </div>
+                    
+
+                </div>
+
+                <div class="bg-white dark:bg-slate-800/50 p-5 rounded-3xl border border-slate-100 dark:border-slate-700/50 shadow-sm">
+                    <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-4">Product Tags</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <a href="#" class="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 hover:bg-cyan-50 dark:hover:bg-cyan-900/30 text-slate-600 dark:text-slate-400 hover:text-cyan-600 border border-slate-200 dark:border-slate-700 hover:border-cyan-300 rounded-full text-[12px] font-semibold transition-colors flex items-center gap-1">
+                            <i class="fa-solid fa-xmark text-[10px] opacity-50"></i> Xiaomi
                         </a>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group" href="#">
-                            <span class="material-symbols-outlined text-slate-400 group-hover:text-primary">shield_with_heart</span>
-                            <span class="text-sm">Security</span>
+                        <a href="#" class="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 hover:bg-cyan-50 dark:hover:bg-cyan-900/30 text-slate-600 dark:text-slate-400 hover:text-cyan-600 border border-slate-200 dark:border-slate-700 hover:border-cyan-300 rounded-full text-[12px] font-semibold transition-colors flex items-center gap-1">
+                            <i class="fa-solid fa-xmark text-[10px] opacity-50"></i> Philips Hue
                         </a>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group" href="#">
-                            <span class="material-symbols-outlined text-slate-400 group-hover:text-primary">bolt</span>
-                            <span class="text-sm">Energy</span>
+                        <a href="#" class="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 hover:bg-cyan-50 dark:hover:bg-cyan-900/30 text-slate-600 dark:text-slate-400 hover:text-cyan-600 border border-slate-200 dark:border-slate-700 hover:border-cyan-300 rounded-full text-[12px] font-semibold transition-colors flex items-center gap-1">
+                            <i class="fa-solid fa-xmark text-[10px] opacity-50"></i> Cảm biến
                         </a>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group" href="#">
-                            <span class="material-symbols-outlined text-slate-400 group-hover:text-primary">thermostat</span>
-                            <span class="text-sm">Climate Control</span>
-                        </a>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group" href="#">
-                            <span class="material-symbols-outlined text-slate-400 group-hover:text-primary">kitchen</span>
-                            <span class="text-sm">Appliances</span>
+                        <a href="#" class="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 hover:bg-cyan-50 dark:hover:bg-cyan-900/30 text-slate-600 dark:text-slate-400 hover:text-cyan-600 border border-slate-200 dark:border-slate-700 hover:border-cyan-300 rounded-full text-[12px] font-semibold transition-colors flex items-center gap-1">
+                            <i class="fa-solid fa-xmark text-[10px] opacity-50"></i> An ninh
                         </a>
                     </div>
                 </div>
-                <!-- Brand Filter -->
-                <div>
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4">Brand</h3>
-                    <div class="space-y-2">
-                        <label class="flex items-center gap-3 cursor-pointer group">
-                            <input class="rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary bg-transparent" type="checkbox" />
-                            <span class="text-sm group-hover:text-primary transition-colors">Philips Hue</span>
-                        </label>
-                        <label class="flex items-center gap-3 cursor-pointer group">
-                            <input checked="" class="rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary bg-transparent" type="checkbox" />
-                            <span class="text-sm group-hover:text-primary transition-colors">Xiaomi Mi</span>
-                        </label>
-                        <label class="flex items-center gap-3 cursor-pointer group">
-                            <input class="rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary bg-transparent" type="checkbox" />
-                            <span class="text-sm group-hover:text-primary transition-colors">Aqara</span>
-                        </label>
-                        <label class="flex items-center gap-3 cursor-pointer group">
-                            <input class="rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary bg-transparent" type="checkbox" />
-                            <span class="text-sm group-hover:text-primary transition-colors">Sonoff</span>
-                        </label>
-                    </div>
-                </div>
-                <!-- Price Range -->
-                <div>
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4">Price Range</h3>
+
+                <div class="bg-white dark:bg-slate-800/50 p-5 rounded-3xl border border-slate-100 dark:border-slate-700/50 shadow-sm">
+                    <h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-4">Mức Giá</h3>
                     <div class="px-2">
-                        <input class="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-primary" type="range" />
+                        <input class="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500" type="range" />
                         <div class="flex items-center justify-between mt-4">
-                            <span class="text-xs font-medium px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg">$0</span>
-                            <span class="text-xs font-medium px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg">$500+</span>
+                            <span class="text-xs font-bold px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300">0đ</span>
+                            <span class="text-xs font-bold px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300">5.000.000đ+</span>
                         </div>
                     </div>
-                </div>
-                <!-- Promo Banner Sidebar -->
-                <div class="relative rounded-2xl overflow-hidden bg-primary/10 p-6 border border-primary/20">
-                    <div class="relative z-10">
-                        <p class="text-xs font-bold text-primary uppercase tracking-widest mb-2">Member Deal</p>
-                        <p class="text-lg font-bold leading-tight mb-4">Get 15% off on your first order</p>
-                        <button class="w-full bg-primary text-white text-xs font-bold py-2 rounded-xl hover:brightness-110 transition-all shadow-lg shadow-primary/20">Claim Now</button>
-                    </div>
-                    <div class="absolute -bottom-4 -right-4 size-24 bg-primary/20 rounded-full blur-2xl"></div>
                 </div>
             </aside>
-            <!-- Product Grid - Scrollable content -->
-            <div class="flex-1">
-                <!-- Toolbar -->
-                <div class="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
-                    <h1 class="text-2xl font-bold">Smart Lighting <span class="text-slate-400 font-normal text-lg ml-2">(24 products)</span></h1>
-                    <div class="flex items-center gap-3 w-full sm:w-auto">
-                        <span class="text-sm text-slate-500 whitespace-nowrap">Sort by:</span>
-                        <select class="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-xl text-sm py-1.5 pl-3 pr-8 focus:ring-primary focus:border-primary transition-all cursor-pointer">
-                            <option>Newest Arrivals</option>
-                            <option>Price: Low to High</option>
-                            <option>Price: High to Low</option>
-                            <option>Most Popular</option>
-                        </select>
+
+            <div class="flex-1 min-w-0">
+
+                <div class="relative w-full h-[280px] md:h-[320px] rounded-3xl overflow-hidden mb-10 bg-[#0a0f1c] shadow-2xl flex items-center px-8 md:px-16 group">
+                    <div class="absolute inset-0 z-0">
+                        <img src="https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-700" alt="Smart Home Banner" />
+                        <div class="absolute inset-0 bg-gradient-to-r from-[#0a0f1c] via-[#0a0f1c]/80 to-transparent"></div>
+                    </div>
+
+                    <div class="relative z-10 w-full md:w-2/3">
+                        <h2 class="text-3xl md:text-5xl font-extrabold text-white mb-4 leading-tight">
+                            Kiến tạo <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Không Gian Sống</span><br /> Tương Lai
+                        </h2>
+                        <p class="text-slate-300 mb-8 text-sm md:text-base font-medium">Giảm ngay 20% cho đơn hàng AuruHome đầu tiên của bạn.</p>
+
+                        <div class="flex items-center w-full max-w-md bg-white/10 backdrop-blur-md p-1.5 rounded-full border border-white/20 focus-within:border-cyan-400 transition-colors shadow-[0_0_30px_rgba(6,182,212,0.15)]">
+                            <input type="email" placeholder="Nhập email của bạn..." class="flex-1 bg-transparent border-none text-white placeholder-slate-400 text-sm px-4 focus:ring-0 outline-none" />
+                            <button class="bg-cyan-500 hover:bg-cyan-400 text-white text-sm font-bold py-2.5 px-6 rounded-full transition-colors shadow-[0_0_15px_rgba(6,182,212,0.4)]">
+                                Đăng ký
+                            </button>
+                        </div>
+                    </div>
+
+                    <button class="absolute left-4 top-1/2 -translate-y-1/2 size-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-cyan-500 transition-colors z-20">
+                        <i class="fa-solid fa-chevron-left text-sm"></i>
+                    </button>
+                    <button class="absolute right-4 top-1/2 -translate-y-1/2 size-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-cyan-500 transition-colors z-20">
+                        <i class="fa-solid fa-chevron-right text-sm"></i>
+                    </button>
+                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+                        <span class="w-6 h-2 rounded-full bg-cyan-500"></span>
+                        <span class="w-2 h-2 rounded-full bg-white/30"></span>
+                        <span class="w-2 h-2 rounded-full bg-white/30"></span>
                     </div>
                 </div>
-                <!-- Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                    <!-- Product Card 1 -->
-                    <div class="bg-white dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-xl hover:shadow-primary/10 transition-all group">
-                        <div class="relative aspect-[4/3] bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                            <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Smart LED light bulb with colorful glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAM3YG50cupu3RYSE9C48IH2LFN8vB8uzYZNIdlMnylBuAqQZkMs4b3IggHf1St7v7kUJtHGYThXX0QG19z3-er1Q4oRtxImkpF0RcYCleZMTNEjFE4LPeXoDB8P09EHbf4LUi63yK-Vg3rWYgrLOrorvpCfauf_yR7Yd8fHKnQLbhp1D9YBPGyemwhmwO9mxDYP8OTvGC-Infeai53RK80tMWSC-lHzqCnhrW-VMx3lLKyrrkQ-RSegfbZLMA48Ic3BAiW4g3ShPnB" />
-                            <span class="absolute top-3 left-3 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase">Best Seller</span>
-                            <button class="absolute top-3 right-3 size-8 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm flex items-center justify-center text-slate-900 dark:text-white hover:text-primary transition-colors">
-                                <span class="material-symbols-outlined text-sm">favorite</span>
-                            </button>
-                        </div>
-                        <div class="p-5">
-                            <p class="text-xs text-slate-400 mb-1">Philips Hue</p>
-                            <h3 class="font-bold text-slate-900 dark:text-white mb-2 line-clamp-1">White &amp; Color Ambiance Bulb</h3>
-                            <div class="flex items-center gap-1 mb-3">
-                                <div class="flex text-yellow-400">
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs">star</span>
-                                </div>
-                                <span class="text-[10px] text-slate-400 font-medium">(128)</span>
-                            </div>
-                            <div class="flex items-center justify-between gap-4">
-                                <div>
-                                    <span class="text-lg font-bold text-primary">$49.99</span>
-                                    <span class="text-xs text-slate-400 line-through ml-1">$59.99</span>
-                                </div>
-                                <button class="size-10 rounded-xl bg-primary text-white flex items-center justify-center hover:brightness-110 transition-all shadow-lg shadow-primary/20">
-                                    <span class="material-symbols-outlined">add_shopping_cart</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Product Card 2 -->
-                    <div class="bg-white dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-xl hover:shadow-primary/10 transition-all group">
-                        <div class="relative aspect-[4/3] bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                            <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Smart LED light strip for room decoration" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZ3nByLYsS5qisd5gy5YUxytted2DMxSVGurYeXtMPwlzZ5TcUNwEURCSVUTo3efe6GbijWsW9N7rKECqm8aWP7ycM1fiLkRqEOtcVJrzsz5OeDh-gH76t_MijIGmfe4v03w57aIYFNuczODfxV5XJVDSrwZeAcNeJcgBVQjt0bOnlebCiwaMg2n3LjW_10v_QR7QE4MWtBLuZD9qvZrflKtxQQs0xEjnpzaTCB_ZR8PaGx3IMNgwlMAqpAFcntqucG75tiOSRKaE6" />
-                            <button class="absolute top-3 right-3 size-8 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm flex items-center justify-center text-slate-900 dark:text-white hover:text-primary transition-colors">
-                                <span class="material-symbols-outlined text-sm">favorite</span>
-                            </button>
-                        </div>
-                        <div class="p-5">
-                            <p class="text-xs text-slate-400 mb-1">Xiaomi Mi</p>
-                            <h3 class="font-bold text-slate-900 dark:text-white mb-2 line-clamp-1">Smart LED Strip Pro</h3>
-                            <div class="flex items-center gap-1 mb-3">
-                                <div class="flex text-yellow-400">
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                </div>
-                                <span class="text-[10px] text-slate-400 font-medium">(84)</span>
-                            </div>
-                            <div class="flex items-center justify-between gap-4">
-                                <span class="text-lg font-bold text-primary">$34.50</span>
-                                <button class="size-10 rounded-xl bg-primary text-white flex items-center justify-center hover:brightness-110 transition-all shadow-lg shadow-primary/20">
-                                    <span class="material-symbols-outlined">add_shopping_cart</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Product Card 3 -->
-                    <div class="bg-white dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-xl hover:shadow-primary/10 transition-all group">
-                        <div class="relative aspect-[4/3] bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                            <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Minimalist smart desk lamp with touch control" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2EEHvzpgNJ30hG67JPRlYw-hmz6izahyaEyoA65PTOp69apuIlXJe-QcaLchdiELCsQFLr1SyqsDJFhjP_wux8M2fANnz2tDj8N7fer83402eAhEryJnN0ThRd_QfeuPEJfblEKkH0JZV7WGRTkmYc2g6dyWnxi8syJS5XzATuM9SQGdt0h1uV8bL5TgQV9DXXSF7eJk0ExtWYOl0w928n1HJ16m6AClJu8CSl0fs8-PN4cxUoQpoIxb4JOs6yeDdcXyQiUQXMciC" />
-                            <span class="absolute top-3 left-3 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase">Eco-Friendly</span>
-                            <button class="absolute top-3 right-3 size-8 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm flex items-center justify-center text-slate-900 dark:text-white hover:text-primary transition-colors">
-                                <span class="material-symbols-outlined text-sm">favorite</span>
-                            </button>
-                        </div>
-                        <div class="p-5">
-                            <p class="text-xs text-slate-400 mb-1">Aqara</p>
-                            <h3 class="font-bold text-slate-900 dark:text-white mb-2 line-clamp-1">Smart Desk Lamp V2</h3>
-                            <div class="flex items-center gap-1 mb-3">
-                                <div class="flex text-yellow-400">
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs">star</span>
-                                </div>
-                                <span class="text-[10px] text-slate-400 font-medium">(42)</span>
-                            </div>
-                            <div class="flex items-center justify-between gap-4">
-                                <span class="text-lg font-bold text-primary">$89.00</span>
-                                <button class="size-10 rounded-xl bg-primary text-white flex items-center justify-center hover:brightness-110 transition-all shadow-lg shadow-primary/20">
-                                    <span class="material-symbols-outlined">add_shopping_cart</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Product Card 4 -->
-                    <div class="bg-white dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-xl hover:shadow-primary/10 transition-all group">
-                        <div class="relative aspect-[4/3] bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                            <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Smart recessed ceiling light fixture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBb5fzfs8dumLY57Qn2VCHb6GsFm767TLZulnamGb7kcwIIlgDu1Am2ni_2ZpOI_y2mX7i2aAE2j49Fjj4Dz7X0asuosC_GT7NeQ7GxBk0V5tQ6WHgO6LxYCKYdkCnyOzTJv810GunzIz8kYNTVPZBafR3faJDycBIlZoxT7b3tTPXI9AFAA0XFSyrvHF8ybn6Vr6FwN1gnFjHkq03cw0caB8KgY8OElITpVzJPvGxn2I4pk7IwK_Qqi7os4WV_JuAVbOXzIu6s8Xgu" />
-                            <button class="absolute top-3 right-3 size-8 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm flex items-center justify-center text-slate-900 dark:text-white hover:text-primary transition-colors">
-                                <span class="material-symbols-outlined text-sm">favorite</span>
-                            </button>
-                        </div>
-                        <div class="p-5">
-                            <p class="text-xs text-slate-400 mb-1">Philips Hue</p>
-                            <h3 class="font-bold text-slate-900 dark:text-white mb-2 line-clamp-1">Centura Recessed Spotlight</h3>
-                            <div class="flex items-center gap-1 mb-3">
-                                <div class="flex text-yellow-400">
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                </div>
-                                <span class="text-[10px] text-slate-400 font-medium">(215)</span>
-                            </div>
-                            <div class="flex items-center justify-between gap-4">
-                                <span class="text-lg font-bold text-primary">$65.00</span>
-                                <button class="size-10 rounded-xl bg-primary text-white flex items-center justify-center hover:brightness-110 transition-all shadow-lg shadow-primary/20">
-                                    <span class="material-symbols-outlined">add_shopping_cart</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Product Card 5 -->
-                    <div class="bg-white dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-xl hover:shadow-primary/10 transition-all group">
-                        <div class="relative aspect-[4/3] bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                            <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Smart outdoor floodlight for security" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAc3JWzbCnGZ3l6gaWqANFlFEviHY_HABDVHZQieeZCa1iWz8tIE1lyT2dwPobIZbndP56E2bqJ6GuEtjwWAV4PLP19Zy8SV9fJGwMWJrNEneKBOwBU3hVW-ZJ0aMRth6i121KB0hpo-5CPJo9Jiq6_AUjKPUW7dYTSpYQbECv3Kdf3xB3DJ-I3G58Y4VQMRzPRbHJLok33-PwmqJ33LwR2lh1n0bYGUE5D9itua1nPGAKI7y3QY-cXbxhoeSJCk-aso8aSdGQuws7" />
-                            <button class="absolute top-3 right-3 size-8 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm flex items-center justify-center text-slate-900 dark:text-white hover:text-primary transition-colors">
-                                <span class="material-symbols-outlined text-sm">favorite</span>
-                            </button>
-                        </div>
-                        <div class="p-5">
-                            <p class="text-xs text-slate-400 mb-1">Xiaomi Mi</p>
-                            <h3 class="font-bold text-slate-900 dark:text-white mb-2 line-clamp-1">Outdoor Security Light Pro</h3>
-                            <div class="flex items-center gap-1 mb-3">
-                                <div class="flex text-yellow-400">
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs">star</span>
-                                </div>
-                                <span class="text-[10px] text-slate-400 font-medium">(56)</span>
-                            </div>
-                            <div class="flex items-center justify-between gap-4">
-                                <span class="text-lg font-bold text-primary">$120.00</span>
-                                <button class="size-10 rounded-xl bg-primary text-white flex items-center justify-center hover:brightness-110 transition-all shadow-lg shadow-primary/20">
-                                    <span class="material-symbols-outlined">add_shopping_cart</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Product Card 6 -->
-                    <div class="bg-white dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-xl hover:shadow-primary/10 transition-all group">
-                        <div class="relative aspect-[4/3] bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                            <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Smart bedside lamp with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxHjtUfSS11ru206sLAnNgKsWB8G-JRp0llYT9e76eoa5VlW2_KfNNvD-dJ3psZ6O-JbV7XzDqcMT5DNBHaC1vNyJFP5Fzg1KWx-qTw-PDwvmKusyvWdsfqqtS7p9c7XKNOhocUd1YGT_JrfYRaCub_dJJ-qczOFcyu86qeNHe6MIj3ekFoQ9qHGaDsfRtcB95vi2NjtWe2C08RI4IJJTSvi8ZzizSm18FWQ2rD72d6aI83fHdUVNgZbaECzMZBSU5QPU3wvvbUbN4" />
-                            <span class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase">Sale</span>
-                            <button class="absolute top-3 right-3 size-8 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm flex items-center justify-center text-slate-900 dark:text-white hover:text-primary transition-colors">
-                                <span class="material-symbols-outlined text-sm">favorite</span>
-                            </button>
-                        </div>
-                        <div class="p-5">
-                            <p class="text-xs text-slate-400 mb-1">Aqara</p>
-                            <h3 class="font-bold text-slate-900 dark:text-white mb-2 line-clamp-1">A1 Bedside Smart Lamp</h3>
-                            <div class="flex items-center gap-1 mb-3">
-                                <div class="flex text-yellow-400">
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs fill-1">star</span>
-                                    <span class="material-symbols-outlined text-xs">star</span>
-                                </div>
-                                <span class="text-[10px] text-slate-400 font-medium">(19)</span>
-                            </div>
-                            <div class="flex items-center justify-between gap-4">
-                                <div>
-                                    <span class="text-lg font-bold text-primary">$45.00</span>
-                                    <span class="text-xs text-slate-400 line-through ml-1">$75.00</span>
-                                </div>
-                                <button class="size-10 rounded-xl bg-primary text-white flex items-center justify-center hover:brightness-110 transition-all shadow-lg shadow-primary/20">
-                                    <span class="material-symbols-outlined">add_shopping_cart</span>
-                                </button>
-                            </div>
-                        </div>
+
+                <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-8 gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Thiết Bị Nổi Bật</h2>
+
+                    <div class="flex items-center gap-4 md:gap-6 text-[14px] font-bold overflow-x-auto w-full md:w-auto hide-scrollbar">
+                        @if (Model.DanhMucs != null)
+                        {
+                            foreach (var dm in Model.DanhMucs.Take(5)) 
+                            {
+                                <a href="/SanPhams?category=@dm.MaDanhMuc" class="text-slate-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors whitespace-nowrap">@dm.TenDanhMuc</a>
+                            }
+                        }
                     </div>
                 </div>
-                <!-- Pagination -->
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+                    @if (Model.SanPhams != null && Model.SanPhams.Any())
+                    {
+                        foreach (var sp in Model.SanPhams)
+                        {
+                            <div class="bg-white dark:bg-slate-800/50 rounded-3xl border border-slate-100 dark:border-slate-700/50 overflow-hidden hover:shadow-[0_20px_40px_-15px_rgba(6,182,212,0.15)] hover:border-cyan-200 dark:hover:border-cyan-800 transition-all duration-500 group flex flex-col h-full">
+
+                                <div class="relative aspect-square bg-slate-50 dark:bg-slate-900/50 overflow-hidden p-4 flex items-center justify-center">
+                                    <img class="w-full h-full object-cover group-hover:scale-110 group-hover:rotate-1 transition-transform duration-500"
+                                         src="@(string.IsNullOrEmpty(sp.HinhAnh) ? "https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=500&auto=format&fit=crop" : sp.HinhAnh)"
+                                         alt="@sp.TenSanPham" />
+                                    <span class="absolute top-3 left-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider shadow-md">New</span>
+
+                                    <div class="absolute top-3 right-3 translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
+                                        <button class="size-8 rounded-full bg-white text-slate-400 hover:text-rose-500 hover:shadow-md flex items-center justify-center transition-all">
+                                            <i class="fa-solid fa-heart text-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="p-5 flex flex-col flex-1">
+                                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Xiaomi</p>
+                                    <h3 class="font-bold text-slate-900 dark:text-white text-[15px] mb-2 line-clamp-2 leading-snug group-hover:text-cyan-600 transition-colors">
+                                        @sp.TenSanPham
+                                    </h3>
+
+                                    <div class="flex items-center gap-1 mb-4 mt-auto">
+                                        <div class="flex text-amber-400 text-[10px]">
+                                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                                        </div>
+                                        <span class="text-[11px] text-slate-400 font-medium ml-1">(42)</span>
+                                    </div>
+
+                                    <div class="flex items-end justify-between gap-2 border-t border-slate-100 dark:border-slate-700 pt-4 mt-auto">
+                                        <div>
+                                            <span class="text-lg font-black text-cyan-600 dark:text-cyan-400">@sp.GiaBan đ</span>
+                                        </div>
+                                        <button class="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 text-cyan-600 hover:bg-cyan-500 hover:text-white transition-all duration-300 font-bold text-xs group/btn">
+                                            <i class="fa-solid fa-cart-plus group-hover/btn:animate-bounce"></i>
+                                            <span class="hidden sm:inline">Add</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-span-full py-20 text-center text-slate-500 font-medium">
+                            Không tìm thấy sản phẩm nào!
+                        </div>
+                    }
+                </div>
+
                 <div class="mt-12 flex items-center justify-center gap-2">
-                    <button class="size-10 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-primary hover:text-white hover:border-primary transition-all group">
-                        <span class="material-symbols-outlined">chevron_left</span>
-                    </button>
-                    <button class="size-10 rounded-xl bg-primary text-white font-bold flex items-center justify-center shadow-md shadow-primary/20">1</button>
-                    <button class="size-10 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-primary/10 hover:text-primary transition-all">2</button>
-                    <button class="size-10 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-primary/10 hover:text-primary transition-all">3</button>
-                    <span class="px-2">...</span>
-                    <button class="size-10 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-primary/10 hover:text-primary transition-all">8</button>
-                    <button class="size-10 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-primary hover:text-white hover:border-primary transition-all group">
-                        <span class="material-symbols-outlined">chevron_right</span>
-                    </button>
+                    <button class="size-10 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-cyan-500 hover:text-white transition-all"><i class="fa-solid fa-chevron-left text-sm"></i></button>
+                    <button class="size-10 rounded-xl bg-cyan-500 text-white font-bold flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.4)]">1</button>
+                    <button class="size-10 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-slate-50 transition-all font-semibold">2</button>
+                    <span class="px-2 text-slate-400">...</span>
+                    <button class="size-10 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-cyan-500 hover:text-white transition-all"><i class="fa-solid fa-chevron-right text-sm"></i></button>
                 </div>
             </div>
         </div>

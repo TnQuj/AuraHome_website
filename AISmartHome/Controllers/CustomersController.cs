@@ -5,7 +5,6 @@ using AISmartHome.Data;
 
 namespace AISmartHome.Controllers
 {
-    // Tên class khớp hoàn toàn với file bạn vừa tạo
     public class CustomersController : Controller
     {
         private readonly AISmartHomeDbContext _context;
@@ -15,26 +14,27 @@ namespace AISmartHome.Controllers
             _context = context;
         }
 
-        // Tên hàm là Index, nó sẽ tự động tìm file Views/Customers/Index.cshtml
         public async Task<IActionResult> Index()
         {
-            var products = await _context.SanPhams.ToListAsync();
-            return View(products);
+            var viewModel = new HomeViewModel
+            {
+                SanPhams = await _context.SanPhams.ToListAsync(),
+                DanhMucs = await _context.DanhMucSanPhams.ToListAsync()
+            };
+
+            return View(viewModel);
         }
 
-        public IActionResult GioHang()
-        {
-            return View();
-        }
 
-        public IActionResult TraCuuDonHang()
+        public async Task<IActionResult> Categories()
         {
-            return View();
-        }
+            var viewModel = new HomeViewModel
+            {
+                SanPhams = await _context.SanPhams.ToListAsync(),
+                DanhMucs = await _context.DanhMucSanPhams.ToListAsync()
+            };
 
-        public IActionResult DangNhap()
-        {
-            return View();
+            return View(viewModel);
         }
     }
 }

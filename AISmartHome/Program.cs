@@ -10,6 +10,7 @@ builder.Services.AddDbContext<AISmartHomeDbContext>(options =>
 
 builder.Services.AddScoped<AISmartHome.Services.TaoTinTuDong>();
 
+builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 var app = builder.Build();
 
 // Thêm dòng này vào khu vực builder.Services
@@ -37,6 +38,6 @@ app.MapControllerRoute(
 // 2. ROUTE MẶC ĐỊNH CỦA BẠN DÀNH CHO KHÁCH HÀNG (Giữ nguyên)
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Customers}/{action=Categories}/{id?}");
+    pattern: "{controller=Customers}/{action=Index}/{id?}");
 
 app.Run();

@@ -14,25 +14,25 @@ namespace AISmartHome.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? category)
         {
+            ViewBag.CurrentCategory = category;
+
             var viewModel = new HomeViewModel
             {
-                SanPhams = await _context.SanPhams.ToListAsync(),
                 DanhMucs = await _context.DanhMucSanPhams.ToListAsync()
             };
 
-            return View(viewModel);
-        }
-
-
-        public async Task<IActionResult> Categories()
-        {
-            var viewModel = new HomeViewModel
+            if (category.HasValue)
             {
-                SanPhams = await _context.SanPhams.ToListAsync(),
-                DanhMucs = await _context.DanhMucSanPhams.ToListAsync()
-            };
+                viewModel.SanPhams = await _context.SanPhams
+                    .Where(sp => sp.MaDanhMuc == category.Value)
+                    .ToListAsync();
+            }
+            else
+            {
+                viewModel.SanPhams = await _context.SanPhams.ToListAsync();
+            }
 
             return View(viewModel);
         }

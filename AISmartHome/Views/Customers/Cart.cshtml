@@ -1,0 +1,511 @@
+﻿@model AISmartHome.Models.GioHang
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Giỏ Hàng của bạn";
+
+    // Lấy tổng tiền trực tiếp từ Database
+    decimal tongTien = Model?.TongTien ?? 0;
+}
+
+@using Microsoft.EntityFrameworkCore
+@inject AISmartHome.Data.AISmartHomeDbContext _context
+
+@{
+    // Biến lưu tổng số lượng
+    int cartCount = 0;
+    int maKhachHangHienTai = 1; // Khách hàng số 1 (như đã thiết lập ở Controller)
+
+    // Truy vấn nhanh vào DB để đếm số lượng
+    var cart = _context.GioHangs
+        .Include(g => g.ChiTietGioHangs)
+        .FirstOrDefault(g => g.MaKhachHang == maKhachHangHienTai);
+
+    if (cart != null && cart.ChiTietGioHangs != null)
+    {
+        cartCount = cart.ChiTietGioHangs.Sum(c => c.SoLuong ?? 0);
+    }
+}
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>AI Smart Home - Product Catalog</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2563eb", // Classic Blue (Blue 600)
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f172a",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Hiệu ứng mượt mà khi đổi ảnh */
+        .fade-in-image {
+            animation: fadeIn 0.3s ease-in-out forwards;
+        }
+
+        @@keyframes fadeIn {
+            0% {
+                opacity: 0.4;
+                transform: scale(0.98);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-[9999] bg-white border-b border-gray-100 shadow-sm">
+        <div class="container mx-auto px-4 h-20 flex items-center justify-between relative">
+
+            <div class="flex-1 flex justify-start items-center">
+                <a href="/Home/Index" class="flex items-center gap-2 group cursor-pointer outline-none">
+
+                    <div class="w-10 h-10 bg-brand-navy rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-105 group-hover:shadow-md">
+                        <svg class="h-6 w-6 text-brand-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                        </svg>
+                    </div>
+
+                    <span class="text-xl font-bold tracking-tight text-brand-navy group-hover:text-cyan-600 transition-colors duration-300">
+                        AuraHome
+                    </span>
+
+                </a>
+            </div>
+
+            <nav class="hidden lg:flex items-center justify-center space-x-10 text-[15px] font-semibold h-full relative">
+
+                <div class="relative group h-full flex items-center">
+                    <a asp-controller="Customers" asp-action="Index" class="flex items-center gap-2 hover:text-brand-cyan transition-colors py-8 outline-none text-brand-navy font-bold tracking-wide">
+                        Thiết Bị Thông Minh
+                        <svg class="w-4 h-4 text-brand-navy/60 transition-transform duration-300 group-hover:rotate-180 group-hover:text-brand-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </a>
+
+                    <div class="absolute top-[60%] left-1/2 -translate-x-1/2 w-[340px] h-10 bg-transparent z-[9999]"></div>
+
+                    <div class="absolute left-1/2 -translate-x-1/2 top-[80%] w-[350px]
+                    bg-white/95 backdrop-blur-2xl rounded-3xl
+                    border border-gray-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)]
+                    invisible opacity-0 translate-y-3 scale-95
+                    group-hover:!visible group-hover:!opacity-100 group-hover:!translate-y-0 group-hover:!scale-100
+                    transition-all duration-300 ease-out z-[10000] overflow-hidden">
+
+                        <div class="p-3 space-y-1 relative z-10">
+
+                            <a href="/Customers/Index?category=1" class="flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 group/link hover:bg-slate-50 hover:shadow-sm">
+                                <span class="flex items-center gap-4 font-bold text-[15px] text-brand-navy group-hover/link:text-brand-cyan transition-colors">
+                                    <span class="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-50 text-indigo-500 group-hover/link:bg-indigo-100 group-hover/link:shadow-[0_0_15px_rgba(99,102,241,0.3)] group-hover/link:scale-110 transition-all duration-300">
+                                        <i class="fa-solid fa-lightbulb text-[16px]"></i>
+                                    </span>
+                                    Camera AI
+                                </span>
+                                <i class="fa-solid fa-chevron-right text-[12px] text-brand-cyan opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-300"></i>
+                            </a>
+
+                            <a href="/Customers/Index?category=2" class="flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 group/link hover:bg-slate-50 hover:shadow-sm">
+                                <span class="flex items-center gap-4 font-bold text-[15px] text-brand-navy group-hover/link:text-brand-cyan transition-colors">
+                                    <span class="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-50 text-emerald-500 group-hover/link:bg-emerald-100 group-hover/link:shadow-[0_0_15px_rgba(16,185,129,0.3)] group-hover/link:scale-110 transition-all duration-300">
+                                        <i class="fa-solid fa-shield-halved text-[16px]"></i>
+                                    </span>
+                                    Khóa cửa thông minh
+                                </span>
+                                <i class="fa-solid fa-chevron-right text-[12px] text-brand-cyan opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-300"></i>
+                            </a>
+
+                            <a href="/Customers/Index?category=3" class="flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 group/link hover:bg-slate-50 hover:shadow-sm">
+                                <span class="flex items-center gap-4 font-bold text-[15px] text-brand-navy group-hover/link:text-brand-cyan transition-colors">
+                                    <span class="flex items-center justify-center w-10 h-10 rounded-full bg-orange-50 text-orange-500 group-hover/link:bg-orange-100 group-hover/link:shadow-[0_0_15px_rgba(249,115,22,0.3)] group-hover/link:scale-110 transition-all duration-300">
+                                        <i class="fa-solid fa-temperature-half text-[16px]"></i>
+                                    </span>
+                                    Robot hút bụi
+                                </span>
+                                <i class="fa-solid fa-chevron-right text-[12px] text-brand-cyan opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-300"></i>
+                            </a>
+
+                            <a href="/Customers/Index?category=4" class="flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 group/link hover:bg-slate-50 hover:shadow-sm">
+                                <span class="flex items-center gap-4 font-bold text-[15px] text-brand-navy group-hover/link:text-brand-cyan transition-colors">
+                                    <span class="flex items-center justify-center w-10 h-10 rounded-full bg-cyan-50 text-cyan-500 group-hover/link:bg-cyan-100 group-hover/link:shadow-[0_0_15px_rgba(6,182,212,0.3)] group-hover/link:scale-110 transition-all duration-300">
+                                        <i class="fa-solid fa-microchip text-[16px]"></i>
+                                    </span>
+                                    Cảm biến thông minh
+                                </span>
+                                <i class="fa-solid fa-chevron-right text-[12px] text-brand-cyan opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-300"></i>
+                            </a>
+
+                            <a href="/Customers/Index?category=5" class="flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 group/link hover:bg-slate-50 hover:shadow-sm">
+                                <span class="flex items-center gap-4 font-bold text-[15px] text-brand-navy group-hover/link:text-brand-cyan transition-colors">
+                                    <span class="flex items-center justify-center w-10 h-10 rounded-full bg-purple-50 text-purple-500 group-hover/link:bg-purple-100 group-hover/link:shadow-[0_0_15px_rgba(168,85,247,0.3)] group-hover/link:scale-110 transition-all duration-300">
+                                        <i class="fa-solid fa-battery-full text-[16px]"></i>
+                                    </span>
+                                    Thiết bị chiếu sáng
+                                </span>
+                                <i class="fa-solid fa-chevron-right text-[12px] text-brand-cyan opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-300"></i>
+                            </a>
+                        </div>
+
+                        <div class="bg-slate-50/80 p-4 text-center border-t border-slate-100 group/footer cursor-pointer hover:bg-slate-100 transition-colors">
+                            <a href="/SanPhams" class="text-[12px] font-bold text-gray-500 group-hover/footer:text-brand-cyan uppercase tracking-[0.15em] transition-colors flex items-center justify-center gap-2">
+                                Xem tất cả thiết bị
+                                <i class="fa-solid fa-arrow-right text-[11px] text-brand-cyan opacity-0 -translate-x-2 group-hover/footer:opacity-100 group-hover/footer:translate-x-0 transition-all duration-300"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <a class="hover:text-brand-cyan transition-colors text-brand-navy font-bold tracking-wide" href="/TinTucs">Tin Tức</a>
+                <a class="hover:text-brand-cyan transition-colors text-brand-navy font-bold tracking-wide" href="/HuongDanSuDungs">Hướng Dẫn Sử Dụng</a>
+            </nav>
+            <div class="flex-1 flex items-center justify-end gap-6">
+
+                <a href="/TraCuuDonHang" class="flex items-center gap-2 hover:text-brand-cyan transition-colors text-brand-navy font-bold tracking-wide outline-none whitespace-nowrap ml-6">
+                    <svg ml-1 class="h-5 w-5 text-brand-navy shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1h2m4-1v-4a1 1 0 00-1-1h-3m-1 0v6m4-1h1a1 1 0 001-1v-2l-2-3h-3"></path>
+                    </svg>
+                    <span>Tra cứu đơn hàng</span>
+                </a>
+
+                <div class="hidden xl:flex items-center relative ml-4">
+                    <input class="pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-full text-sm focus:ring-2 focus:ring-brand-cyan/20 focus:border-brand-cyan transition-all w-48 focus:w-64 outline-none text-gray-700" placeholder="Tìm kiếm sản phẩm..." type="text" />
+                    <svg class="h-5 w-5 text-gray-400 absolute left-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    </svg>
+                </div>
+
+                <div class="flex items-center gap-4 pl-4 ml-2">
+                    <button class="text-brand-navy hover:text-brand-cyan transition-colors" title="Account">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                        </svg>
+                    </button>
+                    <a href="/Customers/Cart" class="text-brand-navy hover:text-brand-cyan transition-colors relative" title="Cart">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                        </svg>
+
+                        @if (cartCount > 0)
+                        {
+                            <span class="absolute -top-1.5 -right-1.5 bg-rose-500 text-white text-[10px] font-bold h-4 w-4 flex items-center justify-center rounded-full shadow-md">
+                                @cartCount
+                            </span>
+                        }
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </header>
+    <main class="w-full pb-20 pt-8">
+        <div class="container mx-auto px-4 md:px-8">
+
+            <nav class="flex items-center gap-2 text-sm text-slate-500 mb-10 font-medium">
+                <a class="hover:text-brand-cyan transition-colors" asp-controller="Customers" asp-action="Index">Trang chủ</a>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                <span class="text-brand-navy font-bold px-2 py-1 bg-slate-100 rounded-md">Giỏ hàng của bạn</span>
+            </nav>
+
+            <div class="flex items-end justify-between mb-8">
+                <h1 class="text-3xl md:text-4xl font-black text-brand-navy tracking-tight">Giỏ hàng</h1>
+                <span class="text-slate-500 font-medium">@(Model?.ChiTietGioHangs?.Count ?? 0) sản phẩm</span>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
+                <div class="w-full lg:w-[65%]">
+
+                    @if (Model != null && Model.ChiTietGioHangs != null && Model.ChiTietGioHangs.Any())
+                    {
+                        <div class="flex flex-col gap-5 lg:pr-2">
+                            @foreach (var item in Model.ChiTietGioHangs)
+                            {
+                                var sp = item.MaSanPhamNavigation;
+                                decimal tamTinh = (item.Gia ?? 0) * (item.SoLuong ?? 0);
+
+                                <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col md:flex-row items-start md:items-center gap-6 relative group transition-all duration-300 hover:shadow-lg hover:border-cyan-100">
+
+                                    <a href="/Customers/RemoveFromCart?id=@item.MaSanPham" class="absolute right-4 top-4 md:static w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-rose-50 hover:text-rose-500 transition-colors" title="Xóa khỏi giỏ">
+                                        <i class="fa-solid fa-trash-can text-sm"></i>
+                                    </a>
+
+                                    <div class="w-24 h-24 bg-slate-50 rounded-2xl p-3 flex-shrink-0 border border-slate-100 group-hover:scale-105 transition-transform duration-500">
+                                        <img src="@(string.IsNullOrEmpty(sp?.HinhAnh) ? "https://via.placeholder.com/150" : $"/img/{sp?.HinhAnh}")" alt="@sp?.TenSanPham" class="w-full h-full object-contain mix-blend-multiply" />
+                                    </div>
+
+                                    <div class="flex-1 flex flex-col">
+                                        <a href="/Customers/Details?id=@item.MaSanPham" class="text-[16px] font-bold text-brand-navy hover:text-brand-cyan transition-colors leading-snug line-clamp-2 mb-2 pr-8 md:pr-0">
+                                            @sp?.TenSanPham
+                                        </a>
+                                        <span class="text-brand-cyan font-black text-lg">@item.Gia?.ToString("N0") ₫</span>
+                                    </div>
+
+                                    <div class="flex items-center justify-between w-full md:w-auto gap-8 mt-2 md:mt-0 pt-4 md:pt-0 border-t md:border-none border-slate-100">
+
+                                        <div class="flex items-center border border-slate-200 rounded-full overflow-hidden h-10 w-[110px] bg-white shadow-inner">
+                                            <button type="button" onclick="decreaseQuantity('@item.MaSanPham')" class="w-9 h-full flex justify-center items-center text-slate-500 hover:bg-slate-100 hover:text-brand-cyan transition-colors"><i class="fa-solid fa-minus text-xs"></i></button>
+
+                                            <input id="qty-@item.MaSanPham" type="text" value="@item.SoLuong" readonly class="w-full h-full text-center border-none p-0 text-sm font-bold text-brand-navy focus:ring-0 bg-transparent pointer-events-none" />
+
+                                            <button type="button" onclick="increaseQuantity('@item.MaSanPham')" class="w-9 h-full flex justify-center items-center text-slate-500 hover:bg-slate-100 hover:text-brand-cyan transition-colors"><i class="fa-solid fa-plus text-xs"></i></button>
+                                        </div>
+
+                                        <div class="text-right flex flex-col md:min-w-[100px]">
+                                            <span class="text-xs text-slate-400 font-medium md:hidden mb-1">Thành tiền</span>
+                                            <span class="font-black text-rose-600 text-lg">@tamTinh.ToString("N0") ₫</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="mt-8">
+                            <a href="/Customers" class="inline-flex items-center gap-3 text-slate-500 hover:text-brand-cyan font-bold transition-colors group">
+                                <span class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-cyan-50 transition-colors">
+                                    <i class="fa-solid fa-arrow-left-long group-hover:-translate-x-1 transition-transform"></i>
+                                </span>
+                                Tiếp tục chọn thiết bị
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="py-20 text-center bg-white rounded-3xl border border-dashed border-slate-200 shadow-sm flex flex-col items-center justify-center">
+                            <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-6">
+                                <i class="fa-solid fa-cart-shopping text-4xl text-slate-300"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-brand-navy mb-2">Giỏ hàng trống</h3>
+                            <p class="text-slate-500 mb-8">Bạn chưa thêm thiết bị thông minh nào vào giỏ hàng.</p>
+                            <a href="/Customers" class="inline-flex items-center justify-center gap-2 bg-brand-navy text-white px-8 py-3.5 rounded-2xl font-bold hover:bg-brand-cyan transition-colors shadow-lg hover:-translate-y-1 duration-300">
+                                Khám phá thiết bị AI <i class="fa-solid fa-arrow-right text-sm"></i>
+                            </a>
+                        </div>
+                    }
+                </div>
+
+                <div class="w-full lg:w-[35%]">
+                    <div class="bg-white p-6 md:p-8 border border-slate-100 shadow-xl shadow-slate-200/40 rounded-3xl md:sticky md:top-28">
+                        <h2 class="text-xl font-extrabold text-brand-navy mb-6 flex items-center gap-3">
+                            <i class="fa-solid fa-receipt text-brand-cyan"></i> Tóm tắt đơn hàng
+                        </h2>
+
+                        <div class="flex justify-between items-center mb-4 text-sm font-medium">
+                            <span class="text-slate-500">Tạm tính (@(Model?.ChiTietGioHangs?.Sum(x => x.SoLuong) ?? 0) sản phẩm)</span>
+                            <span class="text-brand-navy">@tongTien.ToString("N0") ₫</span>
+                        </div>
+
+                        <div class="flex justify-between items-center mb-6 text-sm font-medium">
+                            <span class="text-slate-500">Phí vận chuyển</span>
+                            <span class="text-emerald-500">Miễn phí</span>
+                        </div>
+
+                        <div class="w-full border-t border-dashed border-slate-200 my-6"></div>
+
+                        <div class="flex justify-between items-end mb-8">
+                            <span class="text-slate-900 font-bold">Tổng thanh toán</span>
+                            <div class="text-right">
+                                <span class="block font-black text-rose-600 text-3xl">@tongTien.ToString("N0") ₫</span>
+                                <span class="text-[11px] text-slate-400 font-medium">(Đã bao gồm VAT)</span>
+                            </div>
+                        </div>
+
+                        <a href="/Checkout" class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-4 rounded-2xl font-bold text-[15px] hover:shadow-lg hover:shadow-cyan-500/30 hover:-translate-y-1 transition-all duration-300 uppercase tracking-wider mb-6 h-[56px]">
+                            Tiến hành thanh toán <i class="fa-solid fa-arrow-right-long ml-1"></i>
+                        </a>
+
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                            <label class="flex items-center gap-2 text-[13px] font-bold text-slate-700 mb-3 uppercase tracking-wider">
+                                <i class="fa-solid fa-ticket text-brand-cyan"></i> Mã ưu đãi / Voucher
+                            </label>
+                            <div class="flex gap-2">
+                                <input type="text" placeholder="Nhập mã..." class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/20 outline-none transition-all font-medium uppercase" />
+                                <button type="button" class="bg-brand-navy text-white px-5 rounded-xl text-sm hover:bg-slate-800 transition-colors font-bold whitespace-nowrap">
+                                    Áp dụng
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-center gap-4 mt-8 pt-6 border-t border-slate-100 opacity-60 grayscale">
+                            <i class="fa-brands fa-cc-visa text-3xl"></i>
+                            <i class="fa-brands fa-cc-mastercard text-3xl"></i>
+                            <i class="fa-brands fa-cc-paypal text-3xl"></i>
+                            <i class="fa-brands fa-apple-pay text-3xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+    <section class="py-16 md:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="relative bg-[#0a0f1c] rounded-3xl p-10 md:p-16 flex flex-col lg:flex-row justify-between items-center gap-12 overflow-hidden shadow-2xl border border-slate-800">
+
+                <div class="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-96 h-96 bg-cyan-500/20 rounded-full blur-[80px] pointer-events-none"></div>
+
+                <div class="relative z-10 max-w-xl text-center lg:text-left">
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-4 tracking-tight leading-tight">
+                        Đăng ký nhận <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Ưu đãi độc quyền</span>
+                    </h2>
+                    <p class="text-slate-300 text-[15px] md:text-base leading-relaxed">
+                        Nhận ngay mã giảm giá <span class="font-bold text-white">20%</span> cho đơn hàng đầu tiên. Cập nhật nhanh nhất các thiết bị nhà thông minh AuraHome và mẹo thiết lập không gian sống hiện đại.
+                    </p>
+                </div>
+
+                <form class="relative z-10 w-full lg:w-auto flex flex-col sm:flex-row gap-3 md:gap-4 items-stretch">
+                    <div class="relative w-full sm:w-[320px]">
+                        <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input class="w-full bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-slate-400 rounded-xl pl-11 pr-4 py-4 outline-none focus:border-cyan-400 focus:bg-white/15 transition-all shadow-inner text-sm"
+                               placeholder="Nhập địa chỉ email của bạn..."
+                               type="email"
+                               required />
+                    </div>
+
+                    <button type="button" class="bg-cyan-500 text-white font-bold px-8 py-4 rounded-xl hover:bg-cyan-400 hover:-translate-y-1 transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.4)] whitespace-nowrap flex items-center justify-center gap-2">
+                        Nhận ưu đãi <i class="fa-solid fa-paper-plane text-sm"></i>
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </section>
+    <!-- Footer -->
+    <footer class="mt-20 border-t-4 border-cyan-500 bg-[#050b14] relative overflow-hidden">
+        <div class="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 pt-20 pb-12 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-16">
+
+                <div class="lg:col-span-4 space-y-6">
+                    <a href="/" class="flex items-center gap-2 group outline-none w-fit">
+                        <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-105 border border-white/10">
+                            <svg class="h-6 w-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                            </svg>
+                        </div>
+                        <span class="text-2xl font-bold tracking-tight text-white group-hover:text-cyan-400 transition-colors duration-300">
+                            AuraHome
+                        </span>
+                    </a>
+
+                    <p class="text-sm text-slate-400 leading-relaxed pr-4 text-justify">
+                        Tiên phong kiến tạo không gian sống thông minh tại Việt Nam. Chúng tôi cung cấp giải pháp toàn diện về an ninh, chiếu sáng và tự động hóa với công nghệ AI hàng đầu.
+                    </p>
+
+                    <div class="flex gap-3">
+                        <a class="size-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:bg-cyan-500 hover:text-white hover:border-cyan-500 transition-all duration-300" href="#">
+                            <i class="fa-brands fa-facebook-f text-sm"></i>
+                        </a>
+                        <a class="size-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:bg-cyan-500 hover:text-white hover:border-cyan-500 transition-all duration-300" href="#">
+                            <i class="fa-brands fa-youtube text-sm"></i>
+                        </a>
+                        <a class="size-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:bg-cyan-500 hover:text-white hover:border-cyan-500 transition-all duration-300" href="#">
+                            <i class="fa-brands fa-tiktok text-sm"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2">
+                    <h4 class="text-white font-bold mb-6 text-sm uppercase tracking-widest">Sản Phẩm</h4>
+                    <ul class="space-y-4 text-sm text-slate-400">
+                        <li><a class="hover:text-cyan-400 hover:pl-2 transition-all duration-300" href="#">Camera AI</a></li>
+                        <li><a class="hover:text-cyan-400 hover:pl-2 transition-all duration-300" href="#">Khóa cửa thông minh</a></li>
+                        <li><a class="hover:text-cyan-400 hover:pl-2 transition-all duration-300" href="#">Robot hút bụi</a></li>
+                        <li><a class="hover:text-cyan-400 hover:pl-2 transition-all duration-300" href="#">Cảm biến an ninh</a></li>
+                        <li><a class="hover:text-cyan-400 hover:pl-2 transition-all duration-300" href="#">Chiếu sáng thông minh</a></li>
+                    </ul>
+                </div>
+
+                <div class="lg:col-span-2">
+                    <h4 class="text-white font-bold mb-6 text-sm uppercase tracking-widest">Hỗ Trợ</h4>
+                    <ul class="space-y-4 text-sm text-slate-400">
+                        <li><a class="hover:text-cyan-400 hover:pl-2 transition-all duration-300" href="#">Tra cứu đơn hàng</a></li>
+                        <li><a class="hover:text-cyan-400 hover:pl-2 transition-all duration-300" href="#">Chính sách bảo hành</a></li>
+                        <li><a class="hover:text-cyan-400 hover:pl-2 transition-all duration-300" href="#">Hướng dẫn lắp đặt</a></li>
+                        <li><a class="hover:text-cyan-400 hover:pl-2 transition-all duration-300" href="#">Chính sách đổi trả</a></li>
+                        <li><a class="hover:text-cyan-400 hover:pl-2 transition-all duration-300" href="#">Câu hỏi thường gặp</a></li>
+                    </ul>
+                </div>
+
+                <div class="lg:col-span-4 flex flex-col h-full">
+                    <h4 class="text-white font-bold mb-6 text-sm uppercase tracking-widest">Liên Hệ</h4>
+                    <ul class="space-y-5 text-sm text-slate-400 mb-6">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-location-dot mt-1 text-cyan-400"></i>
+                            <span>Đại học An Giang, 18 Ung Văn Khiêm, P. Đông Xuyên, TP. Long Xuyên, An Giang</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fa-solid fa-phone text-cyan-400"></i>
+                            <a href="tel:1900xxxx" class="hover:text-white font-semibold text-lg">1900 1234</a>
+                            <span class="text-xs text-slate-500 bg-white/5 px-2 py-0.5 rounded-full ml-1">Free</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fa-solid fa-envelope text-cyan-400"></i>
+                            <a href="mailto:support@aurahome.vn" class="hover:text-white transition-colors">support@aurahome.vn</a>
+                        </li>
+                    </ul>
+
+                    <div class="w-full h-32 md:h-40 mt-auto rounded-xl overflow-hidden border border-white/10 relative shadow-inner grayscale hover:grayscale-0 transition-all duration-500">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3924.627294437299!2d105.4280517!3d10.3716559!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x310a731e7546fd7b%3A0x8c9c04dfd831d167!2zxJDhuqFpIGjhu41jIEFuIEdpYW5n!5e0!3m2!1svi!2s"
+                                class="absolute inset-0 w-full h-full"
+                                style="border:0;"
+                                allowfullscreen=""
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/10 text-xs text-slate-500 gap-4">
+                <p>© 2026 AuraHome Ecosystem. All rights reserved.</p>
+                <div class="flex gap-4">
+                    <a href="#" class="hover:text-slate-300 transition-colors">Điều khoản dịch vụ</a>
+                    <span class="text-slate-700">|</span>
+                    <a href="#" class="hover:text-slate-300 transition-colors">Bảo mật thông tin</a>
+                </div>
+                <div class="flex gap-2">
+                    <div class="w-10 h-6 bg-white/10 rounded flex items-center justify-center"><i class="fa-brands fa-cc-visa text-slate-300"></i></div>
+                    <div class="w-10 h-6 bg-white/10 rounded flex items-center justify-center"><i class="fa-brands fa-cc-mastercard text-slate-300"></i></div>
+                    <div class="w-10 h-6 bg-white/10 rounded flex items-center justify-center"><i class="fa-brands fa-cc-paypal text-slate-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

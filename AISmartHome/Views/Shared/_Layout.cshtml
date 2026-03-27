@@ -20,5 +20,32 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
+    <div id="mini-cart-overlay" class="fixed inset-0 bg-brand-navy/60 z-[10000] hidden opacity-0 transition-opacity duration-300 backdrop-blur-sm" onclick="closeMiniCart()"></div>
+
+    <div id="mini-cart-panel" class="fixed top-0 right-0 h-full w-full sm:w-[400px] bg-white z-[10001] transform translate-x-full transition-transform duration-300 flex flex-col shadow-2xl">
+        <div class="flex items-center justify-center p-5 border-b border-slate-100 relative">
+            <h3 class="text-lg font-display font-medium text-brand-navy uppercase tracking-wider">Giỏ Hàng</h3>
+            <button type="button" onclick="closeMiniCart()" class="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-slate-500 hover:text-brand-red transition-colors">
+                <i class="fa-solid fa-xmark text-2xl"></i>
+            </button>
+        </div>
+
+        <div id="mini-cart-items" class="flex-1 overflow-y-auto p-5 flex flex-col gap-5 cart-scroll">
+        </div>
+
+        <div class="p-6 border-t border-slate-100 bg-white mt-auto">
+            <div class="flex justify-between items-center mb-5">
+                <span class="text-brand-navy font-bold text-[16px]">Tổng số phụ:</span>
+                <span id="mini-cart-total" class="text-xl font-black text-brand-navy">0 VNĐ</span>
+            </div>
+            <div class="flex flex-col gap-3">
+                <a href="/Customers/Cart" class="w-full bg-[#2b3a82] hover:bg-brand-navy text-white text-center py-3.5 rounded-sm font-medium transition-colors">Xem giỏ hàng</a>
+                <a href="/Checkout" class="w-full bg-brand-red hover:bg-red-700 text-white text-center py-3.5 rounded-sm font-medium transition-colors">Thanh toán</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/js/app.js" asp-append-version="true"></script>
 </body>
 </html>

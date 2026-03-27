@@ -34,6 +34,9 @@ public partial class SanPham
     public virtual ICollection<ChiTietGioHang> ChiTietGioHangs { get; set; } = new List<ChiTietGioHang>();
 
     [InverseProperty("MaSanPhamNavigation")]
+    public virtual ICollection<HinhAnhSanPham> HinhAnhSanPhams { get; set; } = new List<HinhAnhSanPham>();
+
+    [InverseProperty("MaSanPhamNavigation")]
     public virtual ICollection<HuongDanSuDung> HuongDanSuDungs { get; set; } = new List<HuongDanSuDung>();
 
     [ForeignKey("MaDanhMuc")]

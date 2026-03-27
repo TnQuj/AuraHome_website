@@ -33,11 +33,11 @@ app.UseAuthorization();
 // 1. THÊM ĐOẠN NÀY DÀNH CHO ADMIN AREA
 app.MapControllerRoute(
     name: "areas",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+    pattern: "{area:exists}/{controller=Admin}/{action=Index}/{id?}");
 
 // 2. ROUTE MẶC ĐỊNH CỦA BẠN DÀNH CHO KHÁCH HÀNG (Giữ nguyên)
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Customers}/{action=Index}/{id?}");
+    pattern: "{controller=Customers}/{action=Cart}/{id?}");
 
 app.Run();

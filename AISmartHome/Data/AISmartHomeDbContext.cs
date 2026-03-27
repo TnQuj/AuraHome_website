@@ -30,6 +30,8 @@ public partial class AISmartHomeDbContext : DbContext
 
     public virtual DbSet<GioHang> GioHangs { get; set; }
 
+    public virtual DbSet<HinhAnhSanPham> HinhAnhSanPhams { get; set; }
+
     public virtual DbSet<HuongDanSuDung> HuongDanSuDungs { get; set; }
 
     public virtual DbSet<KhachHang> KhachHangs { get; set; }
@@ -105,6 +107,13 @@ public partial class AISmartHomeDbContext : DbContext
             entity.Property(e => e.NgayTao).HasDefaultValueSql("(getdate())");
 
             entity.HasOne(d => d.MaKhachHangNavigation).WithMany(p => p.GioHangs).HasConstraintName("FK_GioHang_KhachHang");
+        });
+
+        modelBuilder.Entity<HinhAnhSanPham>(entity =>
+        {
+            entity.HasKey(e => e.MaHinhAnh).HasName("PK__HinhAnhS__A9C37A9BF582421D");
+
+            entity.HasOne(d => d.MaSanPhamNavigation).WithMany(p => p.HinhAnhSanPhams).HasConstraintName("FK_HinhAnh_SanPham");
         });
 
         modelBuilder.Entity<HuongDanSuDung>(entity =>

@@ -4,6 +4,24 @@
 @{
     ViewData["Title"] = "Trang chủ - Thiết bị Smart Home";
 }
+@using Microsoft.EntityFrameworkCore
+@inject AISmartHome.Data.AISmartHomeDbContext _context
+
+@{
+    // Biến lưu tổng số lượng
+    int cartCount = 0;
+    int maKhachHangHienTai = 1; // Khách hàng số 1 (như đã thiết lập ở Controller)
+
+    // Truy vấn nhanh vào DB để đếm số lượng
+    var cart = _context.GioHangs
+        .Include(g => g.ChiTietGioHangs)
+        .FirstOrDefault(g => g.MaKhachHang == maKhachHangHienTai);
+
+    if (cart != null && cart.ChiTietGioHangs != null)
+    {
+        cartCount = cart.ChiTietGioHangs.Sum(c => c.SoLuong ?? 0);
+    }
+}
 <!DOCTYPE html>
 
 <html class="scroll-smooth" lang="vi">
@@ -233,12 +251,18 @@
                             <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
                         </svg>
                     </button>
-                    <button class="text-brand-navy hover:text-brand-cyan transition-colors relative" title="Cart">
+                    <a href="/Customers/Cart" class="text-brand-navy hover:text-brand-cyan transition-colors relative" title="Cart">
                         <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
                         </svg>
-                        <span class="absolute -top-1 -right-1 bg-brand-cyan text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full"></span>
-                    </button>
+
+                        @if (cartCount > 0)
+                        {
+                            <span class="absolute -top-1.5 -right-1.5 bg-rose-500 text-white text-[10px] font-bold h-4 w-4 flex items-center justify-center rounded-full shadow-md">
+                                @cartCount
+                            </span>
+                        }
+                    </a>
                 </div>
 
             </div>

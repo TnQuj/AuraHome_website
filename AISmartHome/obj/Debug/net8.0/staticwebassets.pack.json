@@ -25,6 +25,10 @@
       "PackagePath": "staticwebassets\\img\\0f396359-ee48-4827-bad2-a057fe12341e.jpg"
     },
     {
+      "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\0f7eae76-6005-4f96-84a1-3ab83dd84616.jpg",
+      "PackagePath": "staticwebassets\\img\\0f7eae76-6005-4f96-84a1-3ab83dd84616.jpg"
+    },
+    {
       "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\1.2-e1695266246541.png",
       "PackagePath": "staticwebassets\\img\\1.2-e1695266246541.png"
     },
@@ -45,6 +49,14 @@
       "PackagePath": "staticwebassets\\img\\103e6a20-8152-4dc9-b079-4a86ed2cbbfb.jpg"
     },
     {
+      "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\1448be362eb2e4d36ec4941ac1dc0086.jpg",
+      "PackagePath": "staticwebassets\\img\\1448be362eb2e4d36ec4941ac1dc0086.jpg"
+    },
+    {
+      "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\16b38452d6a19e7aa94df40ada680296.jpg",
+      "PackagePath": "staticwebassets\\img\\16b38452d6a19e7aa94df40ada680296.jpg"
+    },
+    {
       "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\28269c7d-9d3b-4088-82ac-97028db790df.png",
       "PackagePath": "staticwebassets\\img\\28269c7d-9d3b-4088-82ac-97028db790df.png"
     },
@@ -53,8 +65,24 @@
       "PackagePath": "staticwebassets\\img\\2839f8ee-ccb2-4b3d-85ba-17451fb5fc8f.jpg"
     },
     {
+      "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\2fef45ebd97febbf3bdc96a939993580.jpg",
+      "PackagePath": "staticwebassets\\img\\2fef45ebd97febbf3bdc96a939993580.jpg"
+    },
+    {
+      "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\3471d19418f51bafd24d1dacf2e9144f.jpg",
+      "PackagePath": "staticwebassets\\img\\3471d19418f51bafd24d1dacf2e9144f.jpg"
+    },
+    {
       "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\3ba13f0e-19a5-4d70-9649-30a59d2a7837.png",
       "PackagePath": "staticwebassets\\img\\3ba13f0e-19a5-4d70-9649-30a59d2a7837.png"
+    },
+    {
+      "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\4d36ae35-1ea1-4dba-9126-406607364960.jpg",
+      "PackagePath": "staticwebassets\\img\\4d36ae35-1ea1-4dba-9126-406607364960.jpg"
+    },
+    {
+      "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\543dbfc5a307d34796ed1b126d59cc0e.jpg",
+      "PackagePath": "staticwebassets\\img\\543dbfc5a307d34796ed1b126d59cc0e.jpg"
     },
     {
       "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\5967c39f-b509-4053-9bac-d7fcf9e6156b.png",
@@ -77,12 +105,28 @@
       "PackagePath": "staticwebassets\\img\\786e62c7-8e02-4312-96a9-d7fbaceb123b.jpg"
     },
     {
+      "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\97f4e58ee8e715bf0d1d4bf1ff602262.jpg",
+      "PackagePath": "staticwebassets\\img\\97f4e58ee8e715bf0d1d4bf1ff602262.jpg"
+    },
+    {
       "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\O1CN01nwoQws27ch3mDQ2zo_2200779967818.png",
       "PackagePath": "staticwebassets\\img\\O1CN01nwoQws27ch3mDQ2zo_2200779967818.png"
     },
     {
+      "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\Z1.jpg",
+      "PackagePath": "staticwebassets\\img\\Z1.jpg"
+    },
+    {
+      "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\Z3.jpg",
+      "PackagePath": "staticwebassets\\img\\Z3.jpg"
+    },
+    {
       "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\a338e1ed-149b-4f26-9773-b1e5fd8a7150.jpg",
       "PackagePath": "staticwebassets\\img\\a338e1ed-149b-4f26-9773-b1e5fd8a7150.jpg"
+    },
+    {
+      "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\a34e7b5699b068f3f87bd34792678465.jpg",
+      "PackagePath": "staticwebassets\\img\\a34e7b5699b068f3f87bd34792678465.jpg"
     },
     {
       "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\b8336f1a-b793-46e2-95d1-307aba51b0e1.jpg",
@@ -101,6 +145,10 @@
       "PackagePath": "staticwebassets\\img\\camera2.jpg"
     },
     {
+      "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\ce087c4556ccf37b7e0d054f43d169a5.jpg",
+      "PackagePath": "staticwebassets\\img\\ce087c4556ccf37b7e0d054f43d169a5.jpg"
+    },
+    {
       "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\d056ae94-7169-4119-843a-de1ae50453e8.jpg",
       "PackagePath": "staticwebassets\\img\\d056ae94-7169-4119-843a-de1ae50453e8.jpg"
     },
@@ -115,6 +163,10 @@
     {
       "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\den-ngu-thong-minh-xiaomi-mijia-gen2_df15b5fde9944f7f9b48b63ec5fcf8b0_master.jpg",
       "PackagePath": "staticwebassets\\img\\den-ngu-thong-minh-xiaomi-mijia-gen2_df15b5fde9944f7f9b48b63ec5fcf8b0_master.jpg"
+    },
+    {
+      "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\e5d069f4b195b6b781f32ff6e808b43b.jpg",
+      "PackagePath": "staticwebassets\\img\\e5d069f4b195b6b781f32ff6e808b43b.jpg"
     },
     {
       "Id": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\e6acdc84-e43c-48e3-bf40-22844fc4403b.jpg",

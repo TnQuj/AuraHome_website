@@ -9,6 +9,7 @@ using AISmartHome.Data;
 using AISmartHome.Models;
 using System.IO;
 using ClosedXML.Excel;
+
 namespace AISmartHome.Controllers
 {
     public class SanPhamsController : Controller
@@ -30,18 +31,14 @@ namespace AISmartHome.Controllers
         // GET: SanPhams/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var sanPham = await _context.SanPhams
                 .Include(s => s.MaDanhMucNavigation)
+                .Include(s => s.HinhAnhSanPhams) // BẮT BUỘC PHẢI CÓ DÒNG NÀY THÌ MỚI HIỆN ẢNH PHỤ
                 .FirstOrDefaultAsync(m => m.MaSanPham == id);
-            if (sanPham == null)
-            {
-                return NotFound();
-            }
+
+            if (sanPham == null) return NotFound();
 
             return View(sanPham);
         }
@@ -53,66 +50,71 @@ namespace AISmartHome.Controllers
             return View();
         }
 
-        // POST: SanPhams/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // BƯỚC 1: Đã xóa "HinhAnh" khỏi [Bind]
-        public async Task<IActionResult> Create([Bind("MaSanPham,TenSanPham,GiaBan,MoTa,SoLuong,MaDanhMuc")] SanPham sanPham, IFormFile? HinhAnhUpload)
+        // Lưu ý: Mình đã xóa biến List<IFormFile> ở tham số đi, chỉ giữ lại ảnh chính
+        public async Task<IActionResult> Create([Bind("MaSanPham,TenSanPham,GiaBan,MoTa,SoLuong,MaDanhMuc")] SanPham sanPham,
+                                        IFormFile HinhAnhUpload)
         {
-            // BƯỚC 2: Xóa bỏ kiểm tra (Validation) tự động của hệ thống đối với các trường này
             ModelState.Remove("HinhAnh");
+            ModelState.Remove("HinhAnhSanPhams");
             ModelState.Remove("MaDanhMucNavigation");
-            ModelState.Remove("ChiTietDonHangs");
-            ModelState.Remove("ChiTietGioHangs");
-            ModelState.Remove("HuongDanSuDungs");
 
             if (ModelState.IsValid)
             {
-                // KỊCH BẢN 1: NGƯỜI DÙNG CÓ CHỌN ẢNH
+                string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img");
+                if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+
+                // 1. LƯU ẢNH CHÍNH
                 if (HinhAnhUpload != null && HinhAnhUpload.Length > 0)
                 {
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(HinhAnhUpload.FileName);
-                    string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img");
+                    string tenFileChinh = Guid.NewGuid().ToString() + Path.GetExtension(HinhAnhUpload.FileName);
+                    string duongDanChinh = Path.Combine(uploadPath, tenFileChinh);
 
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
-
-                    string filePath = Path.Combine(uploadsFolder, fileName);
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    using (var stream = new FileStream(duongDanChinh, FileMode.Create))
                     {
                         await HinhAnhUpload.CopyToAsync(stream);
                     }
-
-                    // Gắn tên file thật vào sản phẩm
-                    sanPham.HinhAnh = fileName;
-                }
-                // KỊCH BẢN 2: NGƯỜI DÙNG KHÔNG CHỌN ẢNH (GIẢI QUYẾT LỖI NULL Ở ĐÂY)
-                else
-                {
-                    // Gán một giá trị chuỗi hợp lệ để Database không báo lỗi Null
-                    // Lời khuyên: Bạn nên copy 1 bức ảnh logo hoặc ảnh trống đặt tên là "no-image.png" để vào thư mục wwwroot/img/
-                    sanPham.HinhAnh = "no-image.png";
+                    sanPham.HinhAnh = tenFileChinh;
                 }
 
-                try
+                // 2. LƯU SẢN PHẨM VÀO DB ĐỂ CÓ ID
+                _context.Add(sanPham);
+                await _context.SaveChangesAsync();
+
+                // =========================================================
+                // 3. CÁCH LẤY ẢNH PHỤ SIÊU CHẮC CHẮN (THÒ TAY TRỰC TIẾP VÀO REQUEST)
+                // =========================================================
+                var hinhAnhChiTietFiles = HttpContext.Request.Form.Files.GetFiles("HinhAnhChiTiet");
+
+                if (hinhAnhChiTietFiles != null && hinhAnhChiTietFiles.Count > 0)
                 {
-                    _context.Add(sanPham);
+                    foreach (var file in hinhAnhChiTietFiles)
+                    {
+                        if (file.Length > 0)
+                        {
+                            string tenFilePhu = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                            string duongDanPhu = Path.Combine(uploadPath, tenFilePhu);
+
+                            using (var stream = new FileStream(duongDanPhu, FileMode.Create))
+                            {
+                                await file.CopyToAsync(stream);
+                            }
+
+                            var hinhAnhPhu = new HinhAnhSanPham
+                            {
+                                UrlHinhAnh = tenFilePhu,
+                                MaSanPham = sanPham.MaSanPham
+                            };
+                            _context.HinhAnhSanPhams.Add(hinhAnhPhu);
+                        }
+                    }
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index)); // Xong thì về trang chủ
                 }
-                catch (Exception ex)
-                {
-                    // Nếu Database vẫn cự tuyệt, lỗi sẽ hiện ra rõ ràng để ta biết
-                    ModelState.AddModelError("", "Lỗi khi lưu vào CSDL: " + ex.Message);
-                }
+
+                return RedirectToAction(nameof(Index));
             }
 
-            // Nếu code chạy đến đây nghĩa là có lỗi nhập liệu (ví dụ để trống Tên Sản Phẩm)
-            // Cần load lại dropdown Danh Mục để giao diện không bị sập
             ViewData["MaDanhMuc"] = new SelectList(_context.DanhMucSanPhams, "MaDanhMuc", "TenDanhMuc", sanPham.MaDanhMuc);
             return View(sanPham);
         }
@@ -120,89 +122,129 @@ namespace AISmartHome.Controllers
         // GET: SanPhams/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var sanPham = await _context.SanPhams.FindAsync(id);
-            if (sanPham == null)
-            {
-                return NotFound();
-            }
+            var sanPham = await _context.SanPhams
+                .Include(s => s.HinhAnhSanPhams) // Phải kéo ảnh phụ ra thì giao diện Edit mới thấy
+                .FirstOrDefaultAsync(m => m.MaSanPham == id);
+
+            if (sanPham == null) return NotFound();
+
             ViewData["MaDanhMuc"] = new SelectList(_context.DanhMucSanPhams, "MaDanhMuc", "TenDanhMuc", sanPham.MaDanhMuc);
             return View(sanPham);
         }
 
-        // POST: SanPhams/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // BƯỚC 1: Thêm tham số IFormFile HinhAnhUpload vào hàm Edit
-        public async Task<IActionResult> Edit(int id, [Bind("MaSanPham,TenSanPham,GiaBan,MoTa,HinhAnh,SoLuong,MaDanhMuc")] SanPham sanPham, IFormFile? HinhAnhUpload)
+        public async Task<IActionResult> Edit(int id, [Bind("MaSanPham,TenSanPham,GiaBan,MoTa,SoLuong,MaDanhMuc,HinhAnh")] SanPham sanPham,
+                              IFormFile? HinhAnhUpload, string? IdsToXoa) // Thêm IdsToXoa ở đây
         {
-            if (id != sanPham.MaSanPham)
-            {
-                return NotFound();
-            }
+            if (id != sanPham.MaSanPham) return NotFound();
+
+            ModelState.Remove("HinhAnh");
+            ModelState.Remove("HinhAnhSanPhams");
+            ModelState.Remove("MaDanhMucNavigation");
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    // BƯỚC 2: Xử lý file ảnh được upload
+                    string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img");
+
+                    // --- BỔ SUNG: XỬ LÝ XÓA ẢNH CHI TIẾT ĐÃ CHỌN ---
+                    if (!string.IsNullOrEmpty(IdsToXoa))
+                    {
+                        // Chuyển chuỗi "1,2,3" thành danh sách số nguyên
+                        var ids = IdsToXoa.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                          .Select(int.Parse).ToList();
+
+                        foreach (var anhId in ids)
+                        {
+                            var anhXoa = await _context.HinhAnhSanPhams.FindAsync(anhId);
+                            if (anhXoa != null)
+                            {
+                                // 1. Xóa file vật lý trong thư mục wwwroot/img
+                                string filePath = Path.Combine(uploadPath, anhXoa.UrlHinhAnh);
+                                if (System.IO.File.Exists(filePath))
+                                {
+                                    System.IO.File.Delete(filePath);
+                                }
+
+                                // 2. Xóa bản ghi trong Database
+                                _context.HinhAnhSanPhams.Remove(anhXoa);
+                            }
+                        }
+                        // Lưu thay đổi xóa trước khi thực hiện các bước tiếp theo
+                        await _context.SaveChangesAsync();
+                    }
+                    // ----------------------------------------------
+
+                    // 1. UPDATE ẢNH CHÍNH
                     if (HinhAnhUpload != null && HinhAnhUpload.Length > 0)
                     {
-                        // Tạo tên file ngẫu nhiên (dùng Guid) để không bao giờ bị trùng tên làm lỗi ảnh cũ
-                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(HinhAnhUpload.FileName);
+                        string tenFileChinh = Guid.NewGuid().ToString() + Path.GetExtension(HinhAnhUpload.FileName);
+                        string duongDanChinh = Path.Combine(uploadPath, tenFileChinh);
 
-                        // Đường dẫn lưu file vào thư mục wwwroot/images/
-                        string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", fileName);
-
-                        // Copy file từ bộ nhớ tạm vào ổ cứng server
-                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        using (var stream = new FileStream(duongDanChinh, FileMode.Create))
                         {
                             await HinhAnhUpload.CopyToAsync(stream);
                         }
-
-                        // Cập nhật tên ảnh mới vào Model để lưu xuống Database
-                        sanPham.HinhAnh = fileName;
+                        sanPham.HinhAnh = tenFileChinh;
                     }
-                    // LƯU Ý: Nếu HinhAnhUpload == null, hệ thống sẽ tự động dùng lại tên ảnh cũ 
-                    // được gửi lên từ thẻ <input type="hidden" asp-for="HinhAnh" /> ở Giao diện
 
+                    // 2. UPDATE SẢN PHẨM
                     _context.Update(sanPham);
                     await _context.SaveChangesAsync();
+
+                    // 3. CÁCH LẤY ẢNH PHỤ (Giữ nguyên logic của bạn)
+                    var hinhAnhChiTietFiles = HttpContext.Request.Form.Files.GetFiles("HinhAnhChiTiet");
+                    if (hinhAnhChiTietFiles != null && hinhAnhChiTietFiles.Count > 0)
+                    {
+                        foreach (var file in hinhAnhChiTietFiles)
+                        {
+                            if (file.Length > 0)
+                            {
+                                string tenFilePhu = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                                string duongDanPhu = Path.Combine(uploadPath, tenFilePhu);
+
+                                using (var stream = new FileStream(duongDanPhu, FileMode.Create))
+                                {
+                                    await file.CopyToAsync(stream);
+                                }
+
+                                var hinhAnhPhu = new HinhAnhSanPham
+                                {
+                                    UrlHinhAnh = tenFilePhu,
+                                    MaSanPham = sanPham.MaSanPham
+                                };
+                                _context.HinhAnhSanPhams.Add(hinhAnhPhu);
+                            }
+                        }
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!SanPhamExists(sanPham.MaSanPham)) return NotFound();
                     else throw;
                 }
-                return RedirectToAction(nameof(Index)); // Quay lại trang danh sách
+                return RedirectToAction(nameof(Index));
             }
 
-            // Nếu có lỗi nhập liệu, load lại SelectList danh mục
             ViewData["MaDanhMuc"] = new SelectList(_context.DanhMucSanPhams, "MaDanhMuc", "TenDanhMuc", sanPham.MaDanhMuc);
             return View(sanPham);
         }
-
         // GET: SanPhams/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var sanPham = await _context.SanPhams
                 .Include(s => s.MaDanhMucNavigation)
+                .Include(s => s.HinhAnhSanPhams) // Phải kéo theo ảnh phụ để View đếm số lượng
                 .FirstOrDefaultAsync(m => m.MaSanPham == id);
-            if (sanPham == null)
-            {
-                return NotFound();
-            }
+
+            if (sanPham == null) return NotFound();
 
             return View(sanPham);
         }
@@ -212,13 +254,51 @@ namespace AISmartHome.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var sanPham = await _context.SanPhams.FindAsync(id);
+            // BẮT BUỘC: Phải include rổ ảnh phụ vào thì mới lấy được tên file để xóa ổ cứng
+            var sanPham = await _context.SanPhams
+                .Include(s => s.HinhAnhSanPhams)
+                .FirstOrDefaultAsync(m => m.MaSanPham == id);
+
             if (sanPham != null)
             {
+                string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img");
+
+                // ===============================================
+                // BƯỚC 1: XÓA FILE ẢNH CHÍNH KHỎI Ổ CỨNG
+                // ===============================================
+                if (!string.IsNullOrEmpty(sanPham.HinhAnh))
+                {
+                    string mainImgPath = Path.Combine(uploadPath, sanPham.HinhAnh);
+                    if (System.IO.File.Exists(mainImgPath))
+                    {
+                        System.IO.File.Delete(mainImgPath); // Tiêu diệt file!
+                    }
+                }
+
+                // ===============================================
+                // BƯỚC 2: XÓA TẤT CẢ FILE ẢNH PHỤ KHỎI Ổ CỨNG
+                // ===============================================
+                if (sanPham.HinhAnhSanPhams != null && sanPham.HinhAnhSanPhams.Any())
+                {
+                    foreach (var anh in sanPham.HinhAnhSanPhams)
+                    {
+                        string subImgPath = Path.Combine(uploadPath, anh.UrlHinhAnh);
+                        if (System.IO.File.Exists(subImgPath))
+                        {
+                            System.IO.File.Delete(subImgPath); // Tiêu diệt file phụ!
+                        }
+                    }
+                }
+
+                // ===============================================
+                // BƯỚC 3: XÓA DATA KHỎI DATABASE
+                // ===============================================
+                // Nhờ SQL có lệnh "ON DELETE CASCADE" bạn đã setup lúc đầu, xóa Sản phẩm 
+                // sẽ tự động xóa sạch các dòng dữ liệu trong bảng HinhAnhSanPham. Rất nhàn!
                 _context.SanPhams.Remove(sanPham);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -283,6 +363,7 @@ namespace AISmartHome.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
         private bool SanPhamExists(int id)
         {
             return _context.SanPhams.Any(e => e.MaSanPham == id);

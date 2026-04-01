@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "FwYpIClE57WJKpdehNj9probZrlydfMvWBhh+ArrCGE=",
+  "Hash": "WGSObTgxyN4ew7G1ClPozoTKyQx214eYYqwCxbaItNs=",
   "Source": "AISmartHome",
   "BasePath": "_content/AISmartHome",
   "Mode": "Default",
@@ -1254,6 +1254,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\Z3.jpg"
+    },
+    {
+      "Identity": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\js\\app.js",
+      "SourceId": "AISmartHome",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\",
+      "BasePath": "_content/AISmartHome",
+      "RelativePath": "js/app#[.{fingerprint}]?.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "qib3y55pcg",
+      "Integrity": "EoMqoe5TMrsfPAQfmqwGK035ZMYIzCU5L/3QciqKgok=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\app.js"
     },
     {
       "Identity": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\js\\site.js",
@@ -3072,7 +3093,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 25 Mar 2026 06:25:01 GMT"
+          "Value": "Fri, 27 Mar 2026 08:45:17 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -3109,7 +3130,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 25 Mar 2026 06:25:01 GMT"
+          "Value": "Fri, 27 Mar 2026 08:45:17 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4138,7 +4159,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 25 Mar 2026 06:25:01 GMT"
+          "Value": "Fri, 27 Mar 2026 08:45:17 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4183,7 +4204,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 25 Mar 2026 06:25:01 GMT"
+          "Value": "Fri, 27 Mar 2026 08:45:17 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -7310,6 +7331,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-wW4V8wwpYYXrWrSrRt/szouJ/DnNyN1B7gamAf8eqe8="
+        }
+      ]
+    },
+    {
+      "Route": "js/app.js",
+      "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\js\\app.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "13921"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"EoMqoe5TMrsfPAQfmqwGK035ZMYIzCU5L/3QciqKgok=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 30 Mar 2026 09:04:19 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-EoMqoe5TMrsfPAQfmqwGK035ZMYIzCU5L/3QciqKgok="
+        }
+      ]
+    },
+    {
+      "Route": "js/app.qib3y55pcg.js",
+      "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\js\\app.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "13921"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"EoMqoe5TMrsfPAQfmqwGK035ZMYIzCU5L/3QciqKgok=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 30 Mar 2026 09:04:19 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "qib3y55pcg"
+        },
+        {
+          "Name": "label",
+          "Value": "js/app.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-EoMqoe5TMrsfPAQfmqwGK035ZMYIzCU5L/3QciqKgok="
         }
       ]
     },

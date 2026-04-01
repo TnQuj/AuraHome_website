@@ -161,8 +161,10 @@ async function addToCartAjax(event) {
     }
 }
 
+// Hàm Xóa sản phẩm ngầm (AJAX)
 async function removeFromCartAjax(id, event) {
-    event.preventDefault();
+    if (event) event.preventDefault();
+
     const formData = new FormData();
     formData.append("id", id);
 
@@ -171,60 +173,100 @@ async function removeFromCartAjax(id, event) {
             method: 'POST',
             body: formData
         });
-        const result = await response.json();
-        if (result.success) {
-            renderMiniCart(result);
+
+        if (response.ok) { // 200 OK sẽ chui vào đây
+            const result = await response.json();
+            if (result.success) {
+                renderMiniCart(result); // Vẽ lại giỏ hàng (sản phẩm sẽ biến mất)
+            }
         }
     } catch (error) {
-        console.error('Lỗi khi xóa:', error);
+        console.error('Lỗi khi xóa sản phẩm:', error);
     }
 }
 
+// Hàm vẽ lại Giỏ hàng trượt khi có dữ liệu mới
 function renderMiniCart(data) {
     const container = document.getElementById('mini-cart-items');
-    if (!container) return;
+    const totalEl = document.getElementById('mini-cart-total');
+    const badge = document.getElementById('cart-badge');
 
-    container.innerHTML = '';
+    // 1. Nếu giỏ hàng trống
+    if (!data || !data.items || data.items.length === 0) {
+        container.innerHTML = `
+            <div class="flex flex-col items-center justify-center h-full text-slate-400 gap-3 opacity-70 mt-10">
+                <i class="fa-solid fa-cart-shopping text-5xl"></i>
+                <p class="text-sm font-medium">Giỏ hàng của bạn đang trống</p>
+            </div>`;
+        totalEl.innerText = '0 ₫';
+        if (badge) badge.classList.add('hidden'); // Ẩn chấm đỏ
+        return;
+    }
+
+    // 2. Nếu có sản phẩm thì vẽ danh sách
+    let html = '';
     data.items.forEach(item => {
-        const html = `
-            <div class="flex gap-4 items-center border-b border-slate-100 pb-4 relative group">
-                <img src="${item.hinhAnh}" class="w-20 h-20 object-contain bg-slate-50 rounded-lg p-2 border border-slate-100" />
-                <div class="flex-1 pr-6">
-                    <a href="/Customers/Details?id=${item.maSanPham}" class="text-[14px] font-medium text-brand-navy leading-snug line-clamp-2 hover:text-brand-cyan mb-1">${item.tenSanPham}</a>
-                    <div class="text-sm text-slate-500">${item.soLuong} × <span class="font-bold text-brand-navy">${item.gia.toLocaleString('vi-VN')} ₫</span></div>
+        html += `
+            <div class="flex items-center gap-4 bg-slate-50/50 p-3 rounded-2xl border border-slate-100 relative group">
+                
+                <div class="w-16 h-16 rounded-xl bg-white border border-slate-100 overflow-hidden shrink-0 flex items-center justify-center p-1">
+                    <img src="${item.hinhAnh}" alt="${item.tenSanPham}" class="w-full h-full object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/150'">
                 </div>
-                <a href="#" onclick="removeFromCartAjax(${item.maSanPham}, event)" class="absolute right-0 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-brand-red hover:border-brand-red transition-colors">
-                    <i class="fa-solid fa-xmark text-xs"></i>
-                </a>
+                
+                <div class="flex-1 min-w-0 pr-6">
+                    <h4 class="text-[13px] font-bold text-slate-800 leading-snug truncate mb-1">${item.tenSanPham}</h4>
+                    <div class="text-[12px] text-slate-500 font-medium">
+                        ${item.soLuong} × <span class="text-brand-cyan font-bold">${item.gia.toLocaleString('vi-VN')} ₫</span>
+                    </div>
+                </div>
+
+                <button type="button" onclick="removeFromCartAjax(${item.maSanPham}, event)" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-white text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:shadow-sm border border-slate-100 transition-all opacity-0 group-hover:opacity-100">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+
             </div>
         `;
-        container.insertAdjacentHTML('beforeend', html);
     });
 
-    const totalEl = document.getElementById('mini-cart-total');
-    if (totalEl) totalEl.innerText = data.totalPrice.toLocaleString('vi-VN') + ' ₫';
+    // Cập nhật HTML danh sách sản phẩm
+    container.innerHTML = html;
 
-    const badge = document.getElementById('cart-badge');
+    // Cập nhật Tổng tiền
+    totalEl.innerText = data.totalPrice.toLocaleString('vi-VN') + ' ₫';
+
+    // Cập nhật Chấm đỏ trên Header
     if (badge) {
-        if (data.totalItems > 0) {
-            badge.innerText = data.totalItems;
-            badge.classList.remove('hidden');
-        } else {
-            badge.classList.add('hidden');
-        }
+        badge.innerText = data.totalItems;
+        badge.classList.remove('hidden');
     }
 }
-
-function openMiniCart() {
+// Hàm Mở Giỏ Hàng Trượt
+async function openMiniCart() {
     const overlay = document.getElementById('mini-cart-overlay');
     const panel = document.getElementById('mini-cart-panel');
-    if (overlay && panel) {
-        overlay.classList.remove('hidden');
-        setTimeout(() => {
-            overlay.classList.remove('opacity-0');
-            panel.classList.remove('translate-x-full');
-        }, 10);
-        document.body.style.overflow = 'hidden';
+
+    if (!overlay || !panel) return;
+
+    // 1. Mở giao diện ra trước cho mượt (Hiệu ứng)
+    overlay.classList.remove('hidden');
+    // Đợi 10ms để Tailwind kích hoạt hiệu ứng Transition
+    setTimeout(() => {
+        overlay.classList.remove('opacity-0');
+        panel.classList.remove('translate-x-full');
+    }, 10);
+
+    // 2. GỌI AJAX LẤY DỮ LIỆU TỪ SERVER ĐẮP VÀO GIAO DIỆN
+    try {
+        const response = await fetch('/Customers/GetMiniCartAjax');
+        if (response.ok) {
+            const result = await response.json();
+            if (result.success) {
+                // Gọi hàm vẽ lại danh sách sản phẩm (Hàm này bạn đã có sẵn rồi)
+                renderMiniCart(result);
+            }
+        }
+    } catch (error) {
+        console.error('Lỗi khi lấy dữ liệu giỏ hàng:', error);
     }
 }
 
@@ -240,3 +282,72 @@ function closeMiniCart() {
         }, 300);
     }
 }
+
+// =========================================================
+// CHUYỂN ĐỔI CHẾ ĐỘ XEM (GRID / LIST)
+// =========================================================
+function changeViewMode(mode) {
+    const container = document.getElementById('product-list-container');
+    const btnGrid = document.getElementById('btn-grid');
+    const btnList = document.getElementById('btn-list');
+
+    if (!container || !btnGrid || !btnList) return;
+
+    // Lấy tất cả các thẻ Card sản phẩm
+    const cards = container.querySelectorAll('.group');
+
+    if (mode === 'list') {
+        // --- CHUYỂN SANG DẠNG DANH SÁCH (LIST) ---
+        // 1. Đổi container thành 1 cột (hoặc 2 cột cho màn hình to)
+        container.className = 'grid grid-cols-1 lg:grid-cols-2 gap-6';
+
+        // 2. Bật màu cho nút List, tắt màu nút Grid
+        btnList.classList.add('bg-white', 'dark:bg-slate-700', 'text-cyan-500', 'shadow-sm');
+        btnList.classList.remove('text-slate-400');
+        btnGrid.classList.remove('bg-white', 'dark:bg-slate-700', 'text-cyan-500', 'shadow-sm');
+        btnGrid.classList.add('text-slate-400');
+
+        // 3. Xoay ngang thẻ sản phẩm
+        cards.forEach(card => {
+            card.classList.remove('flex-col');
+            card.classList.add('flex-row', 'items-center');
+
+            // Chỉnh lại kích thước phần chứa hình ảnh cho gọn lại
+            const imgBox = card.firstElementChild;
+            imgBox.classList.add('w-2/5', 'sm:w-1/3', 'shrink-0', 'border-r', 'border-slate-100', 'dark:border-slate-700');
+        });
+
+        // 4. Lưu tùy chọn vào LocalStorage (F5 không bị mất)
+        localStorage.setItem('userViewMode', 'list');
+
+    } else {
+        // --- CHUYỂN SANG DẠNG LƯỚI (GRID) ---
+        // 1. Đổi container về 4 cột mặc định
+        container.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6';
+
+        // 2. Bật màu nút Grid, tắt màu nút List
+        btnGrid.classList.add('bg-white', 'dark:bg-slate-700', 'text-cyan-500', 'shadow-sm');
+        btnGrid.classList.remove('text-slate-400');
+        btnList.classList.remove('bg-white', 'dark:bg-slate-700', 'text-cyan-500', 'shadow-sm');
+        btnList.classList.add('text-slate-400');
+
+        // 3. Xoay dọc thẻ sản phẩm lại
+        cards.forEach(card => {
+            card.classList.add('flex-col');
+            card.classList.remove('flex-row', 'items-center');
+
+            const imgBox = card.firstElementChild;
+            imgBox.classList.remove('w-2/5', 'sm:w-1/3', 'shrink-0', 'border-r', 'border-slate-100', 'dark:border-slate-700');
+        });
+
+        localStorage.setItem('userViewMode', 'grid');
+    }
+}
+
+// Tự động khôi phục chế độ xem khi vừa load trang
+document.addEventListener('DOMContentLoaded', () => {
+    const savedMode = localStorage.getItem('userViewMode');
+    if (savedMode === 'list') {
+        changeViewMode('list');
+    }
+});

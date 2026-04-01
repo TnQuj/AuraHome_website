@@ -521,7 +521,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 25 Mar 2026 06:25:01 GMT"
+          "Value": "Fri, 27 Mar 2026 08:45:17 GMT"
         }
       ],
       "EndpointProperties": [
@@ -558,7 +558,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 25 Mar 2026 06:25:01 GMT"
+          "Value": "Fri, 27 Mar 2026 08:45:17 GMT"
         }
       ],
       "EndpointProperties": [
@@ -1587,7 +1587,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 25 Mar 2026 06:25:01 GMT"
+          "Value": "Fri, 27 Mar 2026 08:45:17 GMT"
         }
       ],
       "EndpointProperties": [
@@ -1632,7 +1632,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 25 Mar 2026 06:25:01 GMT"
+          "Value": "Fri, 27 Mar 2026 08:45:17 GMT"
         }
       ],
       "EndpointProperties": [
@@ -4755,6 +4755,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-dtNgdLUa+I+Tan9ZwUGIDMmgCCnj5m7iaMM9hzWgEMA="
+        }
+      ]
+    },
+    {
+      "Route": "js/app.js",
+      "AssetFile": "js/app.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "13921"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"EoMqoe5TMrsfPAQfmqwGK035ZMYIzCU5L/3QciqKgok=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 30 Mar 2026 09:04:19 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-EoMqoe5TMrsfPAQfmqwGK035ZMYIzCU5L/3QciqKgok="
+        }
+      ]
+    },
+    {
+      "Route": "js/app.qib3y55pcg.js",
+      "AssetFile": "js/app.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "13921"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"EoMqoe5TMrsfPAQfmqwGK035ZMYIzCU5L/3QciqKgok=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 30 Mar 2026 09:04:19 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "qib3y55pcg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-EoMqoe5TMrsfPAQfmqwGK035ZMYIzCU5L/3QciqKgok="
+        },
+        {
+          "Name": "label",
+          "Value": "js/app.js"
         }
       ]
     },

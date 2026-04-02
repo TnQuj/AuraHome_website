@@ -33,6 +33,11 @@ public partial class DonHang
     [StringLength(100)]
     public string? TrangThaiDonHang { get; set; }
 
+    public string? GhiChu { get; set; }
+
+    public string? Email { get; set; }
+
+
     [InverseProperty("MaDonHangNavigation")]
     public virtual ICollection<ChiTietDonHang> ChiTietDonHangs { get; set; } = new List<ChiTietDonHang>();
 

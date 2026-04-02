@@ -209,7 +209,7 @@
                 </div>
 
                 <div class="flex items-center gap-4 pl-4 ml-2">
-                    <button class="text-brand-navy hover:text-brand-cyan transition-colors" title="Account">
+                    <button type="button" onclick="openLoginModal()" class="text-brand-navy hover:text-brand-cyan transition-colors" title="Account">
                         <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
                         </svg>
@@ -383,19 +383,108 @@
                 <span id="mini-cart-total" class="text-xl font-black text-brand-navy">0 VNĐ</span>
             </div>
             <div class="flex flex-col gap-3">
-                <a href="/Customers/Cart" class="w-full bg-[#2b3a82] hover:bg-brand-navy text-white text-center py-3.5 rounded-sm font-medium transition-colors">Xem giỏ hàng</a>
-                <a href="/Checkout" class="w-full bg-brand-red hover:bg-red-700 text-white text-center py-3.5 rounded-sm font-medium transition-colors">Thanh toán</a>
+                <a asp-controller="Customers" asp-action="Cart"
+                   class="w-full bg-[#2b3a82] hover:bg-brand-navy text-white text-center py-3.5 rounded-sm font-medium transition-colors">
+                    Xem giỏ hàng
+                </a>
+
+                <a asp-controller="Customers" asp-action="Checkout"
+                   class="w-full bg-brand-red hover:bg-red-700 text-white text-center py-3.5 rounded-sm font-medium transition-colors">
+                    Thanh toán
+                </a>
             </div>
         </div>
     </div>
+
+    <div id="adminLoginModal" class="fixed inset-0 z-[10005] hidden items-center justify-center bg-brand-navy/80 backdrop-blur-sm transition-all">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl w-[90%] max-w-sm transform scale-100 transition-transform relative">
+
+            <button type="button" onclick="closeLoginModal()" class="absolute top-4 right-5 text-slate-400 hover:text-rose-500 transition-colors">
+                <i class="fa-solid fa-xmark text-2xl"></i>
+            </button>
+
+            <div class="text-center mb-6 mt-2">
+                <div class="mx-auto w-14 h-14 bg-brand-navy rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-brand-navy/20">
+                    <i class="fa-solid fa-shield-halved text-brand-cyan text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-black text-brand-navy uppercase tracking-wider">Đăng nhập</h3>
+            </div>
+
+            <form asp-controller="Admin" asp-action="Login" method="POST" class="space-y-5">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <i class="fa-solid fa-user text-slate-400 text-sm"></i>
+                    </div>
+                    <input name="Username" type="text" required
+                           class="block w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-cyan/20 focus:border-brand-cyan transition-all"
+                           placeholder="Tài khoản">
+                </div>
+
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <i class="fa-solid fa-lock text-slate-400 text-sm"></i>
+                    </div>
+                    <input name="Password" type="password" required
+                           class="block w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-cyan/20 focus:border-brand-cyan transition-all"
+                           placeholder="Mật khẩu">
+                </div>
+
+                <div class="flex items-center justify-between text-xs">
+                    <label class="flex items-center text-slate-600 cursor-pointer">
+                        <input type="checkbox" class="mr-2 text-brand-cyan rounded border-slate-300 focus:ring-brand-cyan"> Ghi nhớ
+                    </label>
+                    <a href="#" class="text-brand-cyan font-semibold hover:underline">Quên mật khẩu?</a>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 bg-brand-navy text-white text-sm font-black uppercase tracking-widest rounded-xl hover:bg-slate-800 transition-all shadow-lg shadow-brand-navy/20">
+                    Đăng nhập
+                </button>
+            </form>
+        </div>
+    </div>
+
+    @if (TempData["LoginError"] != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Hàm này giờ sẽ được gọi từ file login.js của bạn
+                openLoginModal();
+
+                // Hiện thông báo lỗi
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Đăng nhập thất bại',
+                text: '@Html.Raw(TempData["LoginError"])',
+                confirmButtonColor: '#0f172a'
+                });
+            });
+        </script>
+    }
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/app.js" asp-append-version="true"></script>
-
+    <script src="~/js/login.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    @if (TempData["LoginError"] != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Hàm này giờ sẽ được gọi từ file login.js của bạn
+                openLoginModal();
 
+                // Hiện thông báo lỗi
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Đăng nhập thất bại',
+                text: '@Html.Raw(TempData["LoginError"])',
+                confirmButtonColor: '#0f172a'
+                });
+            });
+        </script>
+    }
 </body>
 </html>
    

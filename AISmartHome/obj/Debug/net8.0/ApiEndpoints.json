@@ -1,1 +1,34 @@
-[]
+[
+  {
+    "ContainingType": "AISmartHome.Controllers.OtpController",
+    "Method": "SendOtp",
+    "RelativePath": "api/Otp/send",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "AISmartHome.Controllers.OtpRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AISmartHome.Controllers.OtpController",
+    "Method": "VerifyOtp",
+    "RelativePath": "api/Otp/verify",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "AISmartHome.Controllers.VerifyRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

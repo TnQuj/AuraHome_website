@@ -15,7 +15,11 @@ wwwroot\img\28269c7d-9d3b-4088-82ac-97028db790df.png
 wwwroot\img\2839f8ee-ccb2-4b3d-85ba-17451fb5fc8f.jpg
 wwwroot\img\2fef45ebd97febbf3bdc96a939993580.jpg
 wwwroot\img\3471d19418f51bafd24d1dacf2e9144f.jpg
+wwwroot\img\3af06c488c1163ad41bf7d831a35a942.jpg
 wwwroot\img\3ba13f0e-19a5-4d70-9649-30a59d2a7837.png
+wwwroot\img\420f2ff1ac046d4869f657d9f732e833.jpg
+wwwroot\img\44b6f681666ab402ca49644ded22c688.jpg
+wwwroot\img\4c46adde0b8add716f5b20b4d315d0ac.jpg
 wwwroot\img\4d36ae35-1ea1-4dba-9126-406607364960.jpg
 wwwroot\img\543dbfc5a307d34796ed1b126d59cc0e.jpg
 wwwroot\img\5967c39f-b509-4053-9bac-d7fcf9e6156b.png
@@ -33,6 +37,7 @@ wwwroot\img\camera2.jpg
 wwwroot\img\ce087c4556ccf37b7e0d054f43d169a5.jpg
 wwwroot\img\d056ae94-7169-4119-843a-de1ae50453e8.jpg
 wwwroot\img\de0ebccb-493a-4311-9ebb-11e280005a1d.jpg
+wwwroot\img\de7d2992d5d3094e8faa5c87eaeae19c.jpg
 wwwroot\img\default-product.png
 wwwroot\img\den-ngu-thong-minh-xiaomi-mijia-gen2_df15b5fde9944f7f9b48b63ec5fcf8b0_master.jpg
 wwwroot\img\e5d069f4b195b6b781f32ff6e808b43b.jpg
@@ -56,6 +61,7 @@ wwwroot\img\unnamed.jpg
 wwwroot\img\Z1.jpg
 wwwroot\img\Z3.jpg
 wwwroot\js\app.js
+wwwroot\js\login.js
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap.css
 wwwroot\lib\bootstrap\dist\css\bootstrap.css.map

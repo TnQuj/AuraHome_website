@@ -46,16 +46,36 @@
                             <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Thông tin khách hàng</h4>
                             <div class="bg-slate-50 p-4 rounded-xl border border-gray-100">
                                 <p class="text-sm text-gray-500">Họ tên người nhận</p>
-                                <p class="text-base font-bold text-[#001F3F]">@Model.TenKhachHang</p>
+                                @* Ưu tiên hiển thị TenKhachHang nếu có, nếu không thì hiển thị từ Tài khoản *@
+                                <p class="text-base font-bold text-[#001F3F]">
+                                    @(string.IsNullOrEmpty(Model.TenKhachHang) ? Model.MaKhachHangNavigation?.TenKhachHang : Model.TenKhachHang)
+                                </p>
 
                                 <div class="mt-4">
                                     <p class="text-sm text-gray-500">Số điện thoại</p>
-                                    <p class="text-base font-semibold text-[#001F3F]">@Model.SoDienThoai</p>
+                                    <p class="text-base font-semibold text-[#001F3F]">
+                                        @(string.IsNullOrEmpty(Model.SoDienThoai) ? "Chưa cập nhật" : Model.SoDienThoai)
+                                    </p>
                                 </div>
 
                                 <div class="mt-4">
                                     <p class="text-sm text-gray-500">ID Tài khoản hệ thống</p>
-                                    <p class="text-sm font-mono text-blue-600">#@Model.MaKhachHangNavigation.MaKhachHang</p>
+                                    <p class="text-sm font-mono text-blue-600">
+                                        #@(Model.MaKhachHangNavigation?.MaKhachHang ?? 0)
+                                    </p>
+                                </div>
+                                <div class="mt-4">
+                                    <p class="text-sm text-gray-500">Địa chỉ Email</p>
+                                    @if (!string.IsNullOrEmpty(Model.Email))
+                                    {
+                                        <a href="mailto:@Model.Email" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline transition-colors">
+                                            @Model.Email
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-sm font-medium text-gray-400 italic">Chưa cập nhật</p>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -72,11 +92,24 @@
                     <div class="space-y-6">
                         <div>
                             <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Địa chỉ giao hàng</h4>
-                            <div class="flex gap-3">
+                            <div class="flex gap-3 bg-red-50/50 p-4 rounded-xl border border-red-100">
                                 <svg class="w-5 h-5 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                <p class="text-[#001F3F] leading-relaxed">@Model.DiaChiGiaoHang</p>
+                                <p class="text-[#001F3F] leading-relaxed font-medium">
+                                    @(string.IsNullOrEmpty(Model.DiaChiGiaoHang) ? "Nhận tại cửa hàng" : Model.DiaChiGiaoHang)
+                                </p>
                             </div>
                         </div>
+
+                        @if (!string.IsNullOrEmpty(Model.GhiChu))
+                        {
+                            <div>
+                                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Ghi chú từ Checkout</h4>
+                                <div class="p-4 bg-amber-50 rounded-xl border border-amber-100 text-sm text-amber-800 italic leading-relaxed">
+                                    <i class="fa-solid fa-quote-left mr-2 opacity-50"></i>
+                                    @Model.GhiChu
+                                </div>
+                            </div>
+                        }
 
                         <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100">
                             <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">Tổng cộng đơn hàng</h4>
@@ -95,4 +128,71 @@
             </div>
         </div>
     </div>
+    <div class="mt-8 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <div class="bg-slate-800 px-6 py-3">
+            <h3 class="text-white font-bold text-sm uppercase tracking-widest flex items-center gap-2">
+                <svg class="w-5 h-5 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                Danh sách thiết bị trong đơn hàng
+            </h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 text-[#001F3F] text-xs uppercase font-black border-b border-gray-100">
+                        <th class="p-4">Sản phẩm</th>
+                        <th class="p-4 text-center">Số lượng</th>
+                        <th class="p-4 text-right">Đơn giá</th>
+                        <th class="p-4 text-right">Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    @if (Model.ChiTietDonHangs != null && Model.ChiTietDonHangs.Any())
+                    {
+                        foreach (var ct in Model.ChiTietDonHangs)
+                        {
+                            var thanhTien = (ct.Gia ?? 0) * (ct.SoLuong ?? 0);
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="p-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-12 h-12 bg-gray-100 rounded-lg p-1 shrink-0">
+                                            <img src="/img/@ct.MaSanPhamNavigation?.HinhAnh" class="w-full h-full object-contain" alt="">
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-[#001F3F] text-sm">@ct.MaSanPhamNavigation?.TenSanPham</p>
+                                            <p class="text-xs text-gray-400">Mã SP: #@ct.MaSanPham</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-4 text-center font-semibold text-gray-600">
+                                    @ct.SoLuong
+                                </td>
+                                <td class="p-4 text-right font-medium text-gray-600">
+                                    @(ct.Gia?.ToString("N0")) đ
+                                </td>
+                                <td class="p-4 text-right font-bold text-blue-600">
+                                    @thanhTien.ToString("N0") đ
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="p-8 text-center text-gray-400 italic">
+                                Không tìm thấy chi tiết sản phẩm cho đơn hàng này.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.GhiChu))
+    {
+        <div class="mt-6 p-4 bg-amber-50 border-l-4 border-amber-400 rounded-r-xl">
+            <h4 class="text-xs font-bold text-amber-700 uppercase mb-1">Ghi chú từ hệ thống/Khách hàng:</h4>
+            <p class="text-sm text-amber-800 leading-relaxed">@Model.GhiChu</p>
+        </div>
+    }
 </div>

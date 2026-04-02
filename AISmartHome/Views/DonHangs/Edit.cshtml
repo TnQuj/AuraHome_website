@@ -57,6 +57,28 @@
                     </div>
 
                     <div>
+                        <label asp-for="NgayDatHang" class="block text-sm font-bold text-[#001F3F] mb-2">Ngày lập đơn</label>
+                        <input asp-for="NgayDatHang" type="datetime-local" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 bg-slate-50 focus:bg-white" />
+                        <span asp-validation-for="NgayDatHang" class="text-red-500 text-xs mt-1 block"></span>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label asp-for="TrangThaiDonHang" class="block text-sm font-bold text-[#001F3F] mb-2">Trạng thái đơn hàng</label>
+                        <select asp-for="TrangThaiDonHang" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-[#001F3F] font-bold bg-[#00E5FF]/10 focus:bg-white appearance-none cursor-pointer">
+                            <option value="Chờ xử lý">Chờ xử lý</option>
+                            <option value="Đã xác nhận">Đã xác nhận</option>
+                            <option value="Đang giao">Đang giao hàng</option>
+                            <option value="Hoàn thành">Hoàn thành</option>
+                            <option value="Đã hủy">Đã hủy</option>
+                        </select>
+                        <span asp-validation-for="TrangThaiDonHang" class="text-red-500 text-xs mt-1 block"></span>
+                    </div>
+
+                    <div class="md:col-span-2 pt-4 border-t border-slate-100">
+                        <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Thông tin liên hệ & Giao hàng</h4>
+                    </div>
+
+                    <div>
                         <label asp-for="TenKhachHang" class="block text-sm font-bold text-[#001F3F] mb-2">Họ tên người nhận <span class="text-red-500">*</span></label>
                         <input asp-for="TenKhachHang" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 bg-slate-50 focus:bg-white" placeholder="Nhập tên người nhận hàng" />
                         <span asp-validation-for="TenKhachHang" class="text-red-500 text-xs mt-1 block"></span>
@@ -69,15 +91,9 @@
                     </div>
 
                     <div>
-                        <label asp-for="NgayDatHang" class="block text-sm font-bold text-[#001F3F] mb-2">Ngày lập đơn</label>
-                        <input asp-for="NgayDatHang" type="datetime-local" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 bg-slate-50 focus:bg-white" />
-                        <span asp-validation-for="NgayDatHang" class="text-red-500 text-xs mt-1 block"></span>
-                    </div>
-
-                    <div class="md:col-span-2">
-                        <label asp-for="DiaChiGiaoHang" class="block text-sm font-bold text-[#001F3F] mb-2">Địa chỉ giao hàng chi tiết</label>
-                        <input asp-for="DiaChiGiaoHang" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 bg-slate-50 focus:bg-white" placeholder="Số nhà, tên đường, phường/xã..." />
-                        <span asp-validation-for="DiaChiGiaoHang" class="text-red-500 text-xs mt-1 block"></span>
+                        <label asp-for="Email" class="block text-sm font-bold text-[#001F3F] mb-2">Địa chỉ Email</label>
+                        <input asp-for="Email" type="email" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 bg-slate-50 focus:bg-white" placeholder="example@email.com" />
+                        <span asp-validation-for="Email" class="text-red-500 text-xs mt-1 block"></span>
                     </div>
 
                     <div>
@@ -89,10 +105,16 @@
                         <span asp-validation-for="TongTien" class="text-red-500 text-xs mt-1 block"></span>
                     </div>
 
-                    <div>
-                        <label asp-for="TrangThaiDonHang" class="block text-sm font-bold text-[#001F3F] mb-2">Trạng thái đơn hàng</label>
-                        <input asp-for="TrangThaiDonHang" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 bg-slate-50 focus:bg-white" placeholder="Mới, Đang xử lý, Hoàn thành..." />
-                        <span asp-validation-for="TrangThaiDonHang" class="text-red-500 text-xs mt-1 block"></span>
+                    <div class="md:col-span-2">
+                        <label asp-for="DiaChiGiaoHang" class="block text-sm font-bold text-[#001F3F] mb-2">Địa chỉ giao hàng chi tiết</label>
+                        <input asp-for="DiaChiGiaoHang" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 bg-slate-50 focus:bg-white" placeholder="Số nhà, tên đường, phường/xã..." />
+                        <span asp-validation-for="DiaChiGiaoHang" class="text-red-500 text-xs mt-1 block"></span>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label asp-for="GhiChu" class="block text-sm font-bold text-[#001F3F] mb-2">Ghi chú từ khách hàng / Nội bộ</label>
+                        <textarea asp-for="GhiChu" rows="3" class="w-full px-4 py-3 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 bg-slate-50 focus:bg-white resize-none" placeholder="Nhập ghi chú hoặc yêu cầu đặc biệt..."></textarea>
+                        <span asp-validation-for="GhiChu" class="text-red-500 text-xs mt-1 block"></span>
                     </div>
 
                 </div>

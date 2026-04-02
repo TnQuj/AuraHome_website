@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AISmartHome")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+38098ac9f7ae73669e9e77e89ac44c193b15fff3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a884cc7d3c2832c7933dad6cc3728217739c80d6")]
 [assembly: System.Reflection.AssemblyProductAttribute("AISmartHome")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AISmartHome")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

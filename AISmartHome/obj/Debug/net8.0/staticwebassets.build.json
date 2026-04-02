@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "WGSObTgxyN4ew7G1ClPozoTKyQx214eYYqwCxbaItNs=",
+  "Hash": "5nztpzyciFOruzDbQrnOyEgoVL4YRB4e17YIjdzJ0B4=",
   "Source": "AISmartHome",
   "BasePath": "_content/AISmartHome",
   "Mode": "Default",
@@ -416,6 +416,27 @@
       "OriginalItemSpec": "wwwroot\\img\\3471d19418f51bafd24d1dacf2e9144f.jpg"
     },
     {
+      "Identity": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\3af06c488c1163ad41bf7d831a35a942.jpg",
+      "SourceId": "AISmartHome",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\",
+      "BasePath": "_content/AISmartHome",
+      "RelativePath": "img/3af06c488c1163ad41bf7d831a35a942#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "tk4rvyifxv",
+      "Integrity": "7XbpUbJevDZVuwyDwuH08UoTbY4COA1axLFpd5RJxKM=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\3af06c488c1163ad41bf7d831a35a942.jpg"
+    },
+    {
       "Identity": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\3ba13f0e-19a5-4d70-9649-30a59d2a7837.png",
       "SourceId": "AISmartHome",
       "SourceType": "Discovered",
@@ -435,6 +456,69 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\3ba13f0e-19a5-4d70-9649-30a59d2a7837.png"
+    },
+    {
+      "Identity": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\420f2ff1ac046d4869f657d9f732e833.jpg",
+      "SourceId": "AISmartHome",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\",
+      "BasePath": "_content/AISmartHome",
+      "RelativePath": "img/420f2ff1ac046d4869f657d9f732e833#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "l4tq3jef42",
+      "Integrity": "9cS+q1OGVh83N0qpjDSXWruF91oOxthhBU0NE203Kys=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\420f2ff1ac046d4869f657d9f732e833.jpg"
+    },
+    {
+      "Identity": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\44b6f681666ab402ca49644ded22c688.jpg",
+      "SourceId": "AISmartHome",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\",
+      "BasePath": "_content/AISmartHome",
+      "RelativePath": "img/44b6f681666ab402ca49644ded22c688#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "sy4vpvpeit",
+      "Integrity": "5M9Wn6P5HyMEQocXqB0NzkNP8xQ2GxCSGPc3Khoiiic=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\44b6f681666ab402ca49644ded22c688.jpg"
+    },
+    {
+      "Identity": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\4c46adde0b8add716f5b20b4d315d0ac.jpg",
+      "SourceId": "AISmartHome",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\",
+      "BasePath": "_content/AISmartHome",
+      "RelativePath": "img/4c46adde0b8add716f5b20b4d315d0ac#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "hb7fvbn9t3",
+      "Integrity": "zQ1uDBTdbsl5SaQKfV4a+QkYM0UkFpxTs6x7n+QG7qY=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\4c46adde0b8add716f5b20b4d315d0ac.jpg"
     },
     {
       "Identity": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\4d36ae35-1ea1-4dba-9126-406607364960.jpg",
@@ -792,6 +876,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\de0ebccb-493a-4311-9ebb-11e280005a1d.jpg"
+    },
+    {
+      "Identity": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\de7d2992d5d3094e8faa5c87eaeae19c.jpg",
+      "SourceId": "AISmartHome",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\",
+      "BasePath": "_content/AISmartHome",
+      "RelativePath": "img/de7d2992d5d3094e8faa5c87eaeae19c#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "i01bk6yr6o",
+      "Integrity": "Htog2tNzcKWjl4HxpqVJu316k2qLE67blSuQ62jANmc=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\de7d2992d5d3094e8faa5c87eaeae19c.jpg"
     },
     {
       "Identity": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\default-product.png",
@@ -1270,11 +1375,32 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "qib3y55pcg",
-      "Integrity": "EoMqoe5TMrsfPAQfmqwGK035ZMYIzCU5L/3QciqKgok=",
+      "Fingerprint": "v4rceedh6e",
+      "Integrity": "X+pIRS4MKIBMZRIyMmUh4nAK1aYRZ+NzRYECpyGMdT0=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\app.js"
+    },
+    {
+      "Identity": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\js\\login.js",
+      "SourceId": "AISmartHome",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\",
+      "BasePath": "_content/AISmartHome",
+      "RelativePath": "js/login#[.{fingerprint}]?.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "w62r6mf4ho",
+      "Integrity": "KO6cvtNdCzKKBa8r3hpXVN1dlP7oAWui1/LZNO5Cj28=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\login.js"
     },
     {
       "Identity": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\js\\site.js",
@@ -1291,8 +1417,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "xtxxf3hu2r",
-      "Integrity": "hRQyftXiu1lLX2P9Ly9xa4gHJgLeR1uGN5qegUobtGo=",
+      "Fingerprint": "41rpaww3p7",
+      "Integrity": "6CB3PEBkefGEcuPcGmmD9kPuhD+FaXNETJB+SUGsW9k=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\site.js"
@@ -4055,6 +4181,88 @@
       ]
     },
     {
+      "Route": "img/3af06c488c1163ad41bf7d831a35a942.jpg",
+      "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\3af06c488c1163ad41bf7d831a35a942.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "87988"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"7XbpUbJevDZVuwyDwuH08UoTbY4COA1axLFpd5RJxKM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 01 Apr 2026 15:10:04 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-7XbpUbJevDZVuwyDwuH08UoTbY4COA1axLFpd5RJxKM="
+        }
+      ]
+    },
+    {
+      "Route": "img/3af06c488c1163ad41bf7d831a35a942.tk4rvyifxv.jpg",
+      "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\3af06c488c1163ad41bf7d831a35a942.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "87988"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"7XbpUbJevDZVuwyDwuH08UoTbY4COA1axLFpd5RJxKM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 01 Apr 2026 15:10:04 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "tk4rvyifxv"
+        },
+        {
+          "Name": "label",
+          "Value": "img/3af06c488c1163ad41bf7d831a35a942.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-7XbpUbJevDZVuwyDwuH08UoTbY4COA1axLFpd5RJxKM="
+        }
+      ]
+    },
+    {
       "Route": "img/3ba13f0e-19a5-4d70-9649-30a59d2a7837.288qyksf4n.png",
       "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\3ba13f0e-19a5-4d70-9649-30a59d2a7837.png",
       "Selectors": [],
@@ -4133,6 +4341,252 @@
         {
           "Name": "integrity",
           "Value": "sha256-3qE1EE13eHS9jzSKLva7wE3PnZ99JieOQLk8fvYPj9s="
+        }
+      ]
+    },
+    {
+      "Route": "img/420f2ff1ac046d4869f657d9f732e833.jpg",
+      "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\420f2ff1ac046d4869f657d9f732e833.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "72055"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"9cS+q1OGVh83N0qpjDSXWruF91oOxthhBU0NE203Kys=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 01 Apr 2026 15:11:48 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-9cS+q1OGVh83N0qpjDSXWruF91oOxthhBU0NE203Kys="
+        }
+      ]
+    },
+    {
+      "Route": "img/420f2ff1ac046d4869f657d9f732e833.l4tq3jef42.jpg",
+      "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\420f2ff1ac046d4869f657d9f732e833.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "72055"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"9cS+q1OGVh83N0qpjDSXWruF91oOxthhBU0NE203Kys=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 01 Apr 2026 15:11:48 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "l4tq3jef42"
+        },
+        {
+          "Name": "label",
+          "Value": "img/420f2ff1ac046d4869f657d9f732e833.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-9cS+q1OGVh83N0qpjDSXWruF91oOxthhBU0NE203Kys="
+        }
+      ]
+    },
+    {
+      "Route": "img/44b6f681666ab402ca49644ded22c688.jpg",
+      "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\44b6f681666ab402ca49644ded22c688.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "134490"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"5M9Wn6P5HyMEQocXqB0NzkNP8xQ2GxCSGPc3Khoiiic=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 01 Apr 2026 15:03:08 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-5M9Wn6P5HyMEQocXqB0NzkNP8xQ2GxCSGPc3Khoiiic="
+        }
+      ]
+    },
+    {
+      "Route": "img/44b6f681666ab402ca49644ded22c688.sy4vpvpeit.jpg",
+      "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\44b6f681666ab402ca49644ded22c688.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "134490"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"5M9Wn6P5HyMEQocXqB0NzkNP8xQ2GxCSGPc3Khoiiic=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 01 Apr 2026 15:03:08 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "sy4vpvpeit"
+        },
+        {
+          "Name": "label",
+          "Value": "img/44b6f681666ab402ca49644ded22c688.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-5M9Wn6P5HyMEQocXqB0NzkNP8xQ2GxCSGPc3Khoiiic="
+        }
+      ]
+    },
+    {
+      "Route": "img/4c46adde0b8add716f5b20b4d315d0ac.hb7fvbn9t3.jpg",
+      "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\4c46adde0b8add716f5b20b4d315d0ac.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "81041"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"zQ1uDBTdbsl5SaQKfV4a+QkYM0UkFpxTs6x7n+QG7qY=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 01 Apr 2026 15:00:01 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "hb7fvbn9t3"
+        },
+        {
+          "Name": "label",
+          "Value": "img/4c46adde0b8add716f5b20b4d315d0ac.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-zQ1uDBTdbsl5SaQKfV4a+QkYM0UkFpxTs6x7n+QG7qY="
+        }
+      ]
+    },
+    {
+      "Route": "img/4c46adde0b8add716f5b20b4d315d0ac.jpg",
+      "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\4c46adde0b8add716f5b20b4d315d0ac.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "81041"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"zQ1uDBTdbsl5SaQKfV4a+QkYM0UkFpxTs6x7n+QG7qY=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 01 Apr 2026 15:00:01 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-zQ1uDBTdbsl5SaQKfV4a+QkYM0UkFpxTs6x7n+QG7qY="
         }
       ]
     },
@@ -5527,6 +5981,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-lz2CbZg+hpC0RdgYPuiQQIsA6umj9FJQI3ErnrCNUgo="
+        }
+      ]
+    },
+    {
+      "Route": "img/de7d2992d5d3094e8faa5c87eaeae19c.i01bk6yr6o.jpg",
+      "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\de7d2992d5d3094e8faa5c87eaeae19c.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "82144"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Htog2tNzcKWjl4HxpqVJu316k2qLE67blSuQ62jANmc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 01 Apr 2026 15:08:26 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "i01bk6yr6o"
+        },
+        {
+          "Name": "label",
+          "Value": "img/de7d2992d5d3094e8faa5c87eaeae19c.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-Htog2tNzcKWjl4HxpqVJu316k2qLE67blSuQ62jANmc="
+        }
+      ]
+    },
+    {
+      "Route": "img/de7d2992d5d3094e8faa5c87eaeae19c.jpg",
+      "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\img\\de7d2992d5d3094e8faa5c87eaeae19c.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "82144"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Htog2tNzcKWjl4HxpqVJu316k2qLE67blSuQ62jANmc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 01 Apr 2026 15:08:26 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-Htog2tNzcKWjl4HxpqVJu316k2qLE67blSuQ62jANmc="
         }
       ]
     },
@@ -7345,7 +7881,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "13921"
+          "Value": "17798"
         },
         {
           "Name": "Content-Type",
@@ -7353,11 +7889,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"EoMqoe5TMrsfPAQfmqwGK035ZMYIzCU5L/3QciqKgok=\""
+          "Value": "\"X+pIRS4MKIBMZRIyMmUh4nAK1aYRZ+NzRYECpyGMdT0=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Mon, 30 Mar 2026 09:04:19 GMT"
+          "Value": "Wed, 01 Apr 2026 14:41:50 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -7367,12 +7903,12 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-EoMqoe5TMrsfPAQfmqwGK035ZMYIzCU5L/3QciqKgok="
+          "Value": "sha256-X+pIRS4MKIBMZRIyMmUh4nAK1aYRZ+NzRYECpyGMdT0="
         }
       ]
     },
     {
-      "Route": "js/app.qib3y55pcg.js",
+      "Route": "js/app.v4rceedh6e.js",
       "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\js\\app.js",
       "Selectors": [],
       "ResponseHeaders": [
@@ -7382,7 +7918,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "13921"
+          "Value": "17798"
         },
         {
           "Name": "Content-Type",
@@ -7390,11 +7926,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"EoMqoe5TMrsfPAQfmqwGK035ZMYIzCU5L/3QciqKgok=\""
+          "Value": "\"X+pIRS4MKIBMZRIyMmUh4nAK1aYRZ+NzRYECpyGMdT0=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Mon, 30 Mar 2026 09:04:19 GMT"
+          "Value": "Wed, 01 Apr 2026 14:41:50 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -7404,7 +7940,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "qib3y55pcg"
+          "Value": "v4rceedh6e"
         },
         {
           "Name": "label",
@@ -7412,7 +7948,134 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-EoMqoe5TMrsfPAQfmqwGK035ZMYIzCU5L/3QciqKgok="
+          "Value": "sha256-X+pIRS4MKIBMZRIyMmUh4nAK1aYRZ+NzRYECpyGMdT0="
+        }
+      ]
+    },
+    {
+      "Route": "js/login.js",
+      "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\js\\login.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "426"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"KO6cvtNdCzKKBa8r3hpXVN1dlP7oAWui1/LZNO5Cj28=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 02 Apr 2026 07:21:41 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-KO6cvtNdCzKKBa8r3hpXVN1dlP7oAWui1/LZNO5Cj28="
+        }
+      ]
+    },
+    {
+      "Route": "js/login.w62r6mf4ho.js",
+      "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\js\\login.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "426"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"KO6cvtNdCzKKBa8r3hpXVN1dlP7oAWui1/LZNO5Cj28=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 02 Apr 2026 07:21:41 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "w62r6mf4ho"
+        },
+        {
+          "Name": "label",
+          "Value": "js/login.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-KO6cvtNdCzKKBa8r3hpXVN1dlP7oAWui1/LZNO5Cj28="
+        }
+      ]
+    },
+    {
+      "Route": "js/site.41rpaww3p7.js",
+      "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\js\\site.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "8693"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"6CB3PEBkefGEcuPcGmmD9kPuhD+FaXNETJB+SUGsW9k=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 02 Apr 2026 06:57:10 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "41rpaww3p7"
+        },
+        {
+          "Name": "label",
+          "Value": "js/site.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-6CB3PEBkefGEcuPcGmmD9kPuhD+FaXNETJB+SUGsW9k="
         }
       ]
     },
@@ -7427,7 +8090,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "231"
+          "Value": "8693"
         },
         {
           "Name": "Content-Type",
@@ -7435,11 +8098,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"hRQyftXiu1lLX2P9Ly9xa4gHJgLeR1uGN5qegUobtGo=\""
+          "Value": "\"6CB3PEBkefGEcuPcGmmD9kPuhD+FaXNETJB+SUGsW9k=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 20 Mar 2026 16:31:43 GMT"
+          "Value": "Thu, 02 Apr 2026 06:57:10 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -7449,52 +8112,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-hRQyftXiu1lLX2P9Ly9xa4gHJgLeR1uGN5qegUobtGo="
-        }
-      ]
-    },
-    {
-      "Route": "js/site.xtxxf3hu2r.js",
-      "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\js\\site.js",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "231"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"hRQyftXiu1lLX2P9Ly9xa4gHJgLeR1uGN5qegUobtGo=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Fri, 20 Mar 2026 16:31:43 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "xtxxf3hu2r"
-        },
-        {
-          "Name": "label",
-          "Value": "js/site.js"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-hRQyftXiu1lLX2P9Ly9xa4gHJgLeR1uGN5qegUobtGo="
+          "Value": "sha256-6CB3PEBkefGEcuPcGmmD9kPuhD+FaXNETJB+SUGsW9k="
         }
       ]
     },

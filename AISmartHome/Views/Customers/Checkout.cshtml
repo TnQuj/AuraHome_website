@@ -1,0 +1,231 @@
+﻿@model AISmartHome.Models.GioHang
+@using Microsoft.EntityFrameworkCore
+@inject AISmartHome.Data.AISmartHomeDbContext _context
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Thanh toán đơn hàng";
+
+    // Tính tổng tiền đơn hàng
+    decimal tongTien = Model?.ChiTietGioHangs?.Sum(x => (x.Gia ?? 0) * (x.SoLuong ?? 0)) ?? 0;
+}
+
+<main class="w-full pb-20 pt-8 bg-slate-50/50">
+    <div class="container mx-auto px-4 md:px-8">
+
+        <nav class="flex items-center gap-2 text-sm text-slate-500 mb-10 font-medium">
+            <a class="hover:text-brand-cyan transition-colors" asp-controller="Customers" asp-action="Index">Trang chủ</a>
+            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            <a class="hover:text-brand-cyan transition-colors" asp-action="Cart">Giỏ hàng</a>
+            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            <span class="text-brand-navy font-bold px-2 py-1 bg-slate-100 rounded-md">Thanh toán</span>
+        </nav>
+
+        <form id="checkoutForm" asp-action="PlaceOrder" method="post">
+            <div class="flex flex-col lg:flex-row gap-12">
+
+                <div class="w-full lg:w-[60%]">
+                    <h2 class="text-xl font-black text-brand-navy uppercase tracking-wider mb-8 border-b-2 border-slate-100 pb-2">
+                        Thông tin thanh toán
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Họ và tên *</label>
+                            <input type="text" name="FullName" required placeholder="Nhập họ và tên"
+                                   class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/20 outline-none transition-all">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Số điện thoại *</label>
+                            <input type="tel" name="Phone" required placeholder="Nhập số điện thoại"
+                                   class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/20 outline-none transition-all">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Địa chỉ email *</label>
+                            <input type="email" name="Email" required placeholder="Nhập địa chỉ email"
+                                   class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/20 outline-none transition-all">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Tỉnh/Thành phố *</label>
+                            <select id="province" name="Province" required
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan outline-none transition-all bg-white">
+                                <option value="">Chọn Tỉnh/Thành phố</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Quận/Huyện *</label>
+                            <select id="district" name="District" required
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan outline-none transition-all bg-white">
+                                <option value="">Chọn Quận/Huyện</option>
+                            </select>
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Địa chỉ nhận hàng *</label>
+                            <input type="text" name="Address" required placeholder="Nhập địa chỉ cụ thể. Số nhà, tên đường..."
+                                   class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/20 outline-none transition-all">
+                        </div>
+                    </div>
+
+                    <h2 class="text-xl font-black text-brand-navy uppercase tracking-wider mt-12 mb-8 border-b-2 border-slate-100 pb-2">
+                        Thông tin bổ sung
+                    </h2>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Ghi chú đơn hàng (tuỳ chọn)</label>
+                        <textarea name="Note" rows="4" placeholder="Ghi chú về đơn hàng, ví dụ: thời gian hay chỉ dẫn địa điểm giao hàng chi tiết hơn."
+                                  class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/20 outline-none transition-all"></textarea>
+                    </div>
+                </div>
+
+                <div class="w-full lg:w-[40%]">
+                    <div class="bg-white p-8 border-2 border-brand-navy rounded-sm sticky top-28">
+                        <h2 class="text-xl font-black text-brand-navy uppercase mb-6 tracking-wide">Đơn hàng của bạn</h2>
+
+                        <div class="flex justify-between font-bold text-sm uppercase mb-4 text-slate-800">
+                            <span>Sản phẩm</span>
+                            <span>Tạm tính</span>
+                        </div>
+
+                        <div class="space-y-4 mb-6 border-b border-slate-100 pb-6">
+                            @if (Model?.ChiTietGioHangs != null)
+                            {
+                                @foreach (var item in Model.ChiTietGioHangs)
+                                {
+                                    <div class="flex justify-between items-center gap-4 text-sm mb-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-12 h-12 bg-white rounded-lg p-1 shrink-0 border border-slate-200 shadow-sm">
+                                                <img src="/img/@item.MaSanPhamNavigation?.HinhAnh"
+                                                     alt="@item.MaSanPhamNavigation?.TenSanPham"
+                                                     class="w-full h-full object-contain" />
+                                            </div>
+
+                                            <span class="text-slate-600 leading-relaxed line-clamp-2">
+                                                @item.MaSanPhamNavigation?.TenSanPham
+                                                <strong class="text-brand-navy whitespace-nowrap ml-1">× @item.SoLuong</strong>
+                                            </span>
+                                        </div>
+
+                                        <span class="font-bold text-brand-navy whitespace-nowrap">
+                                            @(((item.Gia ?? 0) * (item.SoLuong ?? 0)).ToString("N0")) VND
+                                        </span>
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                        <div class="space-y-4 mb-8">
+                            <div class="flex justify-between text-sm">
+                                <span class="font-bold uppercase">Tạm tính</span>
+                                <span class="font-bold text-brand-navy">@tongTien.ToString("N0") VND</span>
+                            </div>
+                            <div class="flex justify-between text-base border-t pt-4">
+                                <span class="font-bold uppercase">Tổng</span>
+                                <span class="font-bold text-brand-navy text-lg" id="totalAmountDisplay" data-value="@tongTien">@tongTien.ToString("N0") VND</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 mb-8 text-sm">
+                            <div class="flex flex-col gap-2">
+                                <label class="flex items-center gap-3 font-bold text-slate-700 cursor-pointer">
+                                    <input type="radio" name="payment" checked class="w-4 h-4 text-brand-cyan focus:ring-brand-cyan">
+                                    Chuyển khoản ngân hàng
+                                </label>
+                                <p class="ml-7 text-xs text-slate-500 leading-relaxed bg-slate-50 p-3 rounded">
+                                    Thực hiện thanh toán vào ngay tài khoản ngân hàng của chúng tôi. Vui lòng sử dụng Mã đơn hàng của bạn trong phần Nội dung thanh toán. Đơn hàng sẽ được giao sau khi tiền đã chuyển.
+                                </p>
+                            </div>
+                            <label class="flex items-center gap-3 font-bold text-slate-700 cursor-pointer">
+                                <input type="radio" name="payment" class="w-4 h-4 text-brand-cyan focus:ring-brand-cyan">
+                                Trả tiền mặt khi nhận hàng
+                            </label>
+                        </div>
+
+                        <button id="btn-checkout" type="submit" class="w-full bg-rose-600 text-white py-4 font-black uppercase tracking-widest hover:bg-rose-700 transition-all duration-300 shadow-lg shadow-rose-600/20">
+                            Thanh Toán
+                        </button>
+
+                        <p class="mt-6 text-[11px] text-slate-400 italic text-center leading-relaxed">
+                            Thông tin cá nhân của bạn sẽ được sử dụng để xử lý đơn hàng, tăng trải nghiệm sử dụng website, và cho các mục đích cụ thể khác đã được mô tả trong
+                            <a href="#" class="text-rose-600 underline">chính sách riêng tư</a>.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+    <div id="otpModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm transition-all">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl w-[90%] max-w-md transform scale-100 transition-transform">
+            <h3 class="text-2xl font-black text-brand-navy mb-2 text-center uppercase">Xác thực số điện thoại</h3>
+            <p class="text-slate-500 text-sm text-center mb-6">
+                Chúng tôi đã gửi một mã gồm 6 chữ số đến số điện thoại <br />
+                <strong id="displayPhone" class="text-brand-cyan"></strong>
+            </p>
+
+            <div class="mb-6">
+                <input type="text" id="otpInput" maxlength="6" placeholder="Nhập mã OTP (VD: 123456)"
+                       class="w-full text-center tracking-widest text-2xl font-bold px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-brand-cyan focus:ring-4 focus:ring-brand-cyan/20 outline-none transition-all">
+            </div>
+
+            <div class="flex gap-4">
+                <button id="btnCancelOtp" type="button" class="w-1/2 py-3 font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+                    Hủy bỏ
+                </button>
+                <button id="btnVerifyOtp" type="button" class="w-1/2 py-3 font-bold text-white bg-brand-cyan hover:bg-cyan-600 rounded-xl transition-colors shadow-lg shadow-cyan-600/30">
+                    Xác nhận
+                </button>
+            </div>
+            <p class="text-center text-xs text-slate-400 mt-4">
+                Chưa nhận được mã?
+                <button type="button" id="btnResendOtp" class="text-brand-cyan font-bold hover:underline disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline" disabled>
+                    Gửi lại (<span id="otpTimer">60</span>s)
+                </button>
+            </p>
+        </div>
+    </div>
+
+    <div id="qrModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-brand-navy/80 backdrop-blur-md transition-all">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl w-[90%] max-w-md transform scale-100 transition-transform flex flex-col items-center">
+
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center mb-4 shadow-inner">
+                <i class="fa-solid fa-check text-3xl"></i>
+            </div>
+
+            <h3 class="text-2xl font-black text-brand-navy mb-1 text-center uppercase tracking-wide">Đặt hàng thành công!</h3>
+            <p class="text-slate-500 text-sm text-center mb-6">Mã đơn hàng: <strong id="qrOrderId" class="text-brand-cyan">#...</strong></p>
+
+            <div class="w-full bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl p-6 flex flex-col items-center justify-center mb-6 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-cyan to-blue-500"></div>
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Quét mã VietQR để thanh toán</p>
+
+                <div class="bg-white p-3 rounded-xl shadow-md mb-4 w-48 h-48 flex items-center justify-center border border-slate-100">
+                    <img id="qrImage" src="" alt="QR Code Thanh Toán" class="w-full h-full object-contain hidden" />
+                    <div id="qrLoading" class="text-brand-cyan flex flex-col items-center">
+                        <i class="fa-solid fa-spinner fa-spin text-3xl mb-2"></i>
+                        <span class="text-xs font-medium">Đang tạo mã...</span>
+                    </div>
+                </div>
+
+                <div class="w-full space-y-2 text-sm">
+                    <div class="flex justify-between border-b border-slate-200 pb-2">
+                        <span class="text-slate-500">Số tiền:</span>
+                        <span id="qrAmount" class="font-bold text-rose-600 text-lg">0 VND</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-200 pb-2">
+                        <span class="text-slate-500">Nội dung:</span>
+                        <span id="qrContent" class="font-bold text-brand-navy tracking-wider">...</span>
+                    </div>
+                </div>
+            </div>
+
+            <button id="btnFinishOrder" type="button" class="w-full py-4 font-bold text-white bg-brand-cyan hover:bg-cyan-600 rounded-xl transition-all shadow-lg shadow-cyan-600/30 uppercase tracking-widest">
+                Tôi đã thanh toán xong
+            </button>
+        </div>
+    </div>
+</main>

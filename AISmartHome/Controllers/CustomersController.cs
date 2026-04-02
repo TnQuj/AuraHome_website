@@ -294,5 +294,187 @@ namespace AISmartHome.Controllers
             });
         }
 
+        // GET: Customers/Checkout
+        public async Task<IActionResult> Checkout()
+        {
+            int maKhachHangHienTai = 1; // Thay bằng ID thực tế
+
+            var gioHang = await _context.GioHangs
+                .Include(g => g.ChiTietGioHangs)
+                    .ThenInclude(ct => ct.MaSanPhamNavigation) // Quan trọng để lấy TenSanPham
+                .FirstOrDefaultAsync(g => g.MaKhachHang == maKhachHangHienTai);
+
+            if (gioHang == null) return RedirectToAction("Index");
+
+            // Tính toán tổng tiền ngay tại Controller để truyền sang View cho chính xác
+            ViewBag.TongTien = gioHang.ChiTietGioHangs.Sum(x => (x.Gia ?? 0) * (x.SoLuong ?? 0));
+
+            return View(gioHang);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PlaceOrder(
+            string FullName,
+            string Phone,
+            string Email,
+            string Province, // Thêm Tỉnh
+            string District, // Thêm Huyện
+            string Address,  // Địa chỉ cụ thể
+            string Note,
+            string PaymentMethod)
+        {
+            // Giả lập ID khách hàng (Sau này thay bằng User.Identity nếu có đăng nhập)
+            int maKhachHangHienTai = 1;
+
+            // 1. Lấy thông tin giỏ hàng kèm theo chi tiết
+            var gioHang = await _context.GioHangs
+                .Include(g => g.ChiTietGioHangs)
+                .FirstOrDefaultAsync(g => g.MaKhachHang == maKhachHangHienTai);
+
+            // Kiểm tra giỏ hàng trống
+            if (gioHang == null || !gioHang.ChiTietGioHangs.Any())
+            {
+                return RedirectToAction("Cart");
+            }
+
+            // 2. Tạo hóa đơn mới (DonHang)
+            var donHang = new DonHang
+            {
+                MaKhachHang = maKhachHangHienTai,
+                NgayDatHang = DateTime.Now,
+                TongTien = gioHang.ChiTietGioHangs.Sum(x => (x.Gia ?? 0) * (x.SoLuong ?? 0)),
+                TrangThaiDonHang = "Chờ xử lý",
+
+                // Gộp tất cả thông tin địa chỉ và liên hệ vào cột GhiChu để Admin dễ quản lý
+                GhiChu = $"[KH: {FullName}] - [SĐT: {Phone}] - [Email: {Email}] - [Đ/C: {Address}, {District}, {Province}] - [Note: {Note}]",
+
+                // Nếu DB của bạn có cột TenKhachHang, SoDienThoai riêng thì gán thêm:
+                TenKhachHang = FullName,
+                Email = Email,
+                SoDienThoai = Phone,
+                DiaChiGiaoHang = $"{Address}, {District}, {Province}"
+            };
+
+            _context.DonHangs.Add(donHang);
+            await _context.SaveChangesAsync(); // Lưu để lấy MaDonHang (Identity)
+
+            // 3. Chuyển chi tiết từ Giỏ hàng sang Chi tiết hóa đơn
+            foreach (var item in gioHang.ChiTietGioHangs)
+            {
+                var ctDonHang = new ChiTietDonHang
+                {
+                    MaDonHang = donHang.MaDonHang, // ID vừa sinh ra ở trên
+                    MaSanPham = item.MaSanPham,
+                    SoLuong = item.SoLuong,
+                    Gia = item.Gia
+                };
+                _context.ChiTietDonHangs.Add(ctDonHang);
+            }
+
+            // 4. Dọn dẹp giỏ hàng sau khi đã đặt hàng
+            _context.ChiTietGioHangs.RemoveRange(gioHang.ChiTietGioHangs);
+
+            // Lưu toàn bộ chi tiết đơn hàng và việc xóa giỏ hàng
+            await _context.SaveChangesAsync();
+
+            // 5. Chuyển đến trang thông báo thành công
+            // Lưu ý: Bạn cần tạo thêm Action OrderSuccess(int id) trong Controller này
+            try
+            {
+                // Thực hiện lưu toàn bộ thay đổi
+                await _context.SaveChangesAsync();
+
+                // TRẢ VỀ JSON THÀNH CÔNG
+                return Json(new { success = true, orderId = donHang.MaDonHang });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Có lỗi xảy ra: " + ex.Message });
+            }
+        }
+
+
+        // Tạo class để map với chuỗi JSON từ JS gửi lên
+        public class CartUpdateModel
+        {
+            public int ProductId { get; set; }
+            public int Quantity { get; set; }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateCart([FromBody] CartUpdateModel model)
+        {
+            int maKhachHangHienTai = 1; // ID khách hàng (Fix cứng tạm thời)
+
+            // Lấy giỏ hàng của khách
+            var gioHang = await _context.GioHangs
+                .FirstOrDefaultAsync(g => g.MaKhachHang == maKhachHangHienTai);
+
+            if (gioHang == null) return Json(new { success = false, message = "Lỗi giỏ hàng" });
+
+            // Tìm món hàng đó trong giỏ
+            var cartItem = await _context.ChiTietGioHangs
+                .FirstOrDefaultAsync(c => c.MaSanPham == model.ProductId && c.MaGioHang == gioHang.MaGioHang);
+
+            if (cartItem != null)
+            {
+                // Cập nhật số lượng mới và LƯU LẠI
+                cartItem.SoLuong = model.Quantity;
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true });
+            }
+
+            return Json(new { success = false, message = "Không tìm thấy sản phẩm" });
+        }
+
+        public async Task<IActionResult> BuyNow(int id)
+        {
+            int maKhachHangHienTai = 1; // Giả lập ID khách hàng (Sau này đổi thành ID thật)
+
+            // 1. Kiểm tra sản phẩm có tồn tại không
+            var sanPham = await _context.SanPhams.FindAsync(id);
+            if (sanPham == null) return NotFound();
+
+            // 2. Tìm hoặc tạo giỏ hàng cho khách này
+            var gioHang = await _context.GioHangs
+                .FirstOrDefaultAsync(g => g.MaKhachHang == maKhachHangHienTai);
+
+            if (gioHang == null)
+            {
+                gioHang = new GioHang { MaKhachHang = maKhachHangHienTai };
+                _context.GioHangs.Add(gioHang);
+                await _context.SaveChangesAsync();
+            }
+
+            // 3. Kiểm tra sản phẩm đã có trong giỏ chưa
+            var cartItem = await _context.ChiTietGioHangs
+                .FirstOrDefaultAsync(c => c.MaSanPham == id && c.MaGioHang == gioHang.MaGioHang);
+
+            if (cartItem != null)
+            {
+                // Nếu có rồi thì tăng số lượng lên 1
+                cartItem.SoLuong += 1;
+            }
+            else
+            {
+                // Nếu chưa có thì thêm mới vào giỏ
+                _context.ChiTietGioHangs.Add(new ChiTietGioHang
+                {
+                    MaGioHang = gioHang.MaGioHang,
+                    MaSanPham = id,
+                    SoLuong = 1,
+                    // Lưu ý: Sửa lại thuộc tính giá này cho đúng với Database của bạn (GiaBan, GiaKhuyenMai, v.v.)
+                    Gia = sanPham.GiaBan
+                });
+            }
+
+            // 4. Lưu thay đổi vào Database
+            await _context.SaveChangesAsync();
+
+            // 5. Chuyển thẳng sang trang Thanh toán (Checkout)
+            return RedirectToAction("Checkout");
+        }
     }
 }

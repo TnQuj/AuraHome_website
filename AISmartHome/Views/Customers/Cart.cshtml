@@ -5,7 +5,7 @@
     ViewData["Title"] = "Giỏ Hàng của bạn";
 
     // Lấy tổng tiền trực tiếp từ Database
-    decimal tongTien = Model?.TongTien ?? 0;
+    decimal tongTien = Model?.ChiTietGioHangs?.Sum(x => (x.Gia ?? 0) * (x.SoLuong ?? 0)) ?? 0;
 }
 
 @using Microsoft.EntityFrameworkCore
@@ -46,129 +46,137 @@
                 <span class="text-slate-500 font-medium">@(Model?.ChiTietGioHangs?.Count ?? 0) sản phẩm</span>
             </div>
 
-            <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
-                <div class="w-full lg:w-[65%]">
+                <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
+                    <div class="w-full lg:w-[65%]">
 
-                    @if (Model != null && Model.ChiTietGioHangs != null && Model.ChiTietGioHangs.Any())
-                    {
-                        <div class="flex flex-col gap-5 lg:pr-2">
-                            @foreach (var item in Model.ChiTietGioHangs)
-                            {
-                                var sp = item.MaSanPhamNavigation;
-                                decimal tamTinh = (item.Gia ?? 0) * (item.SoLuong ?? 0);
+                        @if (Model != null && Model.ChiTietGioHangs != null && Model.ChiTietGioHangs.Any())
+                        {
 
-                                <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col md:flex-row items-start md:items-center gap-6 relative group transition-all duration-300 hover:shadow-lg hover:border-cyan-100">
+                            <div class="flex flex-col gap-5 lg:pr-2">
+                                @foreach (var item in Model.ChiTietGioHangs)
+                                {
+                                    var sp = item.MaSanPhamNavigation;
+                                    decimal tamTinh = (item.Gia ?? 0) * (item.SoLuong ?? 0);
+                                    <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col md:flex-row items-start md:items-center gap-6 relative group transition-all duration-300 hover:shadow-lg hover:border-cyan-100">
 
-                                    <a href="/Customers/RemoveFromCart?id=@item.MaSanPham" class="absolute right-4 top-4 md:static w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-rose-50 hover:text-rose-500 transition-colors" title="Xóa khỏi giỏ">
-                                        <i class="fa-solid fa-trash-can text-sm"></i>
-                                    </a>
-
-                                    <div class="w-24 h-24 bg-slate-50 rounded-2xl p-3 flex-shrink-0 border border-slate-100 group-hover:scale-105 transition-transform duration-500">
-                                        <img src="@(string.IsNullOrEmpty(sp?.HinhAnh) ? "https://via.placeholder.com/150" : $"/img/{sp?.HinhAnh}")" alt="@sp?.TenSanPham" class="w-full h-full object-contain mix-blend-multiply" />
-                                    </div>
-
-                                    <div class="flex-1 flex flex-col">
-                                        <a href="/Customers/Details?id=@item.MaSanPham" class="text-[16px] font-bold text-brand-navy hover:text-brand-cyan transition-colors leading-snug line-clamp-2 mb-2 pr-8 md:pr-0">
-                                            @sp?.TenSanPham
+                                        <a href="/Customers/RemoveFromCart?id=@item.MaSanPham" class="absolute right-4 top-4 md:static w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-rose-50 hover:text-rose-500 transition-colors" title="Xóa khỏi giỏ">
+                                            <i class="fa-solid fa-trash-can text-sm"></i>
                                         </a>
-                                        <span class="text-brand-cyan font-black text-lg">@item.Gia?.ToString("N0") ₫</span>
-                                    </div>
 
-                                    <div class="flex items-center justify-between w-full md:w-auto gap-8 mt-2 md:mt-0 pt-4 md:pt-0 border-t md:border-none border-slate-100">
-
-                                        <div class="flex items-center border border-slate-200 rounded-full overflow-hidden h-10 w-[110px] bg-white shadow-inner">
-                                            <button type="button" onclick="decreaseQuantity('@item.MaSanPham')" class="w-9 h-full flex justify-center items-center text-slate-500 hover:bg-slate-100 hover:text-brand-cyan transition-colors"><i class="fa-solid fa-minus text-xs"></i></button>
-
-                                            <input id="qty-@item.MaSanPham" type="text" value="@item.SoLuong" readonly class="w-full h-full text-center border-none p-0 text-sm font-bold text-brand-navy focus:ring-0 bg-transparent pointer-events-none" />
-
-                                            <button type="button" onclick="increaseQuantity('@item.MaSanPham')" class="w-9 h-full flex justify-center items-center text-slate-500 hover:bg-slate-100 hover:text-brand-cyan transition-colors"><i class="fa-solid fa-plus text-xs"></i></button>
+                                        <div class="w-24 h-24 bg-slate-50 rounded-2xl p-3 flex-shrink-0 border border-slate-100 group-hover:scale-105 transition-transform duration-500">
+                                            <img src="@(string.IsNullOrEmpty(sp?.HinhAnh) ? "https://via.placeholder.com/150" : $"/img/{sp?.HinhAnh}")" alt="@sp?.TenSanPham" class="w-full h-full object-contain mix-blend-multiply" />
                                         </div>
 
-                                        <div class="text-right flex flex-col md:min-w-[100px]">
-                                            <span class="text-xs text-slate-400 font-medium md:hidden mb-1">Thành tiền</span>
-                                            <span class="font-black text-rose-600 text-lg">@tamTinh.ToString("N0") ₫</span>
+                                        <div class="flex-1 flex flex-col">
+                                            <a href="/Customers/Details?id=@item.MaSanPham" class="text-[16px] font-bold text-brand-navy hover:text-brand-cyan transition-colors leading-snug line-clamp-2 mb-2 pr-8 md:pr-0">
+                                                @sp?.TenSanPham
+                                            </a>
+                                            <span class="text-brand-cyan font-black text-lg js-unit-price" data-price="@item.Gia">
+                                                @item.Gia?.ToString("N0") ₫
+                                            </span>
+                                        </div>
+
+                                        <div class="flex items-center justify-between w-full md:w-auto gap-8 mt-2 md:mt-0 pt-4 md:pt-0 border-t md:border-none border-slate-100">
+
+                                            <div class="flex items-center border border-slate-200 rounded-full overflow-hidden h-10 w-[110px] bg-white shadow-inner">
+                                                <button type="button" onclick="decreaseQuantity('@item.MaSanPham')" class="w-9 h-full flex justify-center items-center text-slate-500 hover:bg-slate-100 hover:text-brand-cyan transition-colors"><i class="fa-solid fa-minus text-xs"></i></button>
+
+                                                <input id="qty-@item.MaSanPham" type="text" value="@item.SoLuong" readonly class="w-full h-full text-center border-none p-0 text-sm font-bold text-brand-navy focus:ring-0 bg-transparent pointer-events-none" />
+
+                                                <button type="button" onclick="increaseQuantity('@item.MaSanPham')" class="w-9 h-full flex justify-center items-center text-slate-500 hover:bg-slate-100 hover:text-brand-cyan transition-colors"><i class="fa-solid fa-plus text-xs"></i></button>
+                                            </div>
+
+                                            <div class="text-right flex flex-col md:min-w-[100px]">
+                                                <span class="text-xs text-slate-400 font-medium md:hidden mb-1">Thành tiền</span>
+                                                <span id="subtotal-@item.MaSanPham" class="font-black text-rose-600 text-lg js-subtotal">
+                                                    @tamTinh.ToString("N0") ₫
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            }
-                        </div>
-
-                        <div class="mt-8">
-                            <a href="/Customers" class="inline-flex items-center gap-3 text-slate-500 hover:text-brand-cyan font-bold transition-colors group">
-                                <span class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-cyan-50 transition-colors">
-                                    <i class="fa-solid fa-arrow-left-long group-hover:-translate-x-1 transition-transform"></i>
-                                </span>
-                                Tiếp tục chọn thiết bị
-                            </a>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="py-20 text-center bg-white rounded-3xl border border-dashed border-slate-200 shadow-sm flex flex-col items-center justify-center">
-                            <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-6">
-                                <i class="fa-solid fa-cart-shopping text-4xl text-slate-300"></i>
+                                }
                             </div>
-                            <h3 class="text-xl font-bold text-brand-navy mb-2">Giỏ hàng trống</h3>
-                            <p class="text-slate-500 mb-8">Bạn chưa thêm thiết bị thông minh nào vào giỏ hàng.</p>
-                            <a href="/Customers" class="inline-flex items-center justify-center gap-2 bg-brand-navy text-white px-8 py-3.5 rounded-2xl font-bold hover:bg-brand-cyan transition-colors shadow-lg hover:-translate-y-1 duration-300">
-                                Khám phá thiết bị AI <i class="fa-solid fa-arrow-right text-sm"></i>
-                            </a>
-                        </div>
-                    }
-                </div>
 
-                <div class="w-full lg:w-[35%]">
-                    <div class="bg-white p-6 md:p-8 border border-slate-100 shadow-xl shadow-slate-200/40 rounded-3xl md:sticky md:top-28">
-                        <h2 class="text-xl font-extrabold text-brand-navy mb-6 flex items-center gap-3">
-                            <i class="fa-solid fa-receipt text-brand-cyan"></i> Tóm tắt đơn hàng
-                        </h2>
+                            <div class="mt-8">
+                                <a href="/Customers/Index" class="inline-flex items-center gap-3 text-slate-500 hover:text-brand-cyan font-bold transition-colors group">
+                                    <span class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-cyan-50 transition-colors">
+                                        <i class="fa-solid fa-arrow-left-long group-hover:-translate-x-1 transition-transform"></i>
+                                    </span>
+                                    Tiếp tục chọn thiết bị
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="py-20 text-center bg-white rounded-3xl border border-dashed border-slate-200 shadow-sm flex flex-col items-center justify-center">
+                                <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-6">
+                                    <i class="fa-solid fa-cart-shopping text-4xl text-slate-300"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-brand-navy mb-2">Giỏ hàng trống</h3>
+                                <p class="text-slate-500 mb-8">Bạn chưa thêm thiết bị thông minh nào vào giỏ hàng.</p>
+                                <a href="/Customers" class="inline-flex items-center justify-center gap-2 bg-brand-navy text-white px-8 py-3.5 rounded-2xl font-bold hover:bg-brand-cyan transition-colors shadow-lg hover:-translate-y-1 duration-300">
+                                    Khám phá thiết bị AI <i class="fa-solid fa-arrow-right text-sm"></i>
+                                </a>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="w-full lg:w-[35%]">
+                        <div class="bg-white p-6 md:p-8 border border-slate-100 shadow-xl shadow-slate-200/40 rounded-3xl md:sticky md:top-28">
+                            <h2 class="text-xl font-extrabold text-brand-navy mb-6 flex items-center gap-3">
+                                <i class="fa-solid fa-receipt text-brand-cyan"></i> Tóm tắt đơn hàng
+                            </h2>
 
                         <div class="flex justify-between items-center mb-4 text-sm font-medium">
-                            <span class="text-slate-500">Tạm tính (@(Model?.ChiTietGioHangs?.Sum(x => x.SoLuong) ?? 0) sản phẩm)</span>
-                            <span class="text-brand-navy">@tongTien.ToString("N0") ₫</span>
+                            <span class="text-slate-500">
+                                Tạm tính (<span id="total-quantity">@(Model?.ChiTietGioHangs?.Sum(x => x.SoLuong) ?? 0)</span> sản phẩm)
+                            </span>
+                            <span id="subtotal-summary" class="text-brand-navy">@tongTien.ToString("N0") ₫</span>
                         </div>
 
-                        <div class="flex justify-between items-center mb-6 text-sm font-medium">
-                            <span class="text-slate-500">Phí vận chuyển</span>
-                            <span class="text-emerald-500">Miễn phí</span>
-                        </div>
-
-                        <div class="w-full border-t border-dashed border-slate-200 my-6"></div>
-
-                        <div class="flex justify-between items-end mb-8">
-                            <span class="text-slate-900 font-bold">Tổng thanh toán</span>
-                            <div class="text-right">
-                                <span class="block font-black text-rose-600 text-3xl">@tongTien.ToString("N0") ₫</span>
-                                <span class="text-[11px] text-slate-400 font-medium">(Đã bao gồm VAT)</span>
+                            <div class="flex justify-between items-center mb-6 text-sm font-medium">
+                                <span class="text-slate-500">Phí vận chuyển</span>
+                                <span class="text-emerald-500">Miễn phí</span>
                             </div>
-                        </div>
 
-                        <a href="/Checkout" class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-4 rounded-2xl font-bold text-[15px] hover:shadow-lg hover:shadow-cyan-500/30 hover:-translate-y-1 transition-all duration-300 uppercase tracking-wider mb-6 h-[56px]">
-                            Tiến hành thanh toán <i class="fa-solid fa-arrow-right-long ml-1"></i>
-                        </a>
+                            <div class="w-full border-t border-dashed border-slate-200 my-6"></div>
 
-                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                            <label class="flex items-center gap-2 text-[13px] font-bold text-slate-700 mb-3 uppercase tracking-wider">
-                                <i class="fa-solid fa-ticket text-brand-cyan"></i> Mã ưu đãi / Voucher
-                            </label>
-                            <div class="flex gap-2">
-                                <input type="text" placeholder="Nhập mã..." class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/20 outline-none transition-all font-medium uppercase" />
-                                <button type="button" class="bg-brand-navy text-white px-5 rounded-xl text-sm hover:bg-slate-800 transition-colors font-bold whitespace-nowrap">
-                                    Áp dụng
-                                </button>
+                            <div class="flex justify-between items-end mb-8">
+                                <span class="text-slate-900 font-bold">Tổng thanh toán</span>
+                                <div class="text-right">
+                                    <span id="cart-total" class="block font-black text-rose-600 text-3xl">
+                                        @tongTien.ToString("N0") ₫
+                                    </span>
+                                    <span class="text-[11px] text-slate-400 font-medium">(Đã bao gồm VAT)</span>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="flex justify-center gap-4 mt-8 pt-6 border-t border-slate-100 opacity-60 grayscale">
-                            <i class="fa-brands fa-cc-visa text-3xl"></i>
-                            <i class="fa-brands fa-cc-mastercard text-3xl"></i>
-                            <i class="fa-brands fa-cc-paypal text-3xl"></i>
-                            <i class="fa-brands fa-apple-pay text-3xl"></i>
+                            <a asp-controller="Customers" asp-action="CheckOut" class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-4 rounded-2xl font-bold text-[15px] hover:shadow-lg hover:shadow-cyan-500/30 hover:-translate-y-1 transition-all duration-300 uppercase tracking-wider mb-6 h-[56px]">
+                                Tiến hành thanh toán <i class="fa-solid fa-arrow-right-long ml-1"></i>
+                            </a>
+
+                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                <label class="flex items-center gap-2 text-[13px] font-bold text-slate-700 mb-3 uppercase tracking-wider">
+                                    <i class="fa-solid fa-ticket text-brand-cyan"></i> Mã ưu đãi / Voucher
+                                </label>
+                                <div class="flex gap-2">
+                                    <input type="text" placeholder="Nhập mã..." class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/20 outline-none transition-all font-medium uppercase" />
+                                    <button type="button" class="bg-brand-navy text-white px-5 rounded-xl text-sm hover:bg-slate-800 transition-colors font-bold whitespace-nowrap">
+                                        Áp dụng
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-center gap-4 mt-8 pt-6 border-t border-slate-100 opacity-60 grayscale">
+                                <i class="fa-brands fa-cc-visa text-3xl"></i>
+                                <i class="fa-brands fa-cc-mastercard text-3xl"></i>
+                                <i class="fa-brands fa-cc-paypal text-3xl"></i>
+                                <i class="fa-brands fa-apple-pay text-3xl"></i>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-            </div>
+                </div>
         </div>
     </main>
 </body>

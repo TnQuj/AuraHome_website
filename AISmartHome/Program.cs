@@ -11,6 +11,16 @@ builder.Services.AddDbContext<AISmartHomeDbContext>(options =>
 builder.Services.AddScoped<AISmartHome.Services.TaoTinTuDong>();
 
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+builder.Services.AddMemoryCache(); // Thêm dòng này để dùng IMemoryCache
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(60); // Thời gian sống của phiên
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true; // RẤT QUAN TRỌNG: Bỏ qua kiểm tra Cookie Consent
+});
+
 var app = builder.Build();
 
 // Thêm dòng này vào khu vực builder.Services
@@ -28,6 +38,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseSession();
+
 app.UseAuthorization();
 
 // 1. THÊM ĐOẠN NÀY DÀNH CHO ADMIN AREA
@@ -38,6 +50,6 @@ app.MapControllerRoute(
 // 2. ROUTE MẶC ĐỊNH CỦA BẠN DÀNH CHO KHÁCH HÀNG (Giữ nguyên)
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Customers}/{action=Cart}/{id?}");
+    pattern: "{controller=Customers}/{action=Index}/{id?}");
 
 app.Run();

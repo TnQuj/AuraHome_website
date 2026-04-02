@@ -94,11 +94,14 @@
                                 </div>
 
                                 <span class="ml-auto flex-shrink-0 px-2.5 py-1 min-w-[32px] text-center rounded-full text-[12px] font-bold transition-colors @(isAllActive ? "bg-cyan-500 text-white" : "bg-slate-100 dark:bg-slate-700 text-slate-500 group-hover/link:bg-cyan-100 group-hover/link:text-cyan-600")">
-                                    24
+                                    @(Model.DanhMucs.Sum(d => d.SanPhams?.Count ?? 0))
                                 </span>
                             </a>
 
+                            // KHÔNG CẦN DÙNG @{ } Ở ĐÂY NỮA, VÌ CHÚNG TA ĐANG Ở BÊN TRONG @if {} RỒI
                             int index = 0;
+
+                            // CŨNG KHÔNG CẦN DÙNG @ TRƯỚC VÒNG LẶP FOREACH NỮA
                             foreach (var danhmuc in Model.DanhMucs)
                             {
                                 bool isActive = currentCategoryId == danhmuc.MaDanhMuc.ToString();
@@ -123,7 +126,7 @@
                                     </div>
 
                                     <span class="ml-auto flex-shrink-0 px-2.5 py-1 min-w-[32px] text-center rounded-full text-[12px] font-bold transition-colors @(isActive ? "bg-cyan-500 text-white" : "bg-slate-100 dark:bg-slate-700 text-slate-500 group-hover/link:bg-cyan-50 group-hover/link:text-cyan-600")">
-                                        5
+                                        @(danhmuc.SanPhams?.Count ?? 0)
                                     </span>
                                 </a>
                             }
@@ -349,7 +352,7 @@
 
                                                     </form>
 
-                                                    <a href="/Cart/BuyNow?id=@sp.MaSanPham" class="w-full flex items-center justify-center bg-[#e3001f] hover:bg-red-700 text-white font-semibold py-3.5 rounded-xl transition-colors shadow-md">
+                                                    <a asp-controller="Customers" asp-action="CheckOut" class="w-full flex items-center justify-center bg-[#e3001f] hover:bg-red-700 text-white font-semibold py-3.5 rounded-xl transition-colors shadow-md">
                                                         Mua ngay
                                                     </a>
                                                 </div>
@@ -378,7 +381,8 @@
                                         </div>
 
                                         <div class="flex items-center gap-2">
-                                            <a href="/Cart/BuyNow?id=@sp.MaSanPham" class="flex-1 flex items-center justify-center whitespace-nowrap px-2 sm:px-3 py-2 rounded-xl bg-cyan-500 text-white hover:bg-cyan-600 transition-all duration-300 font-bold text-[13px] shadow-[0_4px_10px_rgba(6,182,212,0.3)]">
+                                            <a asp-controller="Customers" asp-action="BuyNow" asp-route-id="@sp.MaSanPham"
+                                               class="flex-1 flex items-center justify-center whitespace-nowrap px-2 sm:px-3 py-2 rounded-xl bg-cyan-500 text-white hover:bg-cyan-600 transition-all duration-300 font-bold text-[13px] shadow-[0_4px_10px_rgba(6,182,212,0.3)]">
                                                 Mua ngay
                                             </a>
                                             <form onsubmit="addToCartAjax(event)" class="m-0 p-0">
@@ -408,6 +412,7 @@
                     }
 
                 </div>
+                <!--Xem thêm sản phẩm-->
                 <div class="mt-12 flex items-center justify-center gap-2">
                     <button class="size-10 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-cyan-500 hover:text-white transition-all"><i class="fa-solid fa-chevron-left text-sm"></i></button>
                     <button class="size-10 rounded-xl bg-cyan-500 text-white font-bold flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.4)]">1</button>
@@ -763,49 +768,91 @@
             }
             else
             {
-                <article class="max-w-none animate-fade-in">
-                    <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-4">Hệ Sinh Thái AI Smart Home Toàn Diện</h2>
-                    <p class="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed text-[15px]">
-                        Chào mừng bạn đến với thế giới nhà thông minh AuraHome. Tại đây, chúng tôi cung cấp đầy đủ các thiết bị IoT hiện đại nhất, từ an ninh, chiếu sáng đến tự động hóa. Tất cả thiết bị đều có thể kết nối với nhau, tạo ra một không gian sống tiện nghi, an toàn và tiết kiệm năng lượng. Hãy khám phá từng danh mục sản phẩm phía trên để chọn cho mình những thiết bị phù hợp nhất!
-                    </p>
-                    <img src="~/img/unnamed.jpg" alt="HeSinhThai" class="rounded-2xl mx-auto shadow-md w-full max-w-2xl object-cover border border-slate-100 dark:border-slate-700" />
-                    <p class=" text-center text-sm text-slate-400 mt-3 italic">Hệ thống không gian hiện đại, thiết kế nhỏ gọn phù hợp với mọi ngôi nhà</p>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-10 relative z-10">
+                <article class="max-w-none animate-fade-in relative">
 
-                        <div class="group relative p-8 bg-white dark:bg-slate-800/80 rounded-3xl border border-slate-100 dark:border-slate-700/50 shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(6,182,212,0.15)] hover:border-cyan-200 dark:hover:border-cyan-800 transition-all duration-500 overflow-hidden hover:-translate-y-1.5">
+                    <div class="text-center max-w-4xl mx-auto mb-16">
+                        <h2 class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-6 tracking-tight leading-tight">
+                            Hệ Sinh Thái <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600">AI Smart Home</span> Toàn Diện
+                        </h2>
+                        <p class="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed text-lg font-medium">
+                            Chào mừng bạn đến với thế giới nhà thông minh AuraHome. Tại đây, chúng tôi không chỉ bán thiết bị, chúng tôi kiến tạo một phong cách sống tương lai. Mọi thiết bị từ an ninh, chiếu sáng đến giải trí đều giao tiếp liền mạch với nhau, học hỏi thói quen của bạn để mang đến một không gian sống tiện nghi, an toàn và tối ưu năng lượng nhất.
+                        </p>
+                    </div>
+
+                    <div class="relative rounded-3xl overflow-hidden shadow-2xl mb-24 group">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent z-10"></div>
+                        <img src="~/img/de7d2992d5d3094e8faa5c87eaeae19c.jpg" alt="HeSinhThai" class="w-full h-[300px] object-cover transition-transform duration-700 group-hover:scale-105" />
+                        <div class="absolute bottom-0 left-0 right-0 p-8 z-20">
+                            <h3 class="text-white text-2xl md:text-3xl font-bold mb-2">Trải nghiệm không giới hạn</h3>
+                            <p class="text-slate-200 text-sm md:text-base max-w-2xl">Hệ thống trung tâm AI tự động nhận diện giọng nói và ngữ cảnh, biến mọi thao tác vật lý trở nên thừa thãi. Bạn chỉ cần bước vào nhà, AuraHome sẽ làm phần còn lại.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 my-20 relative z-10">
+
+                        <div class="group relative p-8 bg-white dark:bg-slate-800/80 rounded-3xl border border-slate-100 dark:border-slate-700/50 shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(6,182,212,0.15)] hover:border-cyan-200 dark:hover:border-cyan-800 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
                             <div class="absolute -top-12 -right-12 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl group-hover:bg-cyan-500/10 transition-colors duration-500"></div>
-
                             <div class="w-16 h-16 rounded-2xl bg-cyan-50 dark:bg-cyan-900/30 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-cyan-500 transition-all duration-500 shadow-inner">
                                 <i class="fa-solid fa-shield-halved text-2xl text-cyan-500 group-hover:text-white transition-colors duration-500"></i>
                             </div>
-
-                            <h4 class="text-lg font-extrabold text-slate-900 dark:text-white mb-3 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">Bảo mật tuyệt đối</h4>
-                            <p class="text-[14px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium text-justify">Hệ thống an ninh 24/7 với công nghệ mã hóa cấp ngân hàng.</p>
+                            <h4 class="text-xl font-black text-slate-900 dark:text-white mb-3 group-hover:text-cyan-600 transition-colors">Bảo mật cấp độ ngân hàng</h4>
+                            <p class="text-base text-slate-500 dark:text-slate-400 leading-relaxed font-medium">Hệ thống camera AI nhận diện khuôn mặt, cảnh báo xâm nhập theo thời gian thực kết hợp khóa cửa mã hóa AES 256-bit.</p>
                         </div>
 
-                        <div class="group relative p-8 bg-white dark:bg-slate-800/80 rounded-3xl border border-slate-100 dark:border-slate-700/50 shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(6,182,212,0.15)] hover:border-cyan-200 dark:hover:border-cyan-800 transition-all duration-500 overflow-hidden hover:-translate-y-1.5">
+                        <div class="group relative p-8 bg-white dark:bg-slate-800/80 rounded-3xl border border-slate-100 dark:border-slate-700/50 shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(6,182,212,0.15)] hover:border-cyan-200 dark:hover:border-cyan-800 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
                             <div class="absolute -top-12 -right-12 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl group-hover:bg-cyan-500/10 transition-colors duration-500"></div>
-
                             <div class="w-16 h-16 rounded-2xl bg-cyan-50 dark:bg-cyan-900/30 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-cyan-500 transition-all duration-500 shadow-inner">
-                                <i class="fa-solid fa-bolt text-2xl text-cyan-500 group-hover:text-white transition-colors duration-500"></i>
+                                <i class="fa-solid fa-leaf text-2xl text-cyan-500 group-hover:text-white transition-colors duration-500"></i>
                             </div>
-
-                            <h4 class="text-lg font-extrabold text-slate-900 dark:text-white mb-3 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">Tiết kiệm năng lượng</h4>
-                            <p class="text-[14px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium text-justify">Tự động điều chỉnh thiết bị giúp giảm tới 30% hóa đơn tiền điện.</p>
+                            <h4 class="text-xl font-black text-slate-900 dark:text-white mb-3 group-hover:text-cyan-600 transition-colors">Sống xanh & Tiết kiệm</h4>
+                            <p class="text-base text-slate-500 dark:text-slate-400 leading-relaxed font-medium">Cảm biến ánh sáng và nhiệt độ tự động điều chỉnh điều hòa, rèm cửa, giúp gia đình bạn giảm tới 35% hóa đơn năng lượng mỗi tháng.</p>
                         </div>
 
-                        <div class="group relative p-8 bg-white dark:bg-slate-800/80 rounded-3xl border border-slate-100 dark:border-slate-700/50 shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(6,182,212,0.15)] hover:border-cyan-200 dark:hover:border-cyan-800 transition-all duration-500 overflow-hidden hover:-translate-y-1.5">
+                        <div class="group relative p-8 bg-white dark:bg-slate-800/80 rounded-3xl border border-slate-100 dark:border-slate-700/50 shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(6,182,212,0.15)] hover:border-cyan-200 dark:hover:border-cyan-800 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
                             <div class="absolute -top-12 -right-12 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl group-hover:bg-cyan-500/10 transition-colors duration-500"></div>
-
                             <div class="w-16 h-16 rounded-2xl bg-cyan-50 dark:bg-cyan-900/30 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-cyan-500 transition-all duration-500 shadow-inner">
                                 <i class="fa-solid fa-mobile-screen text-2xl text-cyan-500 group-hover:text-white transition-colors duration-500"></i>
                             </div>
-
-                            <h4 class="text-lg font-extrabold text-slate-900 dark:text-white mb-3 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">Điều khiển từ xa</h4>
-                            <p class="text-[14px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium text-justify">Quản lý toàn bộ ngôi nhà chỉ với một chạm trên smartphone.</p>
+                            <h4 class="text-xl font-black text-slate-900 dark:text-white mb-3 group-hover:text-cyan-600 transition-colors">Điều khiển một chạm</h4>
+                            <p class="text-base text-slate-500 dark:text-slate-400 leading-relaxed font-medium">Kiểm soát toàn bộ ngôi nhà từ bất cứ đâu trên thế giới thông qua ứng dụng AuraHome App trên iOS và Android.</p>
                         </div>
 
                     </div>
+
+                    <div class="space-y-24 mt-24">
+
+                        <div class="flex flex-col md:flex-row items-center gap-12">
+                            <div class="w-full md:w-1/2 relative">
+                                <div class="absolute -inset-4 bg-cyan-500/10 rounded-3xl transform rotate-3 z-0"></div>
+                                <img src="~/img/420f2ff1ac046d4869f657d9f732e833.jpg" alt="Smart Lighting" class="relative z-10 rounded-2xl shadow-lg w-full object-cover h-[350px]" />
+                            </div>
+                            <div class="w-full md:w-1/2 space-y-6">
+                                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-sm font-bold">
+                                    <i class="fa-solid fa-sun"></i> Kịch bản buổi sáng
+                                </div>
+                                <h3 class="text-3xl font-black text-slate-900 dark:text-white leading-tight">Đánh thức bạn bằng ánh sáng tự nhiên.</h3>
+                                <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed text-justify">Đừng để tiếng chuông báo thức gắt gỏng làm hỏng một ngày mới. Hãy cài đặt ngữ cảnh "Bình Minh". Rèm cửa sẽ từ từ mở ra đón ánh nắng mặt trời, hệ thống đèn mờ dần đi và bản nhạc yêu thích nhẹ nhàng vang lên, chuẩn bị cho bạn một năng lượng hoàn hảo.</p>
+                                <button class="font-bold text-cyan-500 hover:text-cyan-600 transition-colors flex items-center gap-2">Khám phá Đèn Thông Minh <i class="fa-solid fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row-reverse items-center gap-12">
+                            <div class="w-full md:w-1/2 relative">
+                                <div class="absolute -inset-4 bg-indigo-500/10 rounded-3xl transform -rotate-3 z-0"></div>
+                                <img src="https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=800&auto=format&fit=crop" alt="Smart Entertainment" class="relative z-10 rounded-2xl shadow-lg w-full object-cover h-[350px]" />
+                            </div>
+                            <div class="w-full md:w-1/2 space-y-6">
+                                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-sm font-bold">
+                                    <i class="fa-solid fa-film"></i> Kịch bản rạp chiếu phim
+                                </div>
+                                <h3 class="text-3xl font-black text-slate-900 dark:text-white leading-tight">Phòng khách hóa rạp phim trong chớp mắt.</h3>
+                                <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed text-justify">Chỉ một câu lệnh "Mở chế độ xem phim", tivi tự động bật lên Netflix, đèn trần tắt hẳn, đèn hắt tường chuyển sang màu xanh dịu mắt và điều hòa hạ xuống 24 độ. Tận hưởng cuối tuần trọn vẹn chưa bao giờ dễ dàng đến thế.</p>
+                                <button class="font-bold text-indigo-500 hover:text-indigo-600 transition-colors flex items-center gap-2">Khám phá Thiết bị giải trí <i class="fa-solid fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </article>
             }
 

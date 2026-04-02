@@ -6,9 +6,12 @@
 }
 
 <style>
-    /* Hiệu ứng viền sáng (Glow) cho nút Cyan */
     .btn-cyan-glow:hover {
         box-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
+    }
+    /* Hiệu ứng focus cho phần ghi chú */
+    .note-box {
+        border-left: 3px solid #00E5FF;
     }
 </style>
 
@@ -19,7 +22,7 @@
                 <svg class="w-8 h-8 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                 Quản Lý Đơn Hàng
             </h1>
-            <p class="text-sm text-gray-500 mt-1 pl-10">Theo dõi giao dịch và vận chuyển thiết bị AI</p>
+            <p class="text-sm text-gray-500 mt-1 pl-10">Theo dõi giao dịch, ghi chú và vận chuyển thiết bị AI</p>
         </div>
 
         <div class="flex items-center gap-3">
@@ -38,7 +41,7 @@
                 <thead>
                     <tr class="bg-[#001F3F] text-white text-sm uppercase tracking-wider">
                         <th class="p-4 font-semibold">Khách hàng</th>
-                        <th class="p-4 font-semibold w-1/3">Liên hệ & Địa chỉ</th>
+                        <th class="p-4 font-semibold w-1/3">Liên hệ & Ghi chú khách hàng</th>
                         <th class="p-4 font-semibold text-center">Ngày đặt</th>
                         <th class="p-4 font-semibold text-right">Tổng tiền</th>
                         <th class="p-4 font-semibold text-center">Trạng thái</th>
@@ -49,52 +52,70 @@
                     @foreach (var item in Model)
                     {
                         <tr class="hover:bg-blue-50/50 transition-colors group">
-
                             <td class="p-4">
-                                <div class="font-bold text-[#001F3F] text-base">@item.TenKhachHang</div>
-                                @if (item.MaKhachHangNavigation != null)
-                                {
-                                    <div class="text-xs text-gray-400 mt-0.5">Tài khoản ID: #@item.MaKhachHangNavigation.MaKhachHang</div>
-                                }
+                                <div class="font-bold text-[#001F3F] text-base">
+                                    @(item.MaKhachHangNavigation != null ? item.MaKhachHangNavigation.TenKhachHang : "Khách vãng lai")
+                                </div>
+                                <div class="text-xs text-gray-400 mt-0.5">Mã KH: #@item.MaKhachHang</div>
                             </td>
 
                             <td class="p-4">
-                                <div class="font-semibold text-gray-700 flex items-center gap-1.5 mb-1">
-                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                                    @item.SoDienThoai
-                                </div>
-                                <div class="text-xs text-gray-500 line-clamp-2" title="@item.DiaChiGiaoHang">
-                                    <span class="font-medium">Đ/C:</span> @item.DiaChiGiaoHang
-                                </div>
+                                @if (!string.IsNullOrEmpty(item.GhiChu))
+                                {
+                                    <div class="note-box bg-cyan-50/30 p-2 rounded-r-lg mb-2" title="@item.GhiChu">
+                                        <div class="text-[11px] font-bold text-brand-cyan uppercase mb-1">Thông tin thanh toán & Ghi chú:</div>
+                                        <div class="text-xs text-slate-700 line-clamp-2 leading-relaxed">
+                                            @item.GhiChu
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="text-xs text-gray-400 italic">Không có ghi chú bổ sung</div>
+                                }
                             </td>
 
                             <td class="p-4 text-center">
                                 <span class="text-sm font-medium text-gray-600 bg-gray-100 px-3 py-1 rounded-full whitespace-nowrap">
-                                    @(item.NgayDatHang.HasValue ? item.NgayDatHang.Value.ToString("dd/MM/yyyy") : "N/A")
+                                    @(item.NgayDatHang.HasValue ? item.NgayDatHang.Value.ToString("dd/MM/yyyy HH:mm") : "N/A")
                                 </span>
                             </td>
 
                             <td class="p-4 text-right">
                                 <span class="inline-flex items-center font-bold text-[#00E5FF] bg-[#001F3F] px-3 py-1.5 rounded-lg shadow-sm whitespace-nowrap">
-                                    @(item.TongTien.HasValue ? item.TongTien.Value.ToString("#,##0") : "0") đ
+                                    @((item.TongTien ?? 0).ToString("N0")) đ
                                 </span>
                             </td>
 
                             <td class="p-4 text-center">
-                                <span class="inline-flex px-3 py-1 rounded-full text-xs font-bold border border-blue-200 bg-blue-100 text-blue-700 whitespace-nowrap">
-                                    @(string.IsNullOrEmpty(item.TrangThaiDonHang) ? "Chờ xử lý" : item.TrangThaiDonHang)
+                                @{
+                                    var status = item.TrangThaiDonHang ?? "Chờ xử lý";
+                                    // Giả sử bạn có cột NgayCapNhat hoặc dùng NgayDatHang
+                                    var timeInfo = item.NgayDatHang.HasValue ? $"Cập nhật lúc: {item.NgayDatHang.Value.ToString("HH:mm dd/MM")}" : "";
+
+                                    var statusClass = status switch
+                                    {
+                                        "Hoàn thành" => "bg-green-100 text-green-700 border-green-200",
+                                        "Đã hủy" => "bg-red-100 text-red-700 border-red-200",
+                                        "Đang giao" => "bg-amber-100 text-amber-700 border-amber-200",
+                                        "Đã xác nhận" => "bg-cyan-100 text-cyan-700 border-cyan-200",
+                                        _ => "bg-blue-100 text-blue-700 border-blue-200"
+                                    };
+                                }
+                                <span class="inline-flex px-3 py-1 rounded-full text-xs font-bold border @statusClass whitespace-nowrap cursor-help"
+                                      title="@timeInfo">
+                                    @status
                                 </span>
                             </td>
-
                             <td class="p-4">
                                 <div class="flex items-center justify-center gap-2 opacity-30 group-hover:opacity-100 transition-opacity duration-300">
-                                    <a asp-action="Edit" asp-route-id="@item.MaDonHang" class="p-2 text-blue-600 hover:bg-blue-100 hover:text-blue-800 rounded-lg transition-colors" title="Cập nhật trạng thái">
+                                    <a asp-action="Edit" asp-route-id="@item.MaDonHang" class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors" title="Cập nhật">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                     </a>
-                                    <a asp-action="Details" asp-route-id="@item.MaDonHang" class="p-2 text-[#001F3F] hover:bg-gray-200 rounded-lg transition-colors" title="Xem chi tiết đơn">
+                                    <a asp-action="Details" asp-route-id="@item.MaDonHang" class="p-2 text-[#001F3F] hover:bg-gray-200 rounded-lg transition-colors" title="Chi tiết">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                     </a>
-                                    <a asp-action="Delete" asp-route-id="@item.MaDonHang" class="p-2 text-red-500 hover:bg-red-100 hover:text-red-700 rounded-lg transition-colors" title="Hủy / Xóa đơn">
+                                    <a asp-action="Delete" asp-route-id="@item.MaDonHang" class="p-2 text-red-500 hover:bg-red-100 rounded-lg transition-colors" title="Xóa">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                     </a>
                                 </div>

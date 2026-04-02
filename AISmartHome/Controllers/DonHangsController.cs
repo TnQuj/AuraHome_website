@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,28 +19,42 @@ namespace AISmartHome.Controllers
             _context = context;
         }
 
-        // GET: DonHangs
         public async Task<IActionResult> Index()
         {
-            var aISmartHomeDbContext = _context.DonHangs.Include(d => d.MaKhachHangNavigation);
-            return View(await aISmartHomeDbContext.ToListAsync());
+            var orders = await _context.DonHangs.ToListAsync();
+
+            foreach (var order in orders)
+            {
+                // LOGIC TỰ ĐỘNG: Nếu đơn hàng quá 3 ngày chưa giao -> Tự động Hoàn thành (Ví dụ vậy)
+                if (order.TrangThaiDonHang == "Đang giao" &&
+                    order.NgayDatHang.HasValue &&
+                    (DateTime.Now - order.NgayDatHang.Value).TotalDays > 3)
+                {
+                    order.TrangThaiDonHang = "Hoàn thành";
+                }
+
+                // LOGIC TỰ ĐỘNG: Nếu quá 15 phút khách không thanh toán (với đơn online) -> Tự hủy
+                // (Áp dụng nếu bạn có cột thời gian cụ thể)
+            }
+
+            // Lưu lại các thay đổi tự động nếu có
+            await _context.SaveChangesAsync();
+
+            return View(orders);
         }
 
         // GET: DonHangs/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var donHang = await _context.DonHangs
                 .Include(d => d.MaKhachHangNavigation)
+                .Include(d => d.ChiTietDonHangs) // Lấy danh sách chi tiết
+                    .ThenInclude(ct => ct.MaSanPhamNavigation) // Lấy thông tin sản phẩm (tên, hình ảnh)
                 .FirstOrDefaultAsync(m => m.MaDonHang == id);
-            if (donHang == null)
-            {
-                return NotFound();
-            }
+
+            if (donHang == null) return NotFound();
 
             return View(donHang);
         }
@@ -146,13 +160,27 @@ namespace AISmartHome.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            // 1. Tìm tất cả các chi tiết đơn hàng (bảng Con) liên quan đến đơn hàng này
+            var chiTietDonHangs = _context.ChiTietDonHangs
+                                          .Where(ct => ct.MaDonHang == id);
+
+            // 2. Xóa toàn bộ danh sách chi tiết đơn hàng trước
+            if (chiTietDonHangs.Any())
+            {
+                _context.ChiTietDonHangs.RemoveRange(chiTietDonHangs);
+            }
+
+            // 3. Bây giờ mới tìm và xóa Đơn hàng chính (bảng Cha)
             var donHang = await _context.DonHangs.FindAsync(id);
             if (donHang != null)
             {
                 _context.DonHangs.Remove(donHang);
             }
 
+            // 4. Lưu thay đổi vào Database
             await _context.SaveChangesAsync();
+
+            // Quay lại danh sách sau khi xóa thành công
             return RedirectToAction(nameof(Index));
         }
 

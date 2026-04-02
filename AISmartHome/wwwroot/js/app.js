@@ -115,27 +115,105 @@ document.addEventListener('DOMContentLoaded', () => {
 // =========================================================
 // 3. XỬ LÝ SỐ LƯỢNG TRONG GIỎ HÀNG / TRANG CHI TIẾT
 // =========================================================
-function decreaseQuantity(productId = '') {
-    // Nếu có truyền ID thì tìm theo ID, không thì dùng mặc định
-    const inputId = productId ? 'qty-' + productId : 'quantity-input';
-    const input = document.getElementById(inputId);
-    if (input) {
-        let currentValue = parseInt(input.value);
-        if (currentValue > 1) {
-            input.value = currentValue - 1;
-        }
+    function updateCartUI(productId) {
+        // 1. Lấy số lượng mới từ ô input
+        const input = document.getElementById(`qty-${productId}`);
+    const quantity = parseInt(input.value);
+
+    // 2. Lấy đơn giá (đã lưu trong data-price)
+    const unitPriceEl = input.closest('.group').querySelector('.js-unit-price');
+    const unitPrice = parseFloat(unitPriceEl.getAttribute('data-price'));
+
+    // 3. Tính thành tiền mới cho sản phẩm này
+    const subtotalEl = document.getElementById(`subtotal-${productId}`);
+    const newSubtotal = quantity * unitPrice;
+
+    // 4. Hiển thị thành tiền mới (định dạng VNĐ)
+    subtotalEl.innerText = newSubtotal.toLocaleString('vi-VN') + " ₫";
+
+    // 5. Tính lại Tổng thanh toán cuối cùng
+    calculateTotal();
+    }
+
+function calculateTotal() {
+    let totalMoney = 0;
+    let totalQty = 0;
+
+    // 1. Duyệt qua tất cả các input số lượng để tính tổng sản phẩm
+    document.querySelectorAll('input[id^="qty-"]').forEach(input => {
+        totalQty += parseInt(input.value) || 0;
+    });
+
+    // 2. Duyệt qua tất cả thành tiền từng món để tính tổng tiền
+    document.querySelectorAll('.js-subtotal').forEach(el => {
+        const value = parseInt(el.innerText.replace(/[^\d]/g, '')) || 0;
+        totalMoney += value;
+    });
+
+    // 3. Cập nhật lên giao diện
+    const totalQtyEl = document.getElementById('total-quantity');
+    const totalMoneyEl = document.getElementById('cart-total'); // Tổng cuối
+    const summaryMoneyEl = document.getElementById('subtotal-summary'); // Chỗ Tạm tính
+
+    if (totalQtyEl) totalQtyEl.innerText = totalQty;
+    if (totalMoneyEl) totalMoneyEl.innerText = totalMoney.toLocaleString('vi-VN') + " ₫";
+    if (summaryMoneyEl) summaryMoneyEl.innerText = totalMoney.toLocaleString('vi-VN') + " ₫";
+}
+
+// --- GIỮ NGUYÊN HÀM updateCartUI và calculateTotal CỦA BẠN ---
+
+function increaseQuantity(productId) {
+    const input = document.getElementById(`qty-${productId}`);
+    let newQty = parseInt(input.value) + 1;
+    input.value = newQty;
+
+    // Cập nhật giao diện
+    updateCartUI(productId);
+    calculateTotal();
+
+    // LƯU VÀO DATABASE (MỚI THÊM)
+    updateCartOnServer(productId, newQty);
+}
+
+function decreaseQuantity(productId) {
+    const input = document.getElementById(`qty-${productId}`);
+    let currentQty = parseInt(input.value);
+
+    if (currentQty > 1) {
+        let newQty = currentQty - 1;
+        input.value = newQty;
+
+        // Cập nhật giao diện
+        updateCartUI(productId);
+        calculateTotal();
+
+        // LƯU VÀO DATABASE (MỚI THÊM)
+        updateCartOnServer(productId, newQty);
     }
 }
 
-function increaseQuantity(productId = '') {
-    const inputId = productId ? 'qty-' + productId : 'quantity-input';
-    const input = document.getElementById(inputId);
-    if (input) {
-        let currentValue = parseInt(input.value);
-        input.value = currentValue + 1;
-    }
+// HÀM MỚI: Gửi dữ liệu ngầm về Controller C#
+function updateCartOnServer(productId, quantity) {
+    fetch('/Customers/UpdateCart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            productId: parseInt(productId),
+            quantity: quantity
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                alert("Lỗi khi lưu giỏ hàng: " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error("Lỗi:", error);
+        });
 }
-
 // =========================================================
 // 4. GIỎ HÀNG TRƯỢT (OFF-CANVAS MINI CART) BẰNG AJAX
 // =========================================================
@@ -351,3 +429,46 @@ document.addEventListener('DOMContentLoaded', () => {
         changeViewMode('list');
     }
 });
+
+
+// =========================================================
+// PHẦN XỬ LÝ SỐ LƯỢNG CHO TRANG CHI TIẾT SẢN PHẨM (DETAILS)
+// =========================================================
+
+function updateDetailPrice(qty) {
+    const input = document.getElementById('detail-qty');
+    // Nếu không tìm thấy thẻ input này (tức là đang ở trang khác) thì dừng lại
+    if (!input) return;
+
+    const price = parseFloat(input.getAttribute('data-price')) || 0;
+    const total = qty * price;
+
+    const subtotalEl = document.getElementById('detail-subtotal');
+    if (subtotalEl) {
+        subtotalEl.innerText = total.toLocaleString('vi-VN') + ' ₫';
+    }
+}
+
+function increaseDetailQty() {
+    const input = document.getElementById('detail-qty');
+    if (!input) return;
+
+    let currentQty = parseInt(input.value) || 1;
+    let newQty = currentQty + 1;
+
+    input.value = newQty;
+    updateDetailPrice(newQty);
+}
+
+function decreaseDetailQty() {
+    const input = document.getElementById('detail-qty');
+    if (!input) return;
+
+    let currentQty = parseInt(input.value) || 1;
+
+    if (currentQty > 1) {
+        let newQty = currentQty - 1;
+        input.value = newQty;
+        updateDetailPrice(newQty);
+    }
+}

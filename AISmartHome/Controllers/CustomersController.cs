@@ -315,14 +315,15 @@ namespace AISmartHome.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PlaceOrder(
-            string FullName,
-            string Phone,
-            string Email,
-            string Province, // Thêm Tỉnh
-            string District, // Thêm Huyện
-            string Address,  // Địa chỉ cụ thể
-            string Note,
-            string PaymentMethod)
+    string FullName,
+    string Phone,
+    string Email,
+    string Province, // Thêm Tỉnh
+    string District, // Thêm Huyện
+    string Address,  // Địa chỉ cụ thể
+    string Note,
+    string PaymentMethod,
+    bool CanLapDat = false) // BƯỚC 1: Thêm tham số CanLapDat (Mặc định là false nếu khách không tick)
         {
             // Giả lập ID khách hàng (Sau này thay bằng User.Identity nếu có đăng nhập)
             int maKhachHangHienTai = 1;
@@ -359,6 +360,27 @@ namespace AISmartHome.Controllers
             _context.DonHangs.Add(donHang);
             await _context.SaveChangesAsync(); // Lưu để lấy MaDonHang (Identity)
 
+            // =========================================================================
+            // BƯỚC 2: TẠO YÊU CẦU LẮP ĐẶT NẾU KHÁCH HÀNG TÍCH CHỌN
+            // =========================================================================
+            if (CanLapDat == true)
+            {
+                var yeuCauMoi = new YeuCauLapDat
+                {
+                    MaDonHang = donHang.MaDonHang, // Nối với Đơn hàng vừa sinh ra
+                    DiaChiLapDat = donHang.DiaChiGiaoHang, // Dùng luôn địa chỉ giao hàng
+                    NgayLap = DateTime.Now,
+                    TrangThaiLapDat = "Chờ báo giá", // Đưa vào trạng thái chờ
+                    PhiLapDat = null,  // Chưa có tiền báo giá
+                    GhiChuBaoGia = null,
+                    MaNhanVien = null  // Chưa phân công
+                };
+
+                _context.YeuCauLapDats.Add(yeuCauMoi);
+                // Không cần SaveChanges ngay vì lát nữa ở dưới sẽ Save 1 thể
+            }
+            // =========================================================================
+
             // 3. Chuyển chi tiết từ Giỏ hàng sang Chi tiết hóa đơn
             foreach (var item in gioHang.ChiTietGioHangs)
             {
@@ -375,11 +397,7 @@ namespace AISmartHome.Controllers
             // 4. Dọn dẹp giỏ hàng sau khi đã đặt hàng
             _context.ChiTietGioHangs.RemoveRange(gioHang.ChiTietGioHangs);
 
-            // Lưu toàn bộ chi tiết đơn hàng và việc xóa giỏ hàng
-            await _context.SaveChangesAsync();
-
-            // 5. Chuyển đến trang thông báo thành công
-            // Lưu ý: Bạn cần tạo thêm Action OrderSuccess(int id) trong Controller này
+            // 5. Lưu toàn bộ (Chi tiết đơn + Xóa giỏ + Yêu cầu lắp đặt nếu có) và trả về thông báo
             try
             {
                 // Thực hiện lưu toàn bộ thay đổi

@@ -1,0 +1,75 @@
+﻿@model AISmartHome.Models.YeuCauLapDat
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml"; // Bạn có thể đổi sang Layout của Admin nếu có
+    ViewData["Title"] = "Thêm Yêu Cầu Lắp Đặt";
+}
+
+<main class="w-full min-h-[75vh] py-12 bg-slate-50">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="mb-6 flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-black text-brand-navy uppercase tracking-wide">Thêm Yêu Cầu Mới</h1>
+                <p class="text-slate-500 text-sm mt-1">Tạo một yêu cầu lắp đặt mới cho đơn hàng</p>
+            </div>
+            <a asp-action="Index" class="text-slate-500 hover:text-brand-cyan transition-colors font-medium flex items-center gap-2">
+                <i class="fa-solid fa-arrow-left"></i> Quay lại
+            </a>
+        </div>
+
+        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+            <form asp-action="Create" class="space-y-6">
+                <div asp-validation-summary="ModelOnly" class="text-rose-500 text-sm font-medium p-3 bg-rose-50 rounded-xl"></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label asp-for="MaDonHang" class="block text-sm font-bold text-slate-700">Mã Đơn Hàng</label>
+                        <select asp-for="MaDonHang" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-cyan/20 focus:border-brand-cyan transition-all text-slate-700 appearance-none bg-slate-50" asp-items="ViewBag.MaDonHang">
+                            <option value="">-- Chọn đơn hàng --</option>
+                        </select>
+                        <span asp-validation-for="MaDonHang" class="text-rose-500 text-xs"></span>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label asp-for="MaNhanVien" class="block text-sm font-bold text-slate-700">Nhân Viên Phụ Trách</label>
+                        <select asp-for="MaNhanVien" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-cyan/20 focus:border-brand-cyan transition-all text-slate-700 appearance-none bg-slate-50" asp-items="ViewBag.MaNhanVien">
+                            <option value="">-- Chọn nhân viên (Có thể bỏ trống) --</option>
+                        </select>
+                        <span asp-validation-for="MaNhanVien" class="text-rose-500 text-xs"></span>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label asp-for="TrangThaiLapDat" class="block text-sm font-bold text-slate-700">Trạng Thái Lắp Đặt</label>
+                        <input asp-for="TrangThaiLapDat" value="Chưa lắp đặt" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-cyan/20 focus:border-brand-cyan transition-all text-slate-700 bg-slate-50" placeholder="VD: Chưa lắp đặt" />
+                        <span asp-validation-for="TrangThaiLapDat" class="text-rose-500 text-xs"></span>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label asp-for="NgayLap" class="block text-sm font-bold text-slate-700">Ngày Lập Yêu Cầu</label>
+                        <input asp-for="NgayLap" type="datetime-local" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-cyan/20 focus:border-brand-cyan transition-all text-slate-700 bg-slate-50" />
+                        <span asp-validation-for="NgayLap" class="text-rose-500 text-xs"></span>
+                    </div>
+
+                    <div class="space-y-2 md:col-span-2">
+                        <label asp-for="DiaChiLapDat" class="block text-sm font-bold text-slate-700">Địa Chỉ Lắp Đặt</label>
+                        <textarea asp-for="DiaChiLapDat" rows="3" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-cyan/20 focus:border-brand-cyan transition-all text-slate-700 bg-slate-50" placeholder="Nhập địa chỉ chi tiết..."></textarea>
+                        <span asp-validation-for="DiaChiLapDat" class="text-rose-500 text-xs"></span>
+                    </div>
+                </div>
+
+                <div class="pt-6 border-t border-slate-100 flex justify-end">
+                    <button type="submit" class="px-8 py-3.5 bg-brand-navy text-white font-bold rounded-xl hover:bg-slate-800 transition-colors shadow-lg shadow-brand-navy/20 flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Tạo yêu cầu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

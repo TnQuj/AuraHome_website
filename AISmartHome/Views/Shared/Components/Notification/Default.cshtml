@@ -1,0 +1,53 @@
+﻿@model List<AISmartHome.ViewComponents.NotificationItem>
+
+<div id="panelNotification" class="hidden absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden transform transition-all origin-top-right z-50">
+    <div class="p-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+        <h3 class="font-bold text-slate-800">Thông báo mới</h3>
+        @if (Model.Count > 0)
+        {
+            <span class="text-[10px] font-bold bg-rose-500 text-white px-2 py-1 rounded-md">@Model.Count Mới</span>
+        }
+    </div>
+
+    <div class="max-h-[350px] overflow-y-auto custom-scrollbar">
+        @if (Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+                <a href="@item.Link" class="block p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors group">
+                    <div class="flex items-start gap-3">
+                        @if (item.Type == "Order")
+                        {
+                            <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-cart-arrow-down"></i>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-screwdriver-wrench"></i>
+                            </div>
+                        }
+
+                        <div>
+                            <p class="text-sm font-bold text-slate-800">@item.Title</p>
+                            <p class="text-xs text-slate-500 mt-1 line-clamp-2">@item.Description</p>
+                            <p class="text-[10px] text-brand-cyan font-semibold mt-2">@item.GetTimeAgo()</p>
+                        </div>
+                    </div>
+                </a>
+            }
+        }
+        else
+        {
+            <div class="p-8 text-center text-slate-400">
+                <i class="fa-regular fa-bell-slash text-3xl mb-2 text-slate-300"></i>
+                <p class="text-sm font-medium">Không có thông báo mới.</p>
+            </div>
+        }
+    </div>
+
+    <div class="p-3 bg-slate-50 border-t border-slate-100 text-center">
+        <a href="#" class="text-xs font-bold text-slate-500 hover:text-brand-cyan hover:underline transition-colors">Xem tất cả thông báo</a>
+    </div>
+</div>

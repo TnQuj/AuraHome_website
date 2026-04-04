@@ -23,6 +23,11 @@ public partial class YeuCauLapDat
     [StringLength(100)]
     public string? TrangThaiLapDat { get; set; }
 
+    public decimal? PhiLapDat { get; set; }
+
+    [StringLength(500)]
+    public string? GhiChuBaoGia { get; set; }
+
     public int? MaNhanVien { get; set; }
 
     [ForeignKey("MaDonHang")]

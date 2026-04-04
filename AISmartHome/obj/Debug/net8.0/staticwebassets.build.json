@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "5nztpzyciFOruzDbQrnOyEgoVL4YRB4e17YIjdzJ0B4=",
+  "Hash": "iqGi45di4ix53UE7jMnRUb3ZbHbs1wR/SdKz9fkURQ0=",
   "Source": "AISmartHome",
   "BasePath": "_content/AISmartHome",
   "Mode": "Default",
@@ -1417,8 +1417,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "41rpaww3p7",
-      "Integrity": "6CB3PEBkefGEcuPcGmmD9kPuhD+FaXNETJB+SUGsW9k=",
+      "Fingerprint": "vr5gogt975",
+      "Integrity": "xRZDPtyojB3lMqFtNMyQvu9LbrsEOj88JQbPDVyZLXQ=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\site.js"
@@ -4203,7 +4203,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 01 Apr 2026 15:10:04 GMT"
+          "Value": "Thu, 02 Apr 2026 08:19:43 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4240,7 +4240,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 01 Apr 2026 15:10:04 GMT"
+          "Value": "Thu, 02 Apr 2026 08:19:43 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4367,7 +4367,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 01 Apr 2026 15:11:48 GMT"
+          "Value": "Thu, 02 Apr 2026 08:19:43 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4404,7 +4404,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 01 Apr 2026 15:11:48 GMT"
+          "Value": "Thu, 02 Apr 2026 08:19:43 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4449,7 +4449,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 01 Apr 2026 15:03:08 GMT"
+          "Value": "Thu, 02 Apr 2026 08:19:43 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4486,7 +4486,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 01 Apr 2026 15:03:08 GMT"
+          "Value": "Thu, 02 Apr 2026 08:19:43 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4531,7 +4531,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 01 Apr 2026 15:00:01 GMT"
+          "Value": "Thu, 02 Apr 2026 08:19:43 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4576,7 +4576,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 01 Apr 2026 15:00:01 GMT"
+          "Value": "Thu, 02 Apr 2026 08:19:43 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6007,7 +6007,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 01 Apr 2026 15:08:26 GMT"
+          "Value": "Thu, 02 Apr 2026 08:19:43 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6052,7 +6052,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 01 Apr 2026 15:08:26 GMT"
+          "Value": "Thu, 02 Apr 2026 08:19:43 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -7893,7 +7893,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 01 Apr 2026 14:41:50 GMT"
+          "Value": "Thu, 02 Apr 2026 08:19:43 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -7930,7 +7930,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 01 Apr 2026 14:41:50 GMT"
+          "Value": "Thu, 02 Apr 2026 08:19:43 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -7975,7 +7975,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 02 Apr 2026 07:21:41 GMT"
+          "Value": "Thu, 02 Apr 2026 08:19:43 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -8012,7 +8012,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 02 Apr 2026 07:21:41 GMT"
+          "Value": "Thu, 02 Apr 2026 08:19:43 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -8035,51 +8035,6 @@
       ]
     },
     {
-      "Route": "js/site.41rpaww3p7.js",
-      "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\js\\site.js",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "8693"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"6CB3PEBkefGEcuPcGmmD9kPuhD+FaXNETJB+SUGsW9k=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Thu, 02 Apr 2026 06:57:10 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "41rpaww3p7"
-        },
-        {
-          "Name": "label",
-          "Value": "js/site.js"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-6CB3PEBkefGEcuPcGmmD9kPuhD+FaXNETJB+SUGsW9k="
-        }
-      ]
-    },
-    {
       "Route": "js/site.js",
       "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\js\\site.js",
       "Selectors": [],
@@ -8090,7 +8045,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "8693"
+          "Value": "15925"
         },
         {
           "Name": "Content-Type",
@@ -8098,11 +8053,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"6CB3PEBkefGEcuPcGmmD9kPuhD+FaXNETJB+SUGsW9k=\""
+          "Value": "\"xRZDPtyojB3lMqFtNMyQvu9LbrsEOj88JQbPDVyZLXQ=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 02 Apr 2026 06:57:10 GMT"
+          "Value": "Sat, 04 Apr 2026 08:28:47 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -8112,7 +8067,52 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-6CB3PEBkefGEcuPcGmmD9kPuhD+FaXNETJB+SUGsW9k="
+          "Value": "sha256-xRZDPtyojB3lMqFtNMyQvu9LbrsEOj88JQbPDVyZLXQ="
+        }
+      ]
+    },
+    {
+      "Route": "js/site.vr5gogt975.js",
+      "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\js\\site.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "15925"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xRZDPtyojB3lMqFtNMyQvu9LbrsEOj88JQbPDVyZLXQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 04 Apr 2026 08:28:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "vr5gogt975"
+        },
+        {
+          "Name": "label",
+          "Value": "js/site.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-xRZDPtyojB3lMqFtNMyQvu9LbrsEOj88JQbPDVyZLXQ="
         }
       ]
     },

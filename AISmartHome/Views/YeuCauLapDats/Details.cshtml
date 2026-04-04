@@ -1,0 +1,112 @@
+﻿@model AISmartHome.Models.YeuCauLapDat
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml"; // Đảm bảo đúng layout Admin của bạn
+
+    ViewData["Title"] = "Chi Tiết Yêu Cầu";
+}
+
+<main class="w-full min-h-[75vh] py-12 bg-slate-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="mb-6 flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-black text-brand-navy uppercase tracking-wide">Chi Tiết Yêu Cầu</h1>
+                <p class="text-slate-500 text-sm mt-1">Thông tin đầy đủ của mã YC: <strong class="text-brand-cyan">#@Model.MaYeuCauLapDat</strong></p>
+            </div>
+            <a asp-action="Index" class="text-slate-500 hover:text-brand-cyan transition-colors font-medium flex items-center gap-2">
+                <i class="fa-solid fa-arrow-left"></i> Quay lại danh sách
+            </a>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="p-8 border-b border-slate-100 flex items-center gap-4 bg-slate-50/50">
+                <div class="w-16 h-16 bg-brand-navy text-brand-cyan rounded-2xl flex items-center justify-center shadow-inner">
+                    <i class="fa-solid fa-file-invoice text-3xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">Yêu cầu thuộc Đơn hàng #@Model.MaDonHang</h2>
+                    <p class="text-sm text-slate-500 font-medium">
+                        Trạng thái thi công:
+                        @{
+                            var statusColor = Model.TrangThaiLapDat switch
+                            {
+                                "Chờ báo giá" => "text-rose-500",
+                                "Đã hoàn thành" => "text-emerald-500",
+                                "Bị hủy" => "text-slate-400",
+                                _ => "text-brand-cyan"
+                            };
+                        }
+                        <span class="font-bold @statusColor">@Model.TrangThaiLapDat</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                <div class="space-y-1">
+                    <p class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Ngày hẹn lắp đặt</p>
+                    <p class="text-lg font-bold text-slate-800">
+                        <i class="fa-regular fa-clock text-brand-cyan mr-1"></i>
+                        @(Model.NgayLap?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa xác định")
+                    </p>
+                </div>
+
+                <div class="space-y-1">
+                    <p class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Nhân viên phụ trách</p>
+                    <p class="text-lg font-bold text-slate-800">
+                        <i class="fa-solid fa-user-gear text-brand-cyan mr-1"></i>
+                        @(Model.MaNhanVienNavigation != null ? $"NV-{Model.MaNhanVienNavigation.TenNhanVien}" : "Chưa phân công")
+                    </p>
+                </div>
+
+                <div class="space-y-1">
+                    <p class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Thông tin khách hàng</p>
+                    <div class="text-lg font-bold text-slate-800">
+                        @(Model.MaDonHangNavigation?.TenKhachHang ?? Model.MaDonHangNavigation?.MaKhachHangNavigation?.TenKhachHang ?? "Khách hàng ẩn danh")
+                        <div class="text-sm font-medium text-slate-500 mt-1">
+                            <i class="fa-solid fa-phone-volume mr-1"></i> @(Model.MaDonHangNavigation?.SoDienThoai ?? Model.MaDonHangNavigation?.MaKhachHangNavigation?.SoDienThoai ?? "Chưa có SĐT")
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-1">
+                    <p class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Phí lắp đặt</p>
+                    <p class="text-xl font-black text-rose-600">
+                        @(Model.PhiLapDat.HasValue ? Model.PhiLapDat.Value.ToString("N0") + " VNĐ" : "Chưa báo giá")
+                    </p>
+                </div>
+
+                <div class="space-y-1 md:col-span-2">
+                    <p class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Địa chỉ thi công</p>
+                    <p class="text-lg font-bold text-slate-800 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <i class="fa-solid fa-location-dot text-brand-cyan mr-2"></i> @Model.DiaChiLapDat
+                    </p>
+                </div>
+
+                <div class="space-y-1 md:col-span-2">
+                    <p class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Ghi chú thi công</p>
+                    <div class="text-base font-medium text-slate-700 bg-cyan-50/50 p-4 rounded-xl border border-cyan-100 italic">
+                        @if (!string.IsNullOrEmpty(Model.GhiChuBaoGia))
+                        {
+                            <i class="fa-solid fa-quote-left text-cyan-300 mr-2"></i>
+                            @Model.GhiChuBaoGia
+                        }
+                        else
+                        {
+                            <span class="text-slate-400 not-italic">Không có ghi chú thi công.</span>
+                        }
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="p-6 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
+                <a asp-action="Edit" asp-route-id="@Model?.MaYeuCauLapDat" class="px-6 py-2.5 bg-brand-cyan text-white font-bold rounded-xl hover:bg-cyan-600 transition-colors shadow-md flex items-center gap-2">
+                    <i class="fa-solid fa-pen"></i> Chỉnh sửa yêu cầu
+                </a>
+            </div>
+        </div>
+
+    </div>
+</main>

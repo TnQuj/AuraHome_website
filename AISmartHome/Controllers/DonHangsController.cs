@@ -21,26 +21,13 @@ namespace AISmartHome.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var orders = await _context.DonHangs.ToListAsync();
+            // Include thêm bảng YeuCauLapDats để biết đơn nào có lắp đặt
+            var donHangs = _context.DonHangs
+                .Include(d => d.MaKhachHangNavigation)
+                .Include(d => d.YeuCauLapDats) // Kéo theo thông tin lắp đặt
+                .OrderByDescending(d => d.NgayDatHang);
 
-            foreach (var order in orders)
-            {
-                // LOGIC TỰ ĐỘNG: Nếu đơn hàng quá 3 ngày chưa giao -> Tự động Hoàn thành (Ví dụ vậy)
-                if (order.TrangThaiDonHang == "Đang giao" &&
-                    order.NgayDatHang.HasValue &&
-                    (DateTime.Now - order.NgayDatHang.Value).TotalDays > 3)
-                {
-                    order.TrangThaiDonHang = "Hoàn thành";
-                }
-
-                // LOGIC TỰ ĐỘNG: Nếu quá 15 phút khách không thanh toán (với đơn online) -> Tự hủy
-                // (Áp dụng nếu bạn có cột thời gian cụ thể)
-            }
-
-            // Lưu lại các thay đổi tự động nếu có
-            await _context.SaveChangesAsync();
-
-            return View(orders);
+            return View(await donHangs.ToListAsync());
         }
 
         // GET: DonHangs/Details/5
@@ -50,8 +37,10 @@ namespace AISmartHome.Controllers
 
             var donHang = await _context.DonHangs
                 .Include(d => d.MaKhachHangNavigation)
-                .Include(d => d.ChiTietDonHangs) // Lấy danh sách chi tiết
-                    .ThenInclude(ct => ct.MaSanPhamNavigation) // Lấy thông tin sản phẩm (tên, hình ảnh)
+                .Include(d => d.ChiTietDonHangs)
+                    .ThenInclude(c => c.MaSanPhamNavigation)
+                .Include(d => d.YeuCauLapDats) // Kéo theo Yêu cầu lắp đặt
+                    .ThenInclude(y => y.MaNhanVienNavigation) // Kéo luôn Tên nhân viên kỹ thuật
                 .FirstOrDefaultAsync(m => m.MaDonHang == id);
 
             if (donHang == null) return NotFound();
@@ -156,31 +145,40 @@ namespace AISmartHome.Controllers
         }
 
         // POST: DonHangs/Delete/5
+        // POST: DonHangs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            // 1. Tìm tất cả các chi tiết đơn hàng (bảng Con) liên quan đến đơn hàng này
-            var chiTietDonHangs = _context.ChiTietDonHangs
-                                          .Where(ct => ct.MaDonHang == id);
+            // 1. Phải Include() để lôi cả các dữ liệu con lên
+            var donHang = await _context.DonHangs
+                .Include(d => d.YeuCauLapDats)     // Lấy các Yêu cầu lắp đặt
+                .Include(d => d.ChiTietDonHangs)   // Lấy các Chi tiết đơn hàng
+                .FirstOrDefaultAsync(m => m.MaDonHang == id);
 
-            // 2. Xóa toàn bộ danh sách chi tiết đơn hàng trước
-            if (chiTietDonHangs.Any())
-            {
-                _context.ChiTietDonHangs.RemoveRange(chiTietDonHangs);
-            }
-
-            // 3. Bây giờ mới tìm và xóa Đơn hàng chính (bảng Cha)
-            var donHang = await _context.DonHangs.FindAsync(id);
             if (donHang != null)
             {
+                // 2. Xóa tất cả Yêu cầu lắp đặt của đơn này (Dọn dẹp ngọn 1)
+                if (donHang.YeuCauLapDats.Any())
+                {
+                    _context.YeuCauLapDats.RemoveRange(donHang.YeuCauLapDats);
+                }
+
+                // 3. Xóa tất cả Chi tiết đơn hàng (Dọn dẹp ngọn 2)
+                if (donHang.ChiTietDonHangs.Any())
+                {
+                    _context.ChiTietDonHangs.RemoveRange(donHang.ChiTietDonHangs);
+                }
+
+                // 4. Khi con cái đã bị xóa sạch, giờ mới Xóa Đơn Hàng (Bứng gốc)
                 _context.DonHangs.Remove(donHang);
+
+                // 5. Lưu lại toàn bộ thay đổi
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Đã xóa thành công đơn hàng và các dữ liệu liên quan!";
             }
 
-            // 4. Lưu thay đổi vào Database
-            await _context.SaveChangesAsync();
-
-            // Quay lại danh sách sau khi xóa thành công
             return RedirectToAction(nameof(Index));
         }
 

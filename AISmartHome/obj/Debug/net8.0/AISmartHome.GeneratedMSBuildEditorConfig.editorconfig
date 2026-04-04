@@ -128,6 +128,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9uSGFuZ3NcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AuraHome_website/AISmartHome/Views/Employee/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AuraHome_website/AISmartHome/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -216,12 +220,36 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FuUGhhbXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AuraHome_website/AISmartHome/Views/Shared/Components/Notification/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcTm90aWZpY2F0aW9uXERlZmF1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AuraHome_website/AISmartHome/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AuraHome_website/AISmartHome/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AuraHome_website/AISmartHome/Views/YeuCauLapDats/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcWWV1Q2F1TGFwRGF0c1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AuraHome_website/AISmartHome/Views/YeuCauLapDats/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcWWV1Q2F1TGFwRGF0c1xEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AuraHome_website/AISmartHome/Views/YeuCauLapDats/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcWWV1Q2F1TGFwRGF0c1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AuraHome_website/AISmartHome/Views/YeuCauLapDats/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcWWV1Q2F1TGFwRGF0c1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AuraHome_website/AISmartHome/Views/YeuCauLapDats/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcWWV1Q2F1TGFwRGF0c1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AuraHome_website/AISmartHome/Views/_ViewImports.cshtml]

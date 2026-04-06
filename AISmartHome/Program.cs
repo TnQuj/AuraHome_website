@@ -14,6 +14,8 @@ builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 builder.Services.AddMemoryCache(); // Thêm dòng này để dùng IMemoryCache
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(60); // Thời gian sống của phiên

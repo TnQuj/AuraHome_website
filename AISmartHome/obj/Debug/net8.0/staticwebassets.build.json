@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "iqGi45di4ix53UE7jMnRUb3ZbHbs1wR/SdKz9fkURQ0=",
+  "Hash": "M3BQweRPG0scAMYNycJ6xiuSECUdau4VS35b5QfWcHg=",
   "Source": "AISmartHome",
   "BasePath": "_content/AISmartHome",
   "Mode": "Default",
@@ -73,8 +73,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "c2tiyv64ts",
-      "Integrity": "pAGv4ietcJNk/EwsQZ5BN9+K4MuNYS2a9wl4Jw+q9D0=",
+      "Fingerprint": "4sb92mcuut",
+      "Integrity": "5D2W7q15X1xY/kSdB4EV0kvqGDUrgfWlS9ow647yzBY=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\site.css"
@@ -1417,8 +1417,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "vr5gogt975",
-      "Integrity": "xRZDPtyojB3lMqFtNMyQvu9LbrsEOj88JQbPDVyZLXQ=",
+      "Fingerprint": "3c102zwzm0",
+      "Integrity": "PYs9A7Wowu2FOjkjiYsob26UaRdwz7ydbasxWsjPy9Y=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\site.js"
@@ -2787,7 +2787,7 @@
       ]
     },
     {
-      "Route": "css/site.c2tiyv64ts.css",
+      "Route": "css/site.4sb92mcuut.css",
       "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\css\\site.css",
       "Selectors": [],
       "ResponseHeaders": [
@@ -2797,7 +2797,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "362"
+          "Value": "822"
         },
         {
           "Name": "Content-Type",
@@ -2805,11 +2805,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"pAGv4ietcJNk/EwsQZ5BN9+K4MuNYS2a9wl4Jw+q9D0=\""
+          "Value": "\"5D2W7q15X1xY/kSdB4EV0kvqGDUrgfWlS9ow647yzBY=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 20 Mar 2026 16:31:42 GMT"
+          "Value": "Sun, 05 Apr 2026 07:20:33 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -2819,7 +2819,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "c2tiyv64ts"
+          "Value": "4sb92mcuut"
         },
         {
           "Name": "label",
@@ -2827,7 +2827,7 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-pAGv4ietcJNk/EwsQZ5BN9+K4MuNYS2a9wl4Jw+q9D0="
+          "Value": "sha256-5D2W7q15X1xY/kSdB4EV0kvqGDUrgfWlS9ow647yzBY="
         }
       ]
     },
@@ -2842,7 +2842,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "362"
+          "Value": "822"
         },
         {
           "Name": "Content-Type",
@@ -2850,11 +2850,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"pAGv4ietcJNk/EwsQZ5BN9+K4MuNYS2a9wl4Jw+q9D0=\""
+          "Value": "\"5D2W7q15X1xY/kSdB4EV0kvqGDUrgfWlS9ow647yzBY=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 20 Mar 2026 16:31:42 GMT"
+          "Value": "Sun, 05 Apr 2026 07:20:33 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -2864,7 +2864,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-pAGv4ietcJNk/EwsQZ5BN9+K4MuNYS2a9wl4Jw+q9D0="
+          "Value": "sha256-5D2W7q15X1xY/kSdB4EV0kvqGDUrgfWlS9ow647yzBY="
         }
       ]
     },
@@ -8035,6 +8035,51 @@
       ]
     },
     {
+      "Route": "js/site.3c102zwzm0.js",
+      "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\js\\site.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "16141"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PYs9A7Wowu2FOjkjiYsob26UaRdwz7ydbasxWsjPy9Y=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 06 Apr 2026 08:49:04 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "3c102zwzm0"
+        },
+        {
+          "Name": "label",
+          "Value": "js/site.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-PYs9A7Wowu2FOjkjiYsob26UaRdwz7ydbasxWsjPy9Y="
+        }
+      ]
+    },
+    {
       "Route": "js/site.js",
       "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\js\\site.js",
       "Selectors": [],
@@ -8045,7 +8090,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "15925"
+          "Value": "16141"
         },
         {
           "Name": "Content-Type",
@@ -8053,11 +8098,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"xRZDPtyojB3lMqFtNMyQvu9LbrsEOj88JQbPDVyZLXQ=\""
+          "Value": "\"PYs9A7Wowu2FOjkjiYsob26UaRdwz7ydbasxWsjPy9Y=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 04 Apr 2026 08:28:47 GMT"
+          "Value": "Mon, 06 Apr 2026 08:49:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -8067,52 +8112,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-xRZDPtyojB3lMqFtNMyQvu9LbrsEOj88JQbPDVyZLXQ="
-        }
-      ]
-    },
-    {
-      "Route": "js/site.vr5gogt975.js",
-      "AssetFile": "E:\\ThucTapCuoiKhoa\\AISmartHome_webiste\\VS2022\\AISmartHome\\AuraHome_website\\AISmartHome\\wwwroot\\js\\site.js",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "15925"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"xRZDPtyojB3lMqFtNMyQvu9LbrsEOj88JQbPDVyZLXQ=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sat, 04 Apr 2026 08:28:47 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "vr5gogt975"
-        },
-        {
-          "Name": "label",
-          "Value": "js/site.js"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-xRZDPtyojB3lMqFtNMyQvu9LbrsEOj88JQbPDVyZLXQ="
+          "Value": "sha256-PYs9A7Wowu2FOjkjiYsob26UaRdwz7ydbasxWsjPy9Y="
         }
       ]
     },

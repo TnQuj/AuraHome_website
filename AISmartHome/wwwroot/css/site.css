@@ -1,4 +1,4 @@
-html {
+﻿html {
   font-size: 14px;
 }
 
@@ -19,4 +19,16 @@ html {
 
 body {
   margin-bottom: 60px;
+}
+
+/* Ép khung bao SweetAlert nổi lên cao nhất, đè mọi thanh Header fixed */
+.swal2-container {
+    z-index: 999999 !important;
+}
+
+/* Hiệu ứng Kính mờ màu Xanh Navy truyền thống của dự án */
+.swal-glass-backdrop {
+    background-color: rgba(15, 23, 42, 0.85) !important; /* Mã màu brand-navy/85 */
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important; /* Hỗ trợ Safari */
 }

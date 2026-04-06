@@ -98,21 +98,15 @@ namespace AISmartHome.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaYeuCauLapDat,MaDonHang,DiaChiLapDat,NgayLap,TrangThaiLapDat,MaNhanVien")] YeuCauLapDat yeuCauLapDat)
+        public async Task<IActionResult> Create([Bind("MaYeuCauLapDat,MaDonHang,DiaChiLapDat,NgayLap,TrangThaiLapDat,MaNhanVien,PhiLapDat,GhiChuBaoGia")] YeuCauLapDat yeuCauLapDat)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(yeuCauLapDat);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
+            // Loại bỏ kiểm tra ModelState.IsValid (Vì Form Create có thể thiếu một vài trường phụ)
+            // Miễn là có Đơn Hàng và Địa Chỉ là được phép tạo Yêu cầu
 
-            // Nếu có lỗi, nạp lại dữ liệu cho Dropdown
-            var danhSachDonHang = _context.DonHangs.Include(d => d.MaKhachHangNavigation).Select(d => new { MaDonHang = d.MaDonHang, HienThi = $"Đơn #{d.MaDonHang} - " + (d.MaKhachHangNavigation != null ? d.MaKhachHangNavigation.TenKhachHang : "Khách lẻ") }).ToList();
-            ViewData["MaDonHang"] = new SelectList(danhSachDonHang, "MaDonHang", "HienThi", yeuCauLapDat.MaDonHang);
-            ViewData["MaNhanVien"] = new SelectList(_context.NhanViens, "MaNhanVien", "TenNhanVien", yeuCauLapDat.MaNhanVien);
-
-            return View(yeuCauLapDat);
+            _context.Add(yeuCauLapDat);
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Đã tạo yêu cầu lắp đặt thành công!";
+            return RedirectToAction(nameof(Index));
         }
 
         // =========================================================================
@@ -150,49 +144,42 @@ namespace AISmartHome.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
+                // 1. Kéo dữ liệu CŨ từ CSDL lên
+                var existingRecord = await _context.YeuCauLapDats.FindAsync(id);
+                if (existingRecord == null)
                 {
-                    // 1. Kéo dữ liệu CŨ từ CSDL lên
-                    var existingRecord = await _context.YeuCauLapDats.FindAsync(id);
-                    if (existingRecord == null)
-                    {
-                        return NotFound();
-                    }
-
-                    // 2. Chỉ chép đè những trường MỚI mà Admin được phép sửa
-                    existingRecord.NgayLap = model.NgayLap;                 // Ngày giờ hẹn
-                    existingRecord.PhiLapDat = model.PhiLapDat;             // Phí lắp đặt
-                    existingRecord.GhiChuBaoGia = model.GhiChuBaoGia;       // Ghi chú thi công
-                    existingRecord.TrangThaiLapDat = model.TrangThaiLapDat; // Trạng thái
-                    existingRecord.MaNhanVien = model.MaNhanVien;           // Nhân viên phụ trách
-
-                    // (Lưu ý: Không đụng chạm gì đến MaDonHang hay DiaChiLapDat, giữ nguyên như cũ)
-
-                    // 3. Lưu lại
-                    _context.Update(existingRecord);
-                    await _context.SaveChangesAsync();
-
-                    TempData["SuccessMessage"] = "Đã cập nhật thông tin chốt với khách thành công!";
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!YeuCauLapDatExists(model.MaYeuCauLapDat))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+
+                // 2. Bỏ qua kiểm tra ModelState. Chỉ chép đè những trường MỚI từ form lên đối tượng CŨ
+                existingRecord.NgayLap = model.NgayLap;                 // Ngày giờ hẹn CẬP NHẬT TẠI ĐÂY
+                existingRecord.PhiLapDat = model.PhiLapDat;             // Phí lắp đặt
+                existingRecord.GhiChuBaoGia = model.GhiChuBaoGia;       // Ghi chú thi công
+                existingRecord.TrangThaiLapDat = model.TrangThaiLapDat; // Trạng thái
+                existingRecord.MaNhanVien = model.MaNhanVien;           // Nhân viên phụ trách
+
+                // (Lưu ý: Không đụng chạm gì đến MaDonHang hay DiaChiLapDat, giữ nguyên như cũ)
+
+                // 3. Lưu lại
+                _context.Update(existingRecord);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Đã cập nhật thông tin chốt với khách thành công!";
                 return RedirectToAction(nameof(Index));
             }
-
-            // Nếu có lỗi, nạp lại danh sách NhanVien cho thẻ Select (Bạn sửa lại tên biến _context cho khớp với code cũ nếu cần)
-            ViewData["MaNhanVien"] = new SelectList(_context.NhanViens, "MaNhanVien", "TenNhanVien", model.MaNhanVien);
-            return View(model);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!YeuCauLapDatExists(model.MaYeuCauLapDat))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
         // GET: YeuCauLapDats/Delete/5

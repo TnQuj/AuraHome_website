@@ -315,109 +315,143 @@ namespace AISmartHome.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PlaceOrder(
-    string FullName,
-    string Phone,
-    string Email,
-    string Province, // Thêm Tỉnh
-    string District, // Thêm Huyện
-    string Address,  // Địa chỉ cụ thể
-    string Note,
-    string PaymentMethod,
-    bool CanLapDat = false) // BƯỚC 1: Thêm tham số CanLapDat (Mặc định là false nếu khách không tick)
+            string FullName,
+            string Phone,
+            string Email,
+            string Province, 
+            string District, 
+            string Address,  
+            string Note,
+            string PaymentMethod,
+            string PaymentMode, // BẮT BUỘC THÊM THAM SỐ NÀY VÀO ĐÂY
+            bool CanLapDat = false) 
         {
-            // Giả lập ID khách hàng (Sau này thay bằng User.Identity nếu có đăng nhập)
-            int maKhachHangHienTai = 1;
+    try
+    {
+        int maKhachHangHienTai = 1; // Giả lập ID khách hàng
 
-            // 1. Lấy thông tin giỏ hàng kèm theo chi tiết
-            var gioHang = await _context.GioHangs
-                .Include(g => g.ChiTietGioHangs)
-                .FirstOrDefaultAsync(g => g.MaKhachHang == maKhachHangHienTai);
+        // 1. Lấy thông tin giỏ hàng
+        var gioHang = await _context.GioHangs
+            .Include(g => g.ChiTietGioHangs)
+            .FirstOrDefaultAsync(g => g.MaKhachHang == maKhachHangHienTai);
 
-            // Kiểm tra giỏ hàng trống
-            if (gioHang == null || !gioHang.ChiTietGioHangs.Any())
-            {
-                return RedirectToAction("Cart");
-            }
-
-            // 2. Tạo hóa đơn mới (DonHang)
-            var donHang = new DonHang
-            {
-                MaKhachHang = maKhachHangHienTai,
-                NgayDatHang = DateTime.Now,
-                TongTien = gioHang.ChiTietGioHangs.Sum(x => (x.Gia ?? 0) * (x.SoLuong ?? 0)),
-                TrangThaiDonHang = "Chờ xử lý",
-
-                // Gộp tất cả thông tin địa chỉ và liên hệ vào cột GhiChu để Admin dễ quản lý
-                GhiChu = $"[KH: {FullName}] - [SĐT: {Phone}] - [Email: {Email}] - [Đ/C: {Address}, {District}, {Province}] - [Note: {Note}]",
-
-                // Nếu DB của bạn có cột TenKhachHang, SoDienThoai riêng thì gán thêm:
-                TenKhachHang = FullName,
-                Email = Email,
-                SoDienThoai = Phone,
-                DiaChiGiaoHang = $"{Address}, {District}, {Province}"
-            };
-
-            _context.DonHangs.Add(donHang);
-            await _context.SaveChangesAsync(); // Lưu để lấy MaDonHang (Identity)
-
-            // =========================================================================
-            // BƯỚC 2: TẠO YÊU CẦU LẮP ĐẶT NẾU KHÁCH HÀNG TÍCH CHỌN
-            // =========================================================================
-            if (CanLapDat == true)
-            {
-                var yeuCauMoi = new YeuCauLapDat
-                {
-                    MaDonHang = donHang.MaDonHang, // Nối với Đơn hàng vừa sinh ra
-                    DiaChiLapDat = donHang.DiaChiGiaoHang, // Dùng luôn địa chỉ giao hàng
-                    NgayLap = DateTime.Now,
-                    TrangThaiLapDat = "Chờ báo giá", // Đưa vào trạng thái chờ
-                    PhiLapDat = null,  // Chưa có tiền báo giá
-                    GhiChuBaoGia = null,
-                    MaNhanVien = null  // Chưa phân công
-                };
-
-                _context.YeuCauLapDats.Add(yeuCauMoi);
-                // Không cần SaveChanges ngay vì lát nữa ở dưới sẽ Save 1 thể
-            }
-            // =========================================================================
-
-            // 3. Chuyển chi tiết từ Giỏ hàng sang Chi tiết hóa đơn
-            foreach (var item in gioHang.ChiTietGioHangs)
-            {
-                var ctDonHang = new ChiTietDonHang
-                {
-                    MaDonHang = donHang.MaDonHang, // ID vừa sinh ra ở trên
-                    MaSanPham = item.MaSanPham,
-                    SoLuong = item.SoLuong,
-                    Gia = item.Gia
-                };
-                _context.ChiTietDonHangs.Add(ctDonHang);
-            }
-
-            // 4. Dọn dẹp giỏ hàng sau khi đã đặt hàng
-            _context.ChiTietGioHangs.RemoveRange(gioHang.ChiTietGioHangs);
-
-            // 5. Lưu toàn bộ (Chi tiết đơn + Xóa giỏ + Yêu cầu lắp đặt nếu có) và trả về thông báo
-            try
-            {
-                // Thực hiện lưu toàn bộ thay đổi
-                await _context.SaveChangesAsync();
-
-                // TRẢ VỀ JSON THÀNH CÔNG
-                return Json(new { success = true, orderId = donHang.MaDonHang });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = "Có lỗi xảy ra: " + ex.Message });
-            }
+        if (gioHang == null || !gioHang.ChiTietGioHangs.Any())
+        {
+            return Json(new { success = false, message = "Giỏ hàng trống!" });
         }
 
+        // Tính tổng tiền từ các món hàng trong giỏ
+        decimal tongTien = gioHang.ChiTietGioHangs.Sum(c => (c.SoLuong ?? 0) * (c.Gia ?? 0));
+
+        // 2. Khởi tạo đơn hàng mới với thông tin từ Form
+        var donHang = new DonHang
+        {
+            MaKhachHang = maKhachHangHienTai,
+            NgayDatHang = DateTime.Now,
+            TongTien = tongTien,
+            TenKhachHang = FullName,
+            SoDienThoai = Phone,
+            DiaChiGiaoHang = $"{Address}, {District}, {Province}", // Ghép chuỗi địa chỉ
+            PhuongThucThanhToan = PaymentMethod ?? "Chuyển khoản",
+            TrangThaiDonHang = "Chờ xử lý" // TRẠNG THÁI GIAO HÀNG (Luôn là Chờ xử lý)
+        };
+
+        // ====================================================================
+        // 3. LOGIC XỬ LÝ TRẠNG THÁI THANH TOÁN (ĐÃ SỬA CHUẨN XÁC)
+        // ====================================================================
+        string paymentMode = Request.Form["PaymentMode"];
+                if (CanLapDat == true && PaymentMode == "30")
+                {
+                    // Có lắp đặt VÀ khách chọn mode cọc 30%
+                    donHang.TrangThaiThanhToan = "Đã cọc";
+                }
+                else
+                {
+                    // Khách trả 100% (Cho dù có lắp đặt hay giao chuẩn)
+                    donHang.TrangThaiThanhToan = "Đã thanh toán";
+                }
+                // 4. Lưu đơn hàng vào Database ĐỂ LẤY ID TỰ TĂNG
+                _context.DonHangs.Add(donHang);
+        await _context.SaveChangesAsync();
+
+        // 5. Nếu có lắp đặt -> Sinh ra Yêu cầu lắp đặt
+        if (CanLapDat == true)
+        {
+            var yeuCauMoi = new YeuCauLapDat
+            {
+                MaDonHang = donHang.MaDonHang,
+                DiaChiLapDat = donHang.DiaChiGiaoHang,
+                NgayLap = DateTime.Now,
+                TrangThaiLapDat = "Chưa lắp đặt", // Đưa vào trạng thái mặc định cho thợ
+                PhiLapDat = null,  
+                GhiChuBaoGia = Note, // Đẩy ghi chú của khách sang cho thợ đọc
+                MaNhanVien = null  
+            };
+            _context.YeuCauLapDats.Add(yeuCauMoi);
+        }
+
+        // 6. Chuyển chi tiết từ Giỏ hàng sang Chi tiết đơn hàng
+        foreach (var item in gioHang.ChiTietGioHangs)
+        {
+            _context.ChiTietDonHangs.Add(new ChiTietDonHang
+            {
+                MaDonHang = donHang.MaDonHang, 
+                MaSanPham = item.MaSanPham,
+                SoLuong = item.SoLuong,
+                Gia = item.Gia
+            });
+        }
+
+        // 7. Dọn dẹp giỏ hàng sau khi đã đặt hàng thành công
+        _context.ChiTietGioHangs.RemoveRange(gioHang.ChiTietGioHangs);
+        gioHang.TongTien = 0;
+        _context.GioHangs.Update(gioHang);
+
+        // 8. Lưu tất cả thay đổi (Yêu cầu lắp đặt, Chi tiết đơn, Dọn giỏ hàng)
+        await _context.SaveChangesAsync();
+
+                // Đánh dấu trình duyệt này đang là của khách hàng có SĐT này
+                HttpContext.Session.SetString("CustomerPhone", Phone);
+
+                // TRẢ VỀ JSON THÀNH CÔNG CHO JAVASCRIPT BẬT QR CODE
+                return Json(new { success = true, orderId = donHang.MaDonHang });
+    }
+    catch (Exception ex)
+    {
+        return Json(new { success = false, message = "Lỗi hệ thống: " + ex.Message });
+    }
+}
 
         // Tạo class để map với chuỗi JSON từ JS gửi lên
         public class CartUpdateModel
         {
             public int ProductId { get; set; }
             public int Quantity { get; set; }
+        }
+
+        // Hàm này giúp kiểm tra xem trình duyệt đã có ID chưa, chưa có thì tạo mới
+        private async Task<int> GetOrSetGuestCustomerId()
+        {
+            // Đọc Session xem đã có ID chưa
+            string guestIdStr = HttpContext.Session.GetString("GuestCustomerId");
+            if (!string.IsNullOrEmpty(guestIdStr))
+            {
+                return int.Parse(guestIdStr);
+            }
+
+            // Nếu chưa có (Khách mới tinh), tạo 1 record "Khách vãng lai" ảo trong DB
+            var newGuest = new KhachHang
+            {
+                TenKhachHang = "Khách vãng lai" // Số điện thoại, địa chỉ... tạm thời để trống
+            };
+
+            _context.KhachHangs.Add(newGuest);
+            await _context.SaveChangesAsync();
+
+            // Lưu ID vừa tạo vào Session để lần sau khách bấm thêm đồ sẽ không bị tạo mới nữa
+            HttpContext.Session.SetString("GuestCustomerId", newGuest.MaKhachHang.ToString());
+
+            return newGuest.MaKhachHang;
         }
 
         [HttpPost]
@@ -447,15 +481,13 @@ namespace AISmartHome.Controllers
             return Json(new { success = false, message = "Không tìm thấy sản phẩm" });
         }
 
-        public async Task<IActionResult> BuyNow(int id)
+        // 1. THÊM THAM SỐ "quantity" VÀO ĐÂY (Mặc định là 1 nếu khách lỡ nhập sai)
+        public async Task<IActionResult> BuyNow(int id, int quantity = 1)
         {
-            int maKhachHangHienTai = 1; // Giả lập ID khách hàng (Sau này đổi thành ID thật)
-
-            // 1. Kiểm tra sản phẩm có tồn tại không
+            int maKhachHangHienTai = await GetOrSetGuestCustomerId();
             var sanPham = await _context.SanPhams.FindAsync(id);
             if (sanPham == null) return NotFound();
 
-            // 2. Tìm hoặc tạo giỏ hàng cho khách này
             var gioHang = await _context.GioHangs
                 .FirstOrDefaultAsync(g => g.MaKhachHang == maKhachHangHienTai);
 
@@ -466,33 +498,124 @@ namespace AISmartHome.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            // 3. Kiểm tra sản phẩm đã có trong giỏ chưa
             var cartItem = await _context.ChiTietGioHangs
                 .FirstOrDefaultAsync(c => c.MaSanPham == id && c.MaGioHang == gioHang.MaGioHang);
 
             if (cartItem != null)
             {
-                // Nếu có rồi thì tăng số lượng lên 1
-                cartItem.SoLuong += 1;
+                // 2. THAY VÌ CỘNG 1, HÃY CỘNG VỚI SỐ LƯỢNG KHÁCH ĐÃ CHỌN
+                cartItem.SoLuong += quantity;
             }
             else
             {
-                // Nếu chưa có thì thêm mới vào giỏ
                 _context.ChiTietGioHangs.Add(new ChiTietGioHang
                 {
                     MaGioHang = gioHang.MaGioHang,
                     MaSanPham = id,
-                    SoLuong = 1,
-                    // Lưu ý: Sửa lại thuộc tính giá này cho đúng với Database của bạn (GiaBan, GiaKhuyenMai, v.v.)
+                    SoLuong = quantity, // 3. GÁN ĐÚNG SỐ LƯỢNG KHI MUA MỚI
                     Gia = sanPham.GiaBan
                 });
             }
 
-            // 4. Lưu thay đổi vào Database
             await _context.SaveChangesAsync();
 
-            // 5. Chuyển thẳng sang trang Thanh toán (Checkout)
+            // Chuyển thẳng sang trang Thanh toán
             return RedirectToAction("Checkout");
         }
+
+
+
+        // GET & POST chung 1 đường dẫn: /TraCuuDonHang
+        [Route("Customers/OrderHistory")]
+        public async Task<IActionResult> OrderHistory(string phone)
+        {
+            // 1. Nếu khách mới bấm vào link (chưa nhập SĐT) -> Trả về giao diện Form trống
+            if (string.IsNullOrEmpty(phone))
+            {
+                return View(null);
+            }
+
+            // 2. Nếu khách đã nhập SĐT -> Tiến hành quét trong DB
+            // Tìm đơn hàng khớp số điện thoại trên Đơn Hàng HOẶC số điện thoại của Khách Hàng
+            var orders = await _context.DonHangs
+                .Include(d => d.ChiTietDonHangs)
+                    .ThenInclude(c => c.MaSanPhamNavigation)
+                .Include(d => d.YeuCauLapDats)
+                .Where(d => d.SoDienThoai == phone || d.MaKhachHangNavigation!.SoDienThoai == phone)
+                .OrderByDescending(d => d.NgayDatHang)
+                .ToListAsync();
+
+            // 3. Xử lý kết quả
+            if (!orders.Any())
+            {
+                ViewBag.Error = $"Không tìm thấy đơn hàng nào với số điện thoại {phone}";
+                return View(null); // Trả lại form trống kèm báo lỗi
+            }
+            // Lưu số điện thoại vào Session để chuông thông báo bắt đầu hoạt động
+            ViewBag.Phone = phone; // Lưu lại SĐT để hiển thị ra View
+
+            HttpContext.Session.SetString("CustomerPhone", phone);
+
+            return View(orders); // Trả về danh sách đơn hàng
+        }
+
+
+        [Route("Customers/HuyDonHangXacNhan")]
+        public async Task<IActionResult> HuyDonHangXacNhan(int maDonHang, string phone)
+        {
+            // 1. Tìm đơn hàng
+            var order = await _context.DonHangs
+                .Include(d => d.YeuCauLapDats)
+                .FirstOrDefaultAsync(d => d.MaDonHang == maDonHang && (d.SoDienThoai == phone || d.MaKhachHangNavigation.SoDienThoai == phone));
+
+            if (order == null) return NotFound();
+
+            // 2. Kiểm tra lại điều kiện (bảo mật kép phòng hờ khách dùng tool hack)
+            bool choPhepHuy = order.TrangThaiDonHang == "Chờ xử lý"
+                           && (order.YeuCauLapDats == null || !order.YeuCauLapDats.Any() || order.YeuCauLapDats.First().TrangThaiLapDat == "Chưa lắp đặt");
+
+            if (choPhepHuy)
+            {
+                // 3. Cập nhật trạng thái
+                order.TrangThaiDonHang = "Đã hủy";
+
+                // Hủy luôn yêu cầu lắp đặt (nếu có)
+                if (order.YeuCauLapDats != null && order.YeuCauLapDats.Any())
+                {
+                    var lapDat = order.YeuCauLapDats.First();
+                    lapDat.TrangThaiLapDat = "Bị hủy";
+                    _context.Update(lapDat);
+                }
+
+                _context.Update(order);
+                await _context.SaveChangesAsync();
+            }
+
+            // 4. Quay lại trang tra cứu của chính số điện thoại đó
+            return RedirectToAction("OrderHistory", new { phone = phone });
+        }
+
+        // GET: /SanPhams/Search?keyword=xyz
+        public async Task<IActionResult> Search(string keyword)
+        {
+            // Nếu khách cố tình gõ khoảng trắng hoặc không gõ gì thì đẩy về trang chủ/trang sản phẩm
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                return RedirectToAction("Index");
+            }
+
+            // Lưu lại từ khóa để in ra giao diện "Kết quả tìm kiếm cho: xyz"
+            ViewBag.Keyword = keyword;
+
+            // Tìm kiếm tương đối (Contains) trong Tên sản phẩm hoặc Mô tả
+            var searchResults = await _context.SanPhams
+                .Where(s => s.TenSanPham.Contains(keyword) || s.MoTa.Contains(keyword))
+                .OrderByDescending(s => s.MaSanPham) // Có thể đổi thành xếp theo Giá, Số lượng...
+                .ToListAsync();
+
+            return View(searchResults);
+        }
+
+
     }
 }

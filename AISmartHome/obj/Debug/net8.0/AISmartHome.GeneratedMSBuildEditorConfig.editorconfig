@@ -88,6 +88,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AuraHome_website/AISmartHome/Views/Customers/OrderHistory.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJzXE9yZGVySGlzdG9yeS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AuraHome_website/AISmartHome/Views/Customers/Search.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJzXFNlYXJjaC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AuraHome_website/AISmartHome/Views/DanhMucSanPhams/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFuaE11Y1NhblBoYW1zXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -126,6 +134,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AuraHome_website/AISmartHome/Views/DonHangs/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9uSGFuZ3NcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AuraHome_website/AISmartHome/Views/Employee/History.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVcSGlzdG9yeS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/ThucTapCuoiKhoa/AISmartHome_webiste/VS2022/AISmartHome/AuraHome_website/AISmartHome/Views/Employee/Index.cshtml]

@@ -1,20 +1,35 @@
 ﻿@model AISmartHome.Models.DonHang
 
 @{
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Xử lý Đơn hàng";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml"; // Thay đổi layout tùy thuộc vào đường dẫn Admin của bạn
+    ViewData["Title"] = "Chi tiết đơn hàng";
 
-    // Lấy thông tin lắp đặt (nếu có)
+    // 1. Kéo dữ liệu Yêu cầu lắp đặt (nếu có)
     var yeuCau = Model.YeuCauLapDats?.FirstOrDefault();
     bool coLapDat = yeuCau != null;
 
-    // --- LOGIC TÍNH TOÁN TIỀN CỌC ---
+    // 2. Logic tính tiền
     decimal tienHang = Model.TongTien ?? 0;
+    string trangThaiTT = Model.TrangThaiThanhToan ?? "";
     decimal tienLapDat = yeuCau?.PhiLapDat ?? 0;
 
-    // Giả định theo logic checkout: Có lắp đặt thì cọc 30%, Không lắp đặt thì trả 100%
-    decimal tienDaThanhToan = coLapDat ? (tienHang * 0.3m) : tienHang;
-    decimal soTienCanThu = (tienHang + tienLapDat) - tienDaThanhToan;
+    // 3. Xét xem khách đã trả bao nhiêu dựa vào TrangThaiThanhToan
+    decimal tienDaThanhToan = 0;
+    string textDaThu = "Chưa thanh toán";
+
+    if (trangThaiTT == "Đã thanh toán")
+    {
+        tienDaThanhToan = tienHang; // Thu đủ 100%
+        textDaThu = "Đã thanh toán (100%)";
+    }
+    else if (trangThaiTT == "Đã cọc")
+    {
+        tienDaThanhToan = tienHang * 0.3m; // Chỉ thu 30%
+        textDaThu = "Đã cọc (30%)";
+    }
+
+    // 4. Tính số tiền nhân viên cần thu thêm thực tế (Tiền hàng còn lại + Phí lắp đặt)
+    decimal soTienCanThu = (tienHang - tienDaThanhToan) + tienLapDat;
 }
 
 <div class="mb-6 flex items-center justify-between">
@@ -32,9 +47,9 @@
 </div>
 
 <div class="max-w-6xl mx-auto">
-    <div class="mb-6 flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+    <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100 gap-4">
         <div class="flex items-center gap-4">
-            <div class="w-14 h-14 bg-brand-navy text-white rounded-xl flex items-center justify-center text-2xl font-black shadow-inner">
+            <div class="w-14 h-14 bg-brand-navy text-white rounded-xl flex items-center justify-center text-2xl font-black shadow-inner shrink-0">
                 #@Model.MaDonHang
             </div>
             <div>
@@ -44,19 +59,26 @@
                 <p class="text-slate-500 text-sm mt-1">Đặt lúc: @(Model.NgayDatHang?.ToString("dd/MM/yyyy HH:mm"))</p>
             </div>
         </div>
-        <div class="text-right">
+        <div class="text-left md:text-right w-full md:w-auto">
             <p class="text-sm font-bold text-slate-500 uppercase">Cần thu khách (Còn lại)</p>
             <p class="text-3xl font-black text-rose-600">@soTienCanThu.ToString("N0") VNĐ</p>
-            @if (coLapDat)
+
+            @if (tienDaThanhToan == tienHang)
             {
                 <div class="mt-1 inline-flex items-center gap-1 bg-emerald-50 text-emerald-600 text-xs font-bold px-2.5 py-1 rounded-md border border-emerald-100">
-                    <i class="fa-solid fa-check-circle"></i> Đã cọc 30%: @tienDaThanhToan.ToString("N0") đ
+                    <i class="fa-solid fa-check-circle"></i> Đã thanh toán 100% tiền hàng
+                </div>
+            }
+            else if (tienDaThanhToan > 0)
+            {
+                <div class="mt-1 inline-flex items-center gap-1 bg-blue-50 text-blue-600 text-xs font-bold px-2.5 py-1 rounded-md border border-blue-100">
+                    <i class="fa-solid fa-clock"></i> Đã cọc 30%: @tienDaThanhToan.ToString("N0") đ
                 </div>
             }
             else
             {
-                <div class="mt-1 inline-flex items-center gap-1 bg-emerald-50 text-emerald-600 text-xs font-bold px-2.5 py-1 rounded-md border border-emerald-100">
-                    <i class="fa-solid fa-check-circle"></i> Đã thanh toán 100%
+                <div class="mt-1 inline-flex items-center gap-1 bg-amber-50 text-amber-600 text-xs font-bold px-2.5 py-1 rounded-md border border-amber-100">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Chưa thanh toán
                 </div>
             }
         </div>
@@ -71,14 +93,14 @@
                 <div class="space-y-3 text-sm">
                     <p><span class="text-slate-500">Tên:</span> <strong class="text-brand-navy float-right">@(Model.TenKhachHang ?? Model.MaKhachHangNavigation?.TenKhachHang)</strong></p>
                     <p><span class="text-slate-500">SĐT:</span> <strong class="text-brand-cyan float-right">@Model.SoDienThoai</strong></p>
-                    <div class="pt-2 border-t border-slate-50">
+                    <div class="pt-2 border-t border-slate-50 mt-4">
                         <span class="text-slate-500 block mb-1">Địa chỉ giao/lắp:</span>
-                        <strong class="text-slate-800 leading-relaxed block bg-slate-50 p-2 rounded-lg">@Model.DiaChiGiaoHang</strong>
+                        <strong class="text-slate-800 leading-relaxed block bg-slate-50 p-2.5 rounded-lg border border-slate-100">@Model.DiaChiGiaoHang</strong>
                     </div>
                 </div>
             </div>
 
-            @if (coLapDat)
+            @if (coLapDat && yeuCau != null)
             {
                 <div class="bg-cyan-50/50 p-6 rounded-2xl shadow-sm border border-cyan-200 relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-1 h-full bg-brand-cyan"></div>
@@ -89,16 +111,16 @@
 
                     <div class="space-y-3 text-sm">
                         <p><span class="text-slate-500">Trạng thái:</span> <strong class="text-rose-600 float-right">@yeuCau.TrangThaiLapDat</strong></p>
-                        <p>
+                        <p class="flex justify-between">
                             <span class="text-slate-500">Kỹ thuật viên:</span>
-                            <strong class="text-brand-navy float-right">@(yeuCau.MaNhanVienNavigation?.TenNhanVien ?? "Chưa phân công")</strong>
+                            <strong class="text-brand-navy text-right">@(yeuCau.MaNhanVienNavigation?.TenNhanVien ?? "Chưa phân công")</strong>
                         </p>
                         <p><span class="text-slate-500">Hẹn ngày:</span> <strong class="text-slate-800 float-right">@(yeuCau.NgayLap?.ToString("dd/MM HH:mm") ?? "Chưa chốt")</strong></p>
                         <p><span class="text-slate-500">Phí kỹ thuật:</span> <strong class="text-rose-600 float-right">@tienLapDat.ToString("N0") đ</strong></p>
                     </div>
 
                     <a asp-controller="YeuCauLapDats" asp-action="Edit" asp-route-id="@yeuCau.MaYeuCauLapDat"
-                       class="mt-4 block w-full text-center py-2 bg-white border border-cyan-300 text-brand-cyan font-bold rounded-lg hover:bg-brand-cyan hover:text-white transition-colors text-sm shadow-sm">
+                       class="mt-5 block w-full text-center py-2.5 bg-white border-2 border-cyan-300 text-brand-cyan font-bold rounded-xl hover:bg-brand-cyan hover:text-white transition-colors text-sm shadow-sm">
                         Cập nhật / Báo giá lắp đặt
                     </a>
                 </div>
@@ -106,59 +128,63 @@
 
         </div>
 
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 lg:col-span-2 flex flex-col">
-            <div class="flex justify-between items-center border-b pb-4 mb-4">
+        <div class="bg-white p-0 md:p-6 rounded-2xl shadow-sm border border-slate-100 lg:col-span-2 flex flex-col overflow-hidden">
+
+            <div class="p-6 md:p-0 flex justify-between items-center border-b border-slate-100 pb-4 mb-4 bg-slate-50 md:bg-white">
                 <h3 class="font-bold text-slate-800 uppercase text-sm"><i class="fa-solid fa-box-open text-brand-cyan mr-2"></i> Sản phẩm khách đặt</h3>
-                <span class="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-xs font-bold">@Model.ChiTietDonHangs.Count() món</span>
+                <span class="bg-brand-navy text-white px-3 py-1 rounded-full text-xs font-bold">@Model.ChiTietDonHangs.Count() món</span>
             </div>
 
-            <div class="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-4">
-                @foreach (var chitiet in Model.ChiTietDonHangs)
+            <div class="flex-1 overflow-y-auto max-h-[400px] px-6 md:px-2 custom-scrollbar space-y-3 mb-6">
+                @if (Model.ChiTietDonHangs != null && Model.ChiTietDonHangs.Any())
                 {
-                    decimal thanhTien = (chitiet.Gia ?? 0) * (chitiet.SoLuong ?? 0);
-                    <div class="flex items-center gap-4 p-4 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors">
-                        <div class="w-16 h-16 bg-white border border-slate-200 rounded-lg p-1 shrink-0">
-                            <img src="/img/@chitiet.MaSanPhamNavigation?.HinhAnh" class="w-full h-full object-contain" alt="Hình ảnh">
+                    foreach (var chitiet in Model.ChiTietDonHangs)
+                    {
+                        decimal thanhTien = (chitiet.Gia ?? 0) * (chitiet.SoLuong ?? 0);
+                        <div class="flex items-center gap-4 p-3 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors shadow-sm">
+                            <div class="w-16 h-16 bg-white border border-slate-200 rounded-lg p-1 shrink-0">
+                                <img src="/img/@chitiet.MaSanPhamNavigation?.HinhAnh" class="w-full h-full object-contain" alt="Hình ảnh" onerror="this.src='/img/placeholder.jpg'">
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="font-bold text-brand-navy line-clamp-1 text-sm">@chitiet.MaSanPhamNavigation?.TenSanPham</p>
+                                <p class="text-xs text-slate-500 mt-1">Đơn giá: @(chitiet.Gia?.ToString("N0")) đ</p>
+                            </div>
+                            <div class="text-right shrink-0">
+                                <p class="text-sm font-bold text-slate-500 mb-0.5">x @chitiet.SoLuong</p>
+                                <p class="font-black text-brand-cyan text-sm">@thanhTien.ToString("N0") đ</p>
+                            </div>
                         </div>
-                        <div class="flex-1">
-                            <p class="font-bold text-brand-navy line-clamp-1">@chitiet.MaSanPhamNavigation?.TenSanPham</p>
-                            <p class="text-xs text-slate-500 mt-1">Đơn giá: @(chitiet.Gia?.ToString("N0")) đ</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-sm font-bold text-slate-500">x @chitiet.SoLuong</p>
-                            <p class="font-black text-brand-cyan mt-1">@thanhTien.ToString("N0") đ</p>
-                        </div>
-                    </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center py-8 text-slate-400 italic">Không có sản phẩm nào trong đơn hàng này.</div>
                 }
             </div>
 
-            <div class="mt-6 pt-4 border-t border-slate-100">
+            <div class="mt-auto px-6 md:px-4 pt-4 border-t-2 border-slate-100 bg-slate-50/50 md:bg-white rounded-b-2xl md:rounded-none pb-6 md:pb-0">
                 <div class="flex justify-between items-center text-sm mb-2">
                     <span class="text-slate-500 font-bold">Tổng tiền hàng:</span>
                     <span class="font-bold text-slate-800">@tienHang.ToString("N0") đ</span>
                 </div>
 
+                <div class="flex justify-between items-center text-sm mb-2 text-emerald-600">
+                    <span class="font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">
+                        @textDaThu:
+                    </span>
+                    <span class="font-bold">- @tienDaThanhToan.ToString("N0") đ</span>
+                </div>
+
                 @if (coLapDat)
                 {
-                    <div class="flex justify-between items-center text-sm mb-2 text-emerald-600">
-                        <span class="font-bold bg-emerald-50 px-2 py-0.5 rounded">Đã thanh toán (Cọc 30%):</span>
-                        <span class="font-bold">- @tienDaThanhToan.ToString("N0") đ</span>
-                    </div>
                     <div class="flex justify-between items-center text-sm mb-2 text-slate-600">
-                        <span class="font-bold">Phí lắp đặt thợ thu:</span>
+                        <span class="font-bold">Phí lắp đặt (Thợ thu tại chỗ):</span>
                         <span class="font-bold">+ @tienLapDat.ToString("N0") đ</span>
                     </div>
                 }
-                else
-                {
-                    <div class="flex justify-between items-center text-sm mb-2 text-emerald-600">
-                        <span class="font-bold bg-emerald-50 px-2 py-0.5 rounded">Đã thanh toán (100%):</span>
-                        <span class="font-bold">- @tienDaThanhToan.ToString("N0") đ</span>
-                    </div>
-                }
 
-                <div class="flex justify-between items-center text-base mt-4 pt-4 border-t border-dashed border-slate-300">
-                    <span class="font-black text-brand-navy uppercase">Cần thu khách (Còn lại):</span>
+                <div class="flex justify-between items-center text-base mt-4 pt-4 border-t-2 border-dashed border-slate-200">
+                    <span class="font-black text-brand-navy uppercase tracking-wide">Cần thu thực tế:</span>
                     <span class="text-2xl font-black text-rose-600">@soTienCanThu.ToString("N0") VNĐ</span>
                 </div>
             </div>

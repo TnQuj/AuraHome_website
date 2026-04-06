@@ -1,0 +1,251 @@
+﻿@model IEnumerable<AISmartHome.Models.YeuCauLapDat>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Lịch sử công việc";
+}
+
+<main class="w-full min-h-[70vh] py-12 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 bg-slate-100 text-slate-500 rounded-xl flex items-center justify-center">
+                    <i class="fa-solid fa-clock-rotate-left text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black text-brand-navy uppercase tracking-wide">Nhật ký công việc</h1>
+                    <p class="text-slate-500 text-sm">Các đơn hàng đã thi công hoàn tất hoặc bị hủy.</p>
+                </div>
+            </div>
+
+            <a asp-action="Index" class="flex items-center gap-2 px-6 py-3 bg-brand-cyan text-white hover:bg-cyan-600 rounded-xl font-bold transition-colors shadow-md">
+                <i class="fa-solid fa-arrow-left"></i> Quay lại Việc đang chờ
+            </a>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden opacity-95">
+            <div class="p-6 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                <h2 class="text-lg font-bold text-slate-700 flex items-center gap-2">
+                    <i class="fa-solid fa-check-double text-emerald-500"></i>
+                    Danh sách đã xử lý
+                </h2>
+                <span class="bg-slate-200 text-slate-700 px-3 py-1 rounded-full text-xs font-bold">
+                    Tổng: @Model?.Count() đơn
+                </span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                    <thead class="bg-slate-100 text-slate-500 font-bold uppercase text-[11px] tracking-wider">
+                        <tr>
+                            <th class="px-6 py-4">Khách hàng & Địa chỉ</th>
+                            <th class="px-6 py-4">Ngày thi công</th>
+                            <th class="px-6 py-4">Đã thu (Tài chính)</th>
+                            <th class="px-6 py-4 text-center">Kết quả</th>
+                            <th class="px-6 py-4 text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                // ==========================================
+                                // 1. LOGIC TÍNH TIỀN CHUẨN XÁC
+                                // ==========================================
+                                decimal tongTienHang = item.MaDonHangNavigation?.TongTien ?? 0;
+                                string trangThaiTT = item.MaDonHangNavigation?.TrangThaiThanhToan ?? "";
+                                decimal phiLapDat = item.PhiLapDat ?? 0;
+                                bool isCancelled = item.TrangThaiLapDat == "Bị hủy" || item.MaDonHangNavigation?.TrangThaiDonHang == "Đã hủy";
+
+                                decimal tienDaThu = 0;
+                                string textDaThu = "Chưa thanh toán";
+
+                                if (trangThaiTT == "Đã thanh toán")
+                                {
+                                    tienDaThu = tongTienHang; // Đã trả 100%
+                                    textDaThu = "Đã trả 100%";
+                                }
+                                else if (trangThaiTT == "Đã cọc")
+                                {
+                                    tienDaThu = tongTienHang * 0.3m; // Trả 30%
+                                    textDaThu = "Khách đã cọc (30%)";
+                                }
+
+                                decimal conLaiTienHang = tongTienHang - tienDaThu;
+                                decimal tongCanThu = conLaiTienHang + phiLapDat;
+                                if (isCancelled) tongCanThu = 0; // Hủy thì không thu gì cả
+                                // ==========================================
+
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div class="font-bold text-slate-800 text-[15px] mb-1">
+                                            @(item.MaDonHangNavigation?.TenKhachHang ?? item.MaDonHangNavigation?.MaKhachHangNavigation?.TenKhachHang ?? "Khách hàng")
+                                        </div>
+                                        <div class="text-slate-500 font-medium max-w-[250px] text-xs leading-relaxed">
+                                            <i class="fa-solid fa-location-dot text-slate-400 mr-1"></i> @item.DiaChiLapDat
+                                        </div>
+                                    </td>
+
+                                    <td class="px-6 py-4">
+                                        <div class="font-bold text-slate-700">
+                                            @(item.NgayLap?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")
+                                        </div>
+                                        <div class="text-xs text-slate-400 mt-1">
+                                            Mã ĐH: #@item.MaDonHang
+                                        </div>
+                                    </td>
+
+                                    <td class="px-6 py-4">
+                                        @if (!isCancelled)
+                                        {
+                                            <div class="text-xs text-slate-500 mb-1">@textDaThu: @tienDaThu.ToString("N0") đ</div>
+                                            <div class="font-black text-emerald-600">Thu hộ: @tongCanThu.ToString("N0") đ</div>
+                                        }
+                                        else
+                                        {
+                                            <div class="font-bold text-slate-400 italic">Đơn bị hủy (Không thu)</div>
+                                        }
+                                    </td>
+
+                                    <td class="px-6 py-4 text-center">
+                                        @if (item.TrangThaiLapDat == "Đã hoàn thành")
+                                        {
+                                            <span class="px-3 py-1 bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold rounded-full whitespace-nowrap">
+                                                <i class="fa-solid fa-check mr-1"></i> Đã hoàn thành
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="px-3 py-1 bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold rounded-full whitespace-nowrap">
+                                                <i class="fa-solid fa-xmark mr-1"></i> Bị hủy
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td class="px-6 py-4 text-center">
+                                        <button type="button" onclick="showHistoryDetails(@item.MaYeuCauLapDat)" class="px-4 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-lg hover:bg-slate-200 transition-colors border border-slate-200 shadow-sm whitespace-nowrap">
+                                            <i class="fa-solid fa-file-lines mr-1 text-brand-cyan"></i> Xem chi tiết
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <div id="history-detail-@item.MaYeuCauLapDat" class="hidden text-left">
+                                    <div class="space-y-3 text-sm">
+
+                                        <div class="bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
+                                            <h4 class="font-black text-brand-navy border-b border-slate-50 pb-1 mb-2 uppercase tracking-wide text-xs">
+                                                <i class="fa-solid fa-user-check text-brand-cyan mr-1"></i> Thông tin Khách hàng
+                                            </h4>
+                                            <div class="grid grid-cols-2 gap-2 text-slate-700 text-[12px]">
+                                                <p><span class="text-slate-500">Khách hàng:</span> <br><strong class="text-sm">@(item.MaDonHangNavigation?.TenKhachHang ?? item.MaDonHangNavigation?.MaKhachHangNavigation?.TenKhachHang)</strong></p>
+                                                <p><span class="text-slate-500">SĐT:</span> <br><strong class="text-brand-cyan text-sm">@(item.MaDonHangNavigation?.SoDienThoai ?? "N/A")</strong></p>
+                                                <p class="col-span-2"><span class="text-slate-500">Địa chỉ thi công:</span> <br><strong>@item.DiaChiLapDat</strong></p>
+
+                                                @if (!string.IsNullOrEmpty(item.GhiChuBaoGia))
+                                                {
+                                                    <p class="col-span-2"><span class="text-slate-500">Ghi chú:</span> <strong class="text-amber-600 bg-amber-50 px-2 py-0.5 rounded ml-1">@item.GhiChuBaoGia</strong></p>
+                                                }
+                                            </div>
+                                        </div>
+
+                                        <div class="bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
+                                            <h4 class="font-black text-brand-navy border-b border-slate-50 pb-1 mb-2 uppercase tracking-wide text-xs">
+                                                <i class="fa-solid fa-box-open text-brand-cyan mr-1"></i> Sản phẩm đã thi công
+                                            </h4>
+                                            <ul class="space-y-1.5">
+                                                @if (item.MaDonHangNavigation?.ChiTietDonHangs != null)
+                                                {
+                                                    foreach (var detail in item.MaDonHangNavigation.ChiTietDonHangs)
+                                                    {
+                                                        <li class="flex justify-between items-center bg-slate-50 p-2 rounded-lg border border-slate-100 text-[12px]">
+                                                            <span class="text-slate-700 font-semibold line-clamp-1 flex-1">@detail.MaSanPhamNavigation?.TenSanPham</span>
+                                                            <span class="text-slate-500 ml-2 w-20 text-right">@((detail.Gia ?? 0).ToString("N0")) đ</span>
+                                                            <strong class="text-brand-navy ml-2 w-8 text-right">x @detail.SoLuong</strong>
+                                                        </li>
+                                                    }
+                                                }
+                                            </ul>
+                                        </div>
+
+                                        <div class="bg-slate-800 p-4 rounded-xl shadow-inner text-white relative overflow-hidden">
+
+                                            @if (isCancelled)
+                                            {
+                                                <div class="absolute inset-0 bg-rose-950/80 backdrop-blur-[2px] flex items-center justify-center z-20">
+                                                    <div class="border-2 border-rose-500 text-rose-500 font-black text-xl px-4 py-1 rounded-lg tracking-widest uppercase transform -rotate-12 opacity-90 shadow-lg bg-rose-950/50">
+                                                        Đã Hủy Đơn
+                                                    </div>
+                                                </div>
+                                            }
+
+                                            <div class="absolute -right-4 -top-4 w-16 h-16 bg-brand-cyan/20 rounded-full blur-xl pointer-events-none"></div>
+                                            <h4 class="font-black text-brand-cyan border-b border-slate-700 pb-1 mb-2 uppercase tracking-wide text-xs relative z-10">
+                                                <i class="fa-solid fa-file-invoice-dollar mr-1"></i> Báo cáo Tài chính
+                                            </h4>
+                                            <div class="space-y-1.5 text-slate-300 relative z-10 text-[12px]">
+                                                <div class="flex justify-between">
+                                                    <span>Tổng tiền hàng:</span>
+                                                    <span class="font-bold">@tongTienHang.ToString("N0") đ</span>
+                                                </div>
+                                                <div class="flex justify-between @(tienDaThu > 0 ? "text-emerald-400" : "text-amber-400")">
+                                                    <span>@textDaThu:</span>
+                                                    <span class="font-bold">- @tienDaThu.ToString("N0") đ</span>
+                                                </div>
+                                                <div class="flex justify-between">
+                                                    <span>Phí thi công lắp đặt:</span>
+                                                    <span class="font-bold">+ @phiLapDat.ToString("N0") đ</span>
+                                                </div>
+                                                <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-600">
+                                                    <span class="font-black uppercase text-[12px]">Thực tế đã thu:</span>
+                                                    <span class="font-black text-base text-rose-400">@tongCanThu.ToString("N0") VNĐ</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="px-6 py-16 text-center text-slate-400">
+                                    <div class="w-20 h-20 bg-slate-50 border border-slate-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i class="fa-solid fa-folder-open text-3xl text-slate-300"></i>
+                                    </div>
+                                    <p class="text-base font-bold text-slate-500">Chưa có lịch sử công việc nào!</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+@section Scripts {
+    <script>
+        // Bật Popup xem chi tiết Lịch sử
+        function showHistoryDetails(maYeuCau) {
+            const htmlContent = document.getElementById('history-detail-' + maYeuCau).innerHTML;
+            Swal.fire({
+                title: `<div class="text-brand-navy font-black uppercase tracking-wider text-sm mt-2">Báo cáo đơn #${maYeuCau}</div>`,
+                html: htmlContent,
+                confirmButtonText: '<i class="fa-solid fa-check"></i> Đóng',
+                confirmButtonColor: '#0f172a',
+                width: '420px',
+                padding: '1em',
+                customClass: {
+                    htmlContainer: 'text-left mt-2',
+                    popup: '!mt-24 !rounded-[2rem] !overflow-hidden border border-slate-100 shadow-2xl',
+                    confirmButton: '!rounded-xl !px-8 !font-bold tracking-wide w-full mt-2 mb-2',
+                    backdrop: 'swal-glass-backdrop'
+                }
+            });
+        }
+    </script>
+}

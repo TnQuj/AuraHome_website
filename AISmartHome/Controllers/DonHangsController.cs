@@ -29,7 +29,6 @@ namespace AISmartHome.Controllers
 
             return View(await donHangs.ToListAsync());
         }
-
         // GET: DonHangs/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -39,8 +38,8 @@ namespace AISmartHome.Controllers
                 .Include(d => d.MaKhachHangNavigation)
                 .Include(d => d.ChiTietDonHangs)
                     .ThenInclude(c => c.MaSanPhamNavigation)
-                .Include(d => d.YeuCauLapDats) // Kéo theo Yêu cầu lắp đặt
-                    .ThenInclude(y => y.MaNhanVienNavigation) // Kéo luôn Tên nhân viên kỹ thuật
+                .Include(d => d.YeuCauLapDats)
+                    .ThenInclude(y => y.MaNhanVienNavigation)
                 .FirstOrDefaultAsync(m => m.MaDonHang == id);
 
             if (donHang == null) return NotFound();

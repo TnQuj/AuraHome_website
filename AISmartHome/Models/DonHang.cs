@@ -33,6 +33,12 @@ public partial class DonHang
     [StringLength(100)]
     public string? TrangThaiDonHang { get; set; }
 
+    [StringLength(100)]
+    public string? PhuongThucThanhToan { get; set; } // Ví dụ: "Chuyển khoản", "COD"
+
+    [StringLength(100)]
+    public string? TrangThaiThanhToan { get; set; } // Ví dụ: "Đã cọc", "Đã thanh toán", "Chưa thanh toán"
+
     public string? GhiChu { get; set; }
 
     public string? Email { get; set; }

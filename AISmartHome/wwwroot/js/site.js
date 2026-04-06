@@ -1,11 +1,8 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
     // =========================================================
-    // CHỐT CHẶN AN TOÀN: BẢO VỆ CÁC TRANG KHÁC KHỎI BỊ LỖI
+    // CHỐT CHẶN AN TOÀN
     // =========================================================
     const form = document.getElementById('checkoutForm');
-
-    // Nếu không tìm thấy form thanh toán (nghĩa là đang ở trang Chủ, trang Sản phẩm...),
-    // lệnh return sẽ lập tức thoát khỏi khối code này để không báo lỗi "is not defined".
     if (!form) return;
 
     // =========================================================
@@ -26,7 +23,7 @@
                     provinceSelect.appendChild(option);
                 });
             })
-            .catch(error => console.error('Lỗi khi tải Tỉnh/Thành phố:', error));
+            .catch(error => console.error('Lỗi tải Tỉnh/TP:', error));
 
         provinceSelect.addEventListener("change", function () {
             districtSelect.innerHTML = '<option value="">Chọn Quận/Huyện</option>';
@@ -46,7 +43,7 @@
                             });
                         }
                     })
-                    .catch(error => console.error('Lỗi khi tải Quận/Huyện:', error));
+                    .catch(error => console.error('Lỗi tải Quận/Huyện:', error));
             }
         });
     }
@@ -54,7 +51,6 @@
     // =========================================================
     // 2. XỬ LÝ GIAO DIỆN CHỌN GIÁ TIỀN & CỌC
     // =========================================================
-    // Khai báo biến chkLapDat rõ ràng ở đây
     const chkLapDat = document.getElementById('CanLapDat');
     const depositOptionWrapper = document.getElementById('depositOptionWrapper');
     const paymentRadios = document.querySelectorAll('input[name="PaymentMode"]');
@@ -84,9 +80,7 @@
             }
         }
 
-        paymentRadios.forEach(radio => {
-            radio.addEventListener('change', updatePricingDisplay);
-        });
+        paymentRadios.forEach(radio => radio.addEventListener('change', updatePricingDisplay));
 
         chkLapDat.addEventListener('change', function () {
             if (this.checked) {
@@ -109,7 +103,7 @@
     }
 
     // =========================================================
-    // 3. XỬ LÝ OTP VÀ HIỂN THỊ MÃ QR 
+    // 3. XỬ LÝ LƯU ĐƠN - OTP - VÀ HIỂN THỊ MÃ QR 
     // =========================================================
     const otpModal = document.getElementById('otpModal');
     const qrModal = document.getElementById('qrModal');
@@ -155,14 +149,13 @@
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    console.log("Mã OTP Test:", data.otp);
-                    // Bật Popup đẹp của Swal cho Dev dễ test
                     Swal.fire({
                         title: 'Tin nhắn giả lập (Test)',
                         html: `Mã OTP của bạn là: <br><br><b class="text-4xl text-brand-cyan tracking-widest">${data.otp}</b>`,
                         icon: 'info',
                         confirmButtonText: 'Đã hiểu',
-                        confirmButtonColor: '#06b6d4'
+                        confirmButtonColor: '#06b6d4',
+                        customClass: { backdrop: 'swal-glass-backdrop' }
                     });
                 } else {
                     Swal.fire('Lỗi gửi SMS!', data.message, 'error');
@@ -173,7 +166,7 @@
         startCountdown();
     }
 
-    // Khi ấn nút Đặt cọc & Xác nhận
+    // BƯỚC A: Ấn Đặt hàng -> Chặn submit -> Hiện Modal OTP -> Bắn SMS
     form.addEventListener('submit', function (e) {
         e.preventDefault();
         const phoneInput = document.querySelector('input[name="Phone"]');
@@ -187,7 +180,6 @@
             otpModal.classList.add('flex');
             setTimeout(() => { if (otpInput) otpInput.focus(); }, 100);
         }
-
         sendSmsToPhone(phoneValue);
     });
 
@@ -209,22 +201,45 @@
         });
     }
 
+    // BƯỚC B: Xác thực OTP và Tiến hành thanh toán
     if (btnVerifyOtp) {
         btnVerifyOtp.addEventListener('click', function () {
             const enteredOtp = otpInput ? otpInput.value.trim() : '';
             const phoneInput = document.querySelector('input[name="Phone"]');
             const phoneValue = phoneInput ? phoneInput.value : '';
 
+            // LẤY SỐ TIỀN VÀ CHẾ ĐỘ THANH TOÁN (100 hay 30) CHUẨN XÁC TỪ GIAO DIỆN
+            const finalAmount = parseFloat(depositAmountDisplay.getAttribute('data-value'));
+            const paymentMode = document.querySelector('input[name="PaymentMode"]:checked').value;
+            const isDeposit = (paymentMode === "30");
+
             if (!enteredOtp || enteredOtp.length < 6) {
                 return Swal.fire('Cảnh báo', 'Vui lòng nhập đủ mã OTP gồm 6 chữ số.', 'warning');
             }
 
+            Swal.fire({
+                title: 'Đang xử lý giao dịch...',
+                didOpen: () => Swal.showLoading()
+            });
+
+            // 1. Gọi API Verify OTP (Bây giờ đã truyền đủ số tiền để C# không chửi 400 nữa)
             fetch('/api/otp/verify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone: phoneValue, otp: enteredOtp })
+                body: JSON.stringify({
+                    phone: phoneValue,
+                    otp: enteredOtp,
+                    amount: finalAmount,
+                    paymentMode: paymentMode
+                })
             })
-                .then(res => res.json())
+                .then(async res => {
+                    if (!res.ok) {
+                        const err = await res.json();
+                        throw new Error(err.message || "Xác thực OTP thất bại.");
+                    }
+                    return res.json();
+                })
                 .then(data => {
                     if (data.success) {
                         clearInterval(countdownInterval);
@@ -233,73 +248,72 @@
                             otpModal.classList.add('hidden');
                         }
 
-                        Swal.fire({
-                            title: 'Đang tạo đơn hàng...',
-                            didOpen: () => Swal.showLoading()
-                        });
-
-                        // Gửi form đi
+                        // 2. Gửi Form tạo Đơn hàng sau khi OTP chuẩn
                         const formData = new FormData(form);
-                        fetch(form.action, { method: 'POST', body: formData })
-                            .then(res => res.json())
-                            .then(orderData => {
-                                if (orderData.success) {
-                                    Swal.close();
-
-                                    // Chốt số tiền và nội dung dựa theo Radio đã chọn
-                                    const finalAmount = isDeposit ? depositAmount : totalAmount;
-                                    const paymentTypeTxt = isDeposit ? "CỌC 30%" : "THANH TOÁN 100%";
-                                    const transferMsg = isDeposit ? `Coc don hang ${orderData.orderId}` : `Thanh toan don hang ${orderData.orderId}`;
-
-                                    // ==========================================
-                                    // THÊM ĐOẠN NÀY ĐỂ THAY ĐỔI CHỮ TRÊN FORM QR
-                                    // ==========================================
-                                    if (document.getElementById('qrModalTitle'))
-                                        document.getElementById('qrModalTitle').innerText = isDeposit ? "Thanh toán cọc 30%" : "Thanh toán 100%";
-
-                                    if (document.getElementById('qrAmountLabel'))
-                                        document.getElementById('qrAmountLabel').innerText = isDeposit ? "SỐ TIỀN CỌC:" : "TỔNG THANH TOÁN:";
-
-                                    if (document.getElementById('qrFooterNote'))
-                                        document.getElementById('qrFooterNote').innerText = isDeposit
-                                            ? "70% còn lại sẽ được thanh toán cho nhân viên sau khi nghiệm thu."
-                                            : "Cảm ơn bạn đã thanh toán toàn bộ giá trị đơn hàng. Chúng tôi sẽ giao hàng sớm nhất.";
-                                    // ==========================================
-
-                                    const qrTextData = `XÁC NHẬN THANH TOÁN\n-----------------\nCửa hàng: AuraHome\nMã đơn: #${orderData.orderId}\nLoại thanh toán: ${paymentTypeTxt}\nSố tiền: ${new Intl.NumberFormat('vi-VN').format(finalAmount)} VND`;
-                                    const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrTextData)}`;
-
-                                    if (document.getElementById('qrOrderId')) document.getElementById('qrOrderId').innerText = "#" + orderData.orderId;
-                                    if (document.getElementById('qrAmount')) document.getElementById('qrAmount').innerText = new Intl.NumberFormat('vi-VN').format(finalAmount) + " VND";
-                                    if (document.getElementById('qrContent')) document.getElementById('qrContent').innerText = transferMsg;
-
-                                    const qrImage = document.getElementById('qrImage');
-                                    const qrLoading = document.getElementById('qrLoading');
-
-                                    if (qrImage && qrLoading) {
-                                        qrImage.classList.add('hidden');
-                                        qrLoading.classList.remove('hidden');
-                                        qrImage.onload = () => {
-                                            qrLoading.classList.add('hidden');
-                                            qrImage.classList.remove('hidden');
-                                        };
-                                        qrImage.src = qrApiUrl;
-                                    }
-
-                                    if (qrModal) {
-                                        qrModal.classList.remove('hidden');
-                                        qrModal.classList.add('flex');
-                                    }
-                                } else {
-                                    Swal.fire('Lỗi!', orderData.message, 'error');
-                                }
-                            })
-                            .catch(err => Swal.fire('Lỗi', 'Không thể kết nối đến máy chủ.', 'error'));
+                        return fetch(form.action, { method: 'POST', body: formData });
                     } else {
-                        Swal.fire('Thất bại', data.message || "Mã OTP không chính xác.", 'error');
+                        throw new Error(data.message || "Mã OTP không chính xác.");
                     }
                 })
-                .catch(err => Swal.fire('Lỗi', "Lỗi kết nối khi xác thực OTP.", 'error'));
+                .then(async res => {
+                    if (!res) return; // Bị lỗi ở bước trước
+                    const orderData = await res.json();
+
+                    if (orderData.success) {
+                        Swal.close();
+
+                        // Cập nhật thông tin lên Modal QR Code
+                        const paymentTypeTxt = isDeposit ? "CỌC 30%" : "THANH TOÁN 100%";
+                        const transferMsg = isDeposit ? `Coc don hang ${orderData.orderId}` : `Thanh toan don hang ${orderData.orderId}`;
+
+                        if (document.getElementById('qrModalTitle'))
+                            document.getElementById('qrModalTitle').innerText = isDeposit ? "Thanh toán cọc 30%" : "Thanh toán 100%";
+
+                        if (document.getElementById('qrAmountLabel'))
+                            document.getElementById('qrAmountLabel').innerText = isDeposit ? "SỐ TIỀN CỌC:" : "TỔNG THANH TOÁN:";
+
+                        if (document.getElementById('qrFooterNote'))
+                            document.getElementById('qrFooterNote').innerText = isDeposit
+                                ? "70% còn lại sẽ được thanh toán cho nhân viên sau khi nghiệm thu."
+                                : "Cảm ơn bạn đã thanh toán toàn bộ giá trị đơn hàng. Chúng tôi sẽ giao hàng sớm nhất.";
+
+                        const qrTextData = `XÁC NHẬN THANH TOÁN\n-----------------\nCửa hàng: AuraHome\nMã đơn: #${orderData.orderId}\nLoại thanh toán: ${paymentTypeTxt}\nSố tiền: ${new Intl.NumberFormat('vi-VN').format(finalAmount)} VND`;
+                        const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrTextData)}`;
+
+                        if (document.getElementById('qrOrderId')) document.getElementById('qrOrderId').innerText = "#" + orderData.orderId;
+                        if (document.getElementById('qrAmount')) document.getElementById('qrAmount').innerText = new Intl.NumberFormat('vi-VN').format(finalAmount) + " VND";
+                        if (document.getElementById('qrContent')) document.getElementById('qrContent').innerText = transferMsg;
+
+                        const qrImage = document.getElementById('qrImage');
+                        const qrLoading = document.getElementById('qrLoading');
+
+                        if (qrImage && qrLoading) {
+                            qrImage.classList.add('hidden');
+                            qrLoading.classList.remove('hidden');
+                            qrImage.onload = () => {
+                                qrLoading.classList.add('hidden');
+                                qrImage.classList.remove('hidden');
+                            };
+                            qrImage.src = qrApiUrl;
+                        }
+
+                        if (qrModal) {
+                            qrModal.classList.remove('hidden');
+                            qrModal.classList.add('flex');
+                        }
+                    } else {
+                        Swal.fire('Lỗi tạo đơn!', orderData.message, 'error');
+                    }
+                })
+                .catch(err => {
+                    // Báo lỗi bằng SweetAlert mờ xanh Navy hệt như bạn đã làm
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Giao dịch từ chối',
+                        text: err.message || "Không thể kết nối đến máy chủ.",
+                        customClass: { backdrop: 'swal-glass-backdrop' }
+                    });
+                });
         });
     }
 
@@ -310,7 +324,8 @@
                 text: 'Chúng tôi sẽ kiểm tra giao dịch và giao hàng sớm nhất.',
                 icon: 'success',
                 confirmButtonText: 'Về trang chủ',
-                confirmButtonColor: '#06b6d4'
+                confirmButtonColor: '#06b6d4',
+                customClass: { backdrop: 'swal-glass-backdrop' }
             }).then(() => {
                 window.location.href = '/Customers/Index';
             });

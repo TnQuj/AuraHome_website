@@ -368,5 +368,7 @@ namespace AISmartHome.Controllers
         {
             return _context.SanPhams.Any(e => e.MaSanPham == id);
         }
+
+
     }
 }

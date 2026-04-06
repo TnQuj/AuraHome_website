@@ -19,9 +19,15 @@
                 </div>
             </div>
 
-            <a asp-controller="Employee" asp-action="Logout" class="flex items-center gap-2 px-6 py-3 bg-rose-50 text-rose-600 hover:bg-rose-500 hover:text-white rounded-xl font-bold transition-colors">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất
-            </a>
+            <div class="flex items-center gap-3">
+                <a asp-action="History" class="flex items-center gap-2 px-5 py-3 bg-slate-100 text-slate-700 hover:bg-brand-navy hover:text-white rounded-xl font-bold transition-colors shadow-sm">
+                    <i class="fa-solid fa-clock-rotate-left"></i> Lịch sử công việc
+                </a>
+
+                <a asp-controller="Employee" asp-action="Logout" class="flex items-center gap-2 px-5 py-3 bg-rose-50 text-rose-600 hover:bg-rose-500 hover:text-white rounded-xl font-bold transition-colors">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất
+                </a>
+            </div>
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
@@ -51,14 +57,32 @@
                         {
                             @foreach (var item in Model)
                             {
-                                // --- LOGIC TÍNH TOÁN 30% CỌC VÀ TIỀN CẦN THU ---
+                                // ========================================================
+                                // 1. LOGIC TÍNH TIỀN (SỬ DỤNG ĐÚNG CỘT TrangThaiThanhToan)
+                                // ========================================================
                                 decimal tongTienHang = item.MaDonHangNavigation?.TongTien ?? 0;
-                                decimal tienCoc = tongTienHang * 0.3m; // Đã cọc 30% tiền hàng
-                                decimal conLaiTienHang = tongTienHang - tienCoc; // 70% tiền hàng còn lại
+                                string trangThaiTT = item.MaDonHangNavigation?.TrangThaiThanhToan ?? "";
                                 decimal phiLapDat = item.PhiLapDat ?? 0;
-                                decimal tongCanThu = conLaiTienHang + phiLapDat; // Tổng nv phải thu
+                                bool isCancelled = item.TrangThaiLapDat == "Bị hủy" || item.MaDonHangNavigation?.TrangThaiDonHang == "Đã hủy";
 
-                                <tr class="hover:bg-slate-50 transition-colors">
+                                decimal tienDaThu = 0;
+                                string textDaThu = "Chưa thanh toán";
+                                if (trangThaiTT == "Đã thanh toán")
+                                {
+                                    tienDaThu = tongTienHang;
+                                    textDaThu = "Đã trả 100%";
+                                }
+                                else if (trangThaiTT == "Đã cọc")
+                                {
+                                    tienDaThu = tongTienHang * 0.3m;
+                                    textDaThu = "Đã cọc 30%";
+                                }
+
+                                decimal conLaiPhaiThu = (tongTienHang - tienDaThu) + phiLapDat;
+                                if (isCancelled) conLaiPhaiThu = 0;
+                                // ========================================================
+
+                                <tr class="hover:bg-slate-50 transition-colors @(isCancelled ? "bg-rose-50/30" : "")">
 
                                     <td class="px-6 py-4">
                                         <div class="font-bold text-slate-800 text-[15px] mb-1">
@@ -88,32 +112,44 @@
                                     </td>
 
                                     <td class="px-6 py-4 bg-cyan-50/30">
-                                        <div class="text-xs text-slate-500 mb-1 flex justify-between">
-                                            <span>Đã cọc 30%:</span>
-                                            <span class="font-bold text-emerald-600">@tienCoc.ToString("N0") đ</span>
-                                        </div>
-                                        <div class="text-xs text-slate-500 mb-2 flex justify-between border-b border-slate-200 pb-1">
-                                            <span>Phí lắp đặt:</span>
-                                            <span class="font-bold text-slate-700">@phiLapDat.ToString("N0") đ</span>
-                                        </div>
-                                        <div class="flex justify-between items-center">
-                                            <span class="text-xs font-bold uppercase text-brand-navy">Cần thu:</span>
-                                            <span class="text-lg font-black text-rose-600">@tongCanThu.ToString("N0") đ</span>
-                                        </div>
+                                        @if (isCancelled)
+                                        {
+                                            <div class="text-center font-bold text-rose-500 uppercase tracking-widest text-xs">
+                                                Không thu tiền
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="text-xs text-slate-500 mb-1 flex justify-between">
+                                                <span>@textDaThu:</span>
+                                                <span class="font-bold text-emerald-600">@tienDaThu.ToString("N0") đ</span>
+                                            </div>
+                                            <div class="text-xs text-slate-500 mb-2 flex justify-between border-b border-slate-200 pb-1">
+                                                <span>Phí lắp đặt:</span>
+                                                <span class="font-bold text-slate-700">@phiLapDat.ToString("N0") đ</span>
+                                            </div>
+                                            <div class="flex justify-between items-center">
+                                                <span class="text-xs font-bold uppercase text-brand-navy">Cần thu:</span>
+                                                <span class="text-lg font-black text-rose-600">@conLaiPhaiThu.ToString("N0") đ</span>
+                                            </div>
+                                        }
                                     </td>
 
                                     <td class="px-6 py-4 text-center">
                                         @{
-                                            var statusClass = item.TrangThaiLapDat switch
+                                            var statusClass = isCancelled ? "bg-rose-100 text-rose-700" :
+                                            item.TrangThaiLapDat switch
                                             {
                                                 "Chưa lắp đặt" => "bg-amber-100 text-amber-700",
                                                 "Đang xử lý" => "bg-blue-100 text-blue-700",
                                                 "Đã hoàn thành" => "bg-emerald-100 text-emerald-700",
                                                 _ => "bg-slate-100 text-slate-700"
                                             };
+
+                                            var statusText = isCancelled ? "Đã Hủy" : item.TrangThaiLapDat;
                                         }
                                         <span class="px-3 py-1 @statusClass text-xs font-bold rounded-full whitespace-nowrap">
-                                            @item.TrangThaiLapDat
+                                            @statusText
                                         </span>
                                     </td>
 
@@ -121,9 +157,19 @@
                                         <button type="button" onclick="showDetails(@item.MaYeuCauLapDat)" class="w-full px-4 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-lg hover:bg-slate-200 transition-colors border border-slate-200">
                                             <i class="fa-solid fa-eye mr-1"></i> Xem chi tiết
                                         </button>
-                                        <button onclick="changeStatus(@item.MaYeuCauLapDat, '@item.TrangThaiLapDat')" class="w-full px-4 py-2 bg-brand-cyan text-white text-xs font-bold rounded-lg hover:bg-cyan-600 transition-colors shadow-md">
-                                            <i class="fa-solid fa-wrench mr-1"></i> Cập nhật
-                                        </button>
+
+                                        @if (!isCancelled)
+                                        {
+                                            <button onclick="changeStatus(@item.MaYeuCauLapDat, '@item.TrangThaiLapDat')" class="w-full px-4 py-2 bg-brand-cyan text-white text-xs font-bold rounded-lg hover:bg-cyan-600 transition-colors shadow-md">
+                                                <i class="fa-solid fa-wrench mr-1"></i> Cập nhật
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button disabled class="w-full px-4 py-2 bg-slate-200 text-slate-400 text-xs font-bold rounded-lg cursor-not-allowed">
+                                                <i class="fa-solid fa-ban mr-1"></i> Đã Hủy
+                                            </button>
+                                        }
                                     </td>
                                 </tr>
 
@@ -144,9 +190,20 @@
                                                 }
                                             </ul>
                                         </div>
-                                        <div class="bg-cyan-50 text-cyan-800 p-3 rounded-lg border border-cyan-200 text-sm">
-                                            <p><i class="fa-solid fa-circle-exclamation mr-1"></i> Hãy đảm bảo thu đủ số tiền <strong class="text-rose-600 text-lg">@tongCanThu.ToString("N0") VNĐ</strong> sau khi lắp đặt xong.</p>
-                                        </div>
+
+                                        @if (isCancelled)
+                                        {
+                                            <div class="bg-rose-50 text-rose-800 p-3 rounded-lg border border-rose-200 text-sm flex items-center gap-2 font-bold">
+                                                <i class="fa-solid fa-triangle-exclamation text-rose-600 text-lg"></i>
+                                                Đơn hàng này đã bị hủy. Nhân viên KHÔNG thi công và KHÔNG thu tiền!
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="bg-cyan-50 text-cyan-800 p-3 rounded-lg border border-cyan-200 text-sm">
+                                                <p><i class="fa-solid fa-circle-exclamation mr-1"></i> Hãy đảm bảo thu đủ số tiền <strong class="text-rose-600 text-lg">@conLaiPhaiThu.ToString("N0") VNĐ</strong> sau khi lắp đặt xong.</p>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             }
@@ -176,11 +233,13 @@
         @if (TempData["SuccessMessage"] != null)
         {
             <text>
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Đã lưu!',
-                        text: '@Html.Raw(TempData["SuccessMessage"])',
-                        confirmButtonColor: '#06b6d4'
+                    document.addEventListener("DOMContentLoaded", function() {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Đã lưu!',
+                            text: '@Html.Raw(TempData["SuccessMessage"])',
+                            confirmButtonColor: '#06b6d4'
+                        });
                     });
             </text>
         }
@@ -193,14 +252,15 @@
                 html: htmlContent,
                 confirmButtonText: 'Đã hiểu',
                 confirmButtonColor: '#06b6d4',
-                width: '600px'
+                width: '500px',
+                customClass: { backdrop: 'swal-glass-backdrop', htmlContainer: 'mt-2 text-left' }
             });
         }
 
         // Bật Popup cập nhật trạng thái
         function changeStatus(maYeuCau, currentStatus) {
             Swal.fire({
-                title: `Báo cáo tiến độ mã #${maYeuCau}`,
+                title: `<span class="text-brand-navy text-xl">Báo cáo tiến độ mã #${maYeuCau}</span>`,
                 text: "Xác nhận tình trạng thi công thực tế:",
                 input: 'select',
                 inputOptions: {
@@ -212,7 +272,9 @@
                 showCancelButton: true,
                 confirmButtonText: 'Lưu báo cáo',
                 cancelButtonText: 'Đóng',
-                confirmButtonColor: '#0f172a',
+                confirmButtonColor: '#06b6d4',
+                cancelButtonColor: '#0f172a',
+                customClass: { backdrop: 'swal-glass-backdrop' }
             }).then((result) => {
                 if (result.isConfirmed) {
                     const form = document.createElement('form');

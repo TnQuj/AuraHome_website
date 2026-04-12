@@ -352,7 +352,7 @@
 
                                                     </form>
 
-                                                    <a asp-controller="Customers" asp-action="CheckOut" class="w-full flex items-center justify-center bg-[#e3001f] hover:bg-red-700 text-white font-semibold py-3.5 rounded-xl transition-colors shadow-md">
+                                                    <a asp-controller="Customers" asp-action="BuyNow" asp-route-id="@sp.MaSanPham" asp-route-quantity="1" class="w-full flex items-center justify-center bg-[#e3001f] hover:bg-red-700 text-white font-semibold py-3.5 rounded-xl transition-colors shadow-md">
                                                         Mua ngay
                                                     </a>
                                                 </div>
@@ -860,3 +860,153 @@
     </main>
 </body>
 </html>
+<div id="luckyWheelModal" class="fixed inset-0 z-[10000] hidden items-center justify-center bg-[#0a0f1c]/80 backdrop-blur-sm transition-all duration-300 opacity-0">
+
+    <div id="luckyWheelContent" class="relative max-w-4xl w-[95%] mx-auto transform scale-95 transition-transform duration-500">
+
+        <button onclick="closeLuckyWheel()" class="absolute -top-3 -right-3 md:-top-5 md:-right-5 z-50 w-10 h-10 md:w-12 md:h-12 bg-rose-500 text-white rounded-full flex items-center justify-center hover:bg-rose-600 transition-colors border-4 border-[#0a0f1c] shadow-xl">
+            <i class="fa-solid fa-xmark text-lg md:text-xl"></i>
+        </button>
+
+        <div class="bg-[#0a0f1c] p-6 md:p-10 rounded-3xl border border-slate-700 shadow-2xl flex flex-col md:flex-row items-center gap-8 overflow-hidden relative">
+
+            <div class="absolute -top-24 -left-24 w-96 h-96 bg-brand-cyan/20 rounded-full blur-[100px] pointer-events-none"></div>
+
+            <div class="w-full md:w-1/2 space-y-4 md:space-y-6 relative z-10 text-center md:text-left">
+                <h2 class="text-2xl md:text-4xl font-black text-white leading-tight">
+                    Vòng quay tri ân <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan to-blue-500">Trúng 100% quà tặng</span>
+                </h2>
+                <p class="text-slate-400 text-sm md:text-base">Đừng vội mua! Nhập email quay thưởng để nhận Cảm biến cửa, Giảm giá 100k, hoặc Freeship cho đơn hàng này ngay!</p>
+
+                <div class="relative w-full max-w-sm mx-auto md:mx-0">
+                    <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input id="wheelEmail" type="email" placeholder="Nhập địa chỉ email..." class="w-full bg-white/5 border border-slate-700 text-white rounded-xl pl-11 pr-4 py-3 md:py-3.5 focus:border-brand-cyan outline-none transition-all shadow-inner">
+                </div>
+
+                <button onclick="startSpin()" id="btnSpin" class="w-full max-w-sm mx-auto md:mx-0 bg-brand-cyan text-white font-bold py-3 md:py-4 rounded-xl hover:bg-cyan-400 hover:-translate-y-1 transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.4)] block">
+                    BẮT ĐẦU QUAY
+                </button>
+            </div>
+
+            <div class="w-full md:w-1/2 flex justify-center relative z-10 py-4">
+                <div class="absolute top-0 z-20 text-rose-500 text-4xl md:text-5xl drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] translate-y-[-5px]">
+                    <i class="fa-solid fa-location-pin"></i>
+                </div>
+
+                <div id="wheel" class="w-60 h-60 md:w-80 md:h-80 rounded-full border-[8px] md:border-[10px] border-slate-800 shadow-[0_0_40px_rgba(6,182,212,0.2)] relative overflow-hidden"
+                     style="background: conic-gradient(#06b6d4 0deg 60deg, #1e293b 60deg 120deg, #3b82f6 120deg 180deg, #0f172a 180deg 240deg, #10b981 240deg 300deg, #334155 300deg 360deg); transition: transform 4s cubic-bezier(0.14, 0.73, 0.2, 1);">
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 md:w-14 md:h-14 bg-slate-900 border-4 border-slate-700 rounded-full shadow-inner z-10 flex items-center justify-center">
+                        <i class="fa-solid fa-bolt text-yellow-400"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // KIỂM TRA: Nếu khách chưa từng tắt popup này, thì 3 giây sau khi vào trang sẽ hiện lên
+        if (!localStorage.getItem('hasSeenWheel')) {
+            setTimeout(openLuckyWheel, 3000);
+        }
+    });
+
+    function openLuckyWheel() {
+        const modal = document.getElementById('luckyWheelModal');
+        const content = document.getElementById('luckyWheelContent');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        // Mẹo tạo hiệu ứng mờ dần (Fade-in)
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            content.classList.remove('scale-95');
+        }, 10);
+    }
+
+    function closeLuckyWheel() {
+        const modal = document.getElementById('luckyWheelModal');
+        const content = document.getElementById('luckyWheelContent');
+
+        // Đánh dấu là khách đã xem/tắt để lần sau vào lại web không bị làm phiền nữa
+        localStorage.setItem('hasSeenWheel', 'true');
+
+        modal.classList.add('opacity-0');
+        content.classList.add('scale-95');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 300);
+    }
+
+    // ==========================================
+    // LOGIC QUAY CŨ CỦA BẠN (Giữ nguyên)
+    // ==========================================
+    let isSpinning = false;
+
+    function startSpin() {
+        if (isSpinning) return;
+
+        const email = document.getElementById('wheelEmail').value;
+        if (!email || !email.includes('@@')) { // Nhớ 2 dấu @@ để không lỗi C# nhé
+            Swal.fire('Lỗi', 'Vui lòng nhập một email hợp lệ!', 'warning');
+            return;
+        }
+
+        isSpinning = true;
+        const btn = document.getElementById('btnSpin');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang chờ máy chủ...';
+
+        fetch(`/Home/SpinWheel?email=${encodeURIComponent(email)}`, { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) {
+                Swal.fire('Rất tiếc', data.message, 'warning');
+                isSpinning = false;
+                btn.disabled = false;
+                btn.innerHTML = 'BẮT ĐẦU QUAY';
+                return;
+            }
+
+            btn.innerHTML = 'ĐANG QUAY...';
+            const wheel = document.getElementById('wheel');
+            const degreePerSlice = 60;
+            const targetDegree = 1800 + (360 - (data.prizeIndex * degreePerSlice)) - (degreePerSlice / 2);
+
+            wheel.style.transform = `rotate(${targetDegree}deg)`;
+
+            setTimeout(() => {
+                if (data.prizeIndex === 3) {
+                    Swal.fire('Thật tiếc...', data.prizeName, 'info').then(() => closeLuckyWheel());
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Tuyệt vời!',
+                        html: `Bạn đã trúng: <b class="text-lg text-brand-navy">${data.prizeName}</b><br><br>
+                               <div class="bg-cyan-50 p-3 rounded-lg border border-dashed border-cyan-400">
+                                  <span class="text-xs text-slate-500 uppercase font-bold block mb-1">Mã của bạn:</span>
+                                  <strong class="text-2xl text-brand-cyan tracking-widest">${data.voucherCode}</strong>
+                               </div>`,
+                        confirmButtonColor: '#06b6d4',
+                        confirmButtonText: 'Mua hàng ngay'
+                    }).then(() => closeLuckyWheel()); // Quay trúng xong thì tự đóng popup
+                }
+
+                // Đánh dấu đã chơi xong để khỏi hiện lại
+                localStorage.setItem('hasSeenWheel', 'true');
+
+                isSpinning = false;
+                btn.disabled = false;
+                btn.innerHTML = 'ĐÃ NHẬN QUÀ';
+            }, 4200);
+        })
+        .catch(error => {
+            Swal.fire('Lỗi', 'Không thể kết nối máy chủ', 'error');
+            isSpinning = false;
+            btn.disabled = false;
+            btn.innerHTML = 'BẮT ĐẦU QUAY';
+        });
+    }
+</script>

@@ -68,12 +68,12 @@
 
             const selectedMode = checkedRadio.value;
             if (selectedMode === "30") {
-                depositAmountDisplay.innerText = new Intl.NumberFormat('vi-VN').format(depositVal) + " đ";
+                depositAmountDisplay.innerText = new Intl.NumberFormat('vi-VN').format(depositVal) + " ";
                 depositAmountDisplay.setAttribute('data-value', depositVal);
                 if (badgePaymentType) badgePaymentType.innerText = "Cọc 30% giữ đơn";
                 if (btnCheckout) btnCheckout.innerHTML = '<i class="fa-solid fa-shield-halved"></i> Đặt cọc & Xác nhận';
             } else {
-                depositAmountDisplay.innerText = new Intl.NumberFormat('vi-VN').format(totalVal) + " đ";
+                depositAmountDisplay.innerText = new Intl.NumberFormat('vi-VN').format(totalVal) + " ";
                 depositAmountDisplay.setAttribute('data-value', totalVal);
                 if (badgePaymentType) badgePaymentType.innerText = "Thanh toán 100%";
                 if (btnCheckout) btnCheckout.innerHTML = '<i class="fa-solid fa-credit-card"></i> Xác nhận thanh toán';

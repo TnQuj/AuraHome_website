@@ -58,26 +58,49 @@ namespace AISmartHome.Controllers
         // =========================================================
         public async Task<IActionResult> Index()
         {
-            // 1. Kiểm tra đăng nhập
-            int? maNhanVienHienTai = await ValidateAndGetEmployeeId();
-            if (maNhanVienHienTai == null) return RedirectToAction("Index", "Home");
+            // 1. Kiểm tra quyền truy cập của Session
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Employee")
+            {
+                TempData["LoginError"] = "Khu vực này chỉ dành cho Nhân viên!";
+                TempData["ShowLoginModal"] = "true";
+                return RedirectToAction("Index", "Home");
+            }
 
-            // 2. Lấy danh sách yêu cầu ĐANG CHỜ (Loại bỏ các đơn Đã hoàn thành hoặc Đã/Bị hủy)
-            var activeTasks = await _context.YeuCauLapDats
+            // 2. Đọc ID tài khoản của người vừa đăng nhập
+            int? accountId = HttpContext.Session.GetInt32("AccountId");
+            if (accountId == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            // 3. TÌM ĐÚNG THÔNG TIN CỦA CHÍNH NHÂN VIÊN NÀY
+            var currentEmployee = await _context.NhanViens
+                                        .FirstOrDefaultAsync(nv => nv.MaTaiKhoan == accountId);
+
+            if (currentEmployee == null)
+            {
+                return NotFound("Không tìm thấy thông tin nhân viên!");
+            }
+
+            // Truyền tên nhân viên ra ngoài file HTML (Khớp với @ViewBag.TenNhanVien của bạn)
+            ViewBag.TenNhanVien = currentEmployee.TenNhanVien;
+
+            // =================================================================
+            // 4. LỌC: CHỈ LẤY CÔNG VIỆC CỦA ĐÚNG NHÂN VIÊN NÀY
+            // =================================================================
+            var pendingInstalls = await _context.YeuCauLapDats
+                .Include(y => y.MaDonHangNavigation) // Lấy thông tin đơn hàng (Tổng tiền, Trạng thái...)
+                    .ThenInclude(d => d.MaKhachHangNavigation) // Lấy Tên, SĐT khách
                 .Include(y => y.MaDonHangNavigation)
-                    .ThenInclude(d => d.MaKhachHangNavigation)
-                .Include(y => y.MaDonHangNavigation)
-                    .ThenInclude(d => d.ChiTietDonHangs)
+                    .ThenInclude(d => d.ChiTietDonHangs) // Lấy chi tiết xem mang theo sản phẩm gì
                         .ThenInclude(c => c.MaSanPhamNavigation)
-                // CHỐT CHẶN: Chỉ lấy đơn chưa hoàn thành và Đơn hàng phải chưa bị hủy
-                .Where(y => y.MaNhanVien == maNhanVienHienTai
-                         && y.TrangThaiLapDat != "Đã hoàn thành"
-                         && y.TrangThaiLapDat != "Bị hủy"
-                         && y.MaDonHangNavigation.TrangThaiDonHang != "Đã hủy")
-                .OrderByDescending(y => y.NgayLap)
+                // ĐIỀU KIỆN QUAN TRỌNG NHẤT LÀ ĐÂY:
+                .Where(y => y.TrangThaiLapDat == "Chưa lắp đặt" && y.MaNhanVien == currentEmployee.MaNhanVien)
+                .OrderBy(y => y.NgayLap) // Ưu tiên đơn cũ làm trước
                 .ToListAsync();
 
-            return View(activeTasks);
+            return View(pendingInstalls);
         }
 
         // =========================================================

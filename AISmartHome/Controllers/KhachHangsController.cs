@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -54,7 +54,7 @@ namespace AISmartHome.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaKhachHang,TenKhachHang,SoDienThoai,Email,DiaChi")] KhachHang khachHang)
+        public async Task<IActionResult> Create([Bind("MaKhachHang,TenKhachHang,SoDienThoai,Email,DiaChi,DiemTichLuy,HangThanhVien")] KhachHang khachHang)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace AISmartHome.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("MaKhachHang,TenKhachHang,SoDienThoai,Email,DiaChi")] KhachHang khachHang)
+        public async Task<IActionResult> Edit(int id, [Bind("MaKhachHang,TenKhachHang,SoDienThoai,Email,DiaChi,DiemTichLuy,HangThanhVien")] KhachHang khachHang)
         {
             if (id != khachHang.MaKhachHang)
             {
@@ -134,7 +134,6 @@ namespace AISmartHome.Controllers
             return View(khachHang);
         }
 
-        // POST: KhachHangs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -142,10 +141,47 @@ namespace AISmartHome.Controllers
             var khachHang = await _context.KhachHangs.FindAsync(id);
             if (khachHang != null)
             {
+                // BƯỚC 1: Kiểm tra Hóa đơn mua hàng (Giữ nguyên)
+                var coDonHang = await _context.DonHangs.AnyAsync(d => d.MaKhachHang == id);
+                if (coDonHang)
+                {
+                    TempData["Error"] = "Không thể xóa! Khách hàng này đã có lịch sử mua hàng.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                // BƯỚC 2: Dọn dẹp Giỏ Hàng và CHI TIẾT GIỎ HÀNG
+                var gioHangs = _context.GioHangs.Where(g => g.MaKhachHang == id).ToList();
+                if (gioHangs.Any())
+                {
+                    // Lấy danh sách các Mã Giỏ Hàng của khách này
+                    var maGioHangs = gioHangs.Select(g => (int?)g.MaGioHang).ToList();
+                    // 2.1: Xóa các Sản phẩm nằm trong Giỏ hàng (ChiTietGioHang) TRƯỚC
+                    var chiTietGioHangs = _context.ChiTietGioHangs.Where(ct => maGioHangs.Contains(ct.MaGioHang));
+                    if (chiTietGioHangs.Any())
+                    {
+                        _context.ChiTietGioHangs.RemoveRange(chiTietGioHangs);
+                    }
+
+                    // 2.2: Sau khi giỏ đã trống, tiến hành xóa Giỏ Hàng
+                    _context.GioHangs.RemoveRange(gioHangs);
+                }
+
+                // BƯỚC 3: Dọn dẹp lịch sử Voucher (Giữ nguyên)
+                var voucherHistories = _context.VoucherHistories.Where(v => v.MaKhachHang == id);
+                if (voucherHistories.Any())
+                {
+                    _context.VoucherHistories.RemoveRange(voucherHistories);
+                }
+
+                // BƯỚC 4: Cuối cùng, bứng gốc Khách hàng
                 _context.KhachHangs.Remove(khachHang);
+
+                // Lưu toàn bộ tiến trình dọn dẹp xuống Database 1 lần duy nhất
+                await _context.SaveChangesAsync();
+
+                TempData["Success"] = "Đã xóa khách hàng thành công!";
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

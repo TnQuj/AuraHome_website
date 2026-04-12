@@ -39,7 +39,7 @@
         <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4 text-sm font-medium bg-red-50 p-3 rounded-lg"></div>
             <input type="hidden" asp-for="MaBaiViet" />
-
+           
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 <div class="lg:col-span-3 space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
@@ -76,7 +76,7 @@
                         </div>
                         <div>
                             <label asp-for="NgayDang" class="block text-xs font-bold text-[#00E5FF] uppercase mb-2">Ngày đăng</label>
-                            <input asp-for="NgayDang" type="date" class="w-full bg-[#002b5a] border-none rounded-lg text-sm p-2.5 focus:ring-1 focus:ring-[#00E5FF]" />
+                            <input type="hidden" asp-for="NgayDang" type="date" class="w-full bg-[#002b5a] border-none rounded-lg text-sm p-2.5 focus:ring-1 focus:ring-[#00E5FF]" />
                         </div>
                         <hr class="border-white/10" />
                         <button type="submit" class="btn-cyan-glow w-full bg-[#00E5FF] text-[#001F3F] py-3 rounded-xl font-black transition-all">
@@ -93,23 +93,43 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 
     <script>
-        // Khởi tạo CKEditor
+        let editorInstance;
+
         ClassicEditor
             .create(document.querySelector('#editor'), {
-                toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo' ],
-                placeholder: 'Bắt đầu soạn thảo nội dung bài viết của bạn tại đây...'
+                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo']
             })
-            .catch(error => {
-                console.error(error);
-            });
+            .then(editor => {
+                editorInstance = editor;
 
-        // Xử lý xem trước ảnh khi chọn file
-        document.getElementById('fileInput').onchange = evt => {
-            const [file] = document.getElementById('fileInput').files
-            if (file) {
-                document.getElementById('previewImg').src = URL.createObjectURL(file)
+                // Đồng bộ 1: Cập nhật ngay khi gõ
+                editor.model.document.on('change:data', () => {
+                    document.querySelector('#editor').value = editor.getData();
+                });
+            })
+            .catch(error => { console.error(error); });
+
+        // Đồng bộ 2: Ép dữ liệu khi nhấn Submit (Cực kỳ quan trọng)
+        document.querySelector('form').addEventListener('submit', function (e) {
+            const editorData = editorInstance.getData();
+            if (editorData.trim() === '') {
+                // Nếu nội dung trống, textarea sẽ nhận chuỗi rỗng và ModelState sẽ báo lỗi ngay
+                document.querySelector('#editor').value = "";
+            } else {
+                document.querySelector('#editor').value = editorData;
             }
-        }
+        });
+
+        // Preview ảnh
+        document.getElementById('fileInput').addEventListener('change', function (e) {
+            const preview = document.getElementById('previewImg');
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => { preview.src = event.target.result; }
+                reader.readAsDataURL(file);
+            }
+        });
     </script>
 
     @{

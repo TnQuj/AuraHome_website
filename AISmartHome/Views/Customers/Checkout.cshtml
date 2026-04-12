@@ -89,104 +89,161 @@
                         </div>
                         <!--Thông tin đơn hàng-->
                         <div class="w-full lg:w-[40%]">
-                            <div class="bg-white p-6 md:p-8 border-2 border-brand-navy rounded-3xl sticky top-28 shadow-[0_10px_40px_-10px_rgba(0,31,61,0.15)]">
-                                <h2 class="text-xl font-black text-brand-navy uppercase mb-6 tracking-wide flex items-center gap-2">
-                                    <i class="fa-solid fa-receipt text-brand-cyan"></i> Tổng quan đơn hàng
+                            <div class="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-100 sticky top-28 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] relative overflow-hidden">
+                                <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-cyan-400 to-blue-600"></div>
+
+                                <h2 class="text-xl font-black text-slate-800 uppercase mb-6 tracking-wide flex items-center gap-2">
+                                    <span class="w-8 h-8 rounded-full bg-cyan-50 flex items-center justify-center text-cyan-500 shadow-sm">
+                                        <i class="fa-solid fa-receipt text-sm"></i>
+                                    </span>
+                                    Tổng quan đơn hàng
                                 </h2>
 
-                                <div class="space-y-4 mb-6 border-b border-slate-100 pb-6 max-h-64 overflow-y-auto custom-scrollbar pr-2">
+                                <div class="space-y-3 mb-6 border-b-2 border-dashed border-slate-100 pb-6 max-h-72 overflow-y-auto custom-scrollbar pr-2">
                                     @if (Model?.ChiTietGioHangs != null)
                                     {
                                         @foreach (var item in Model.ChiTietGioHangs)
                                         {
-                                            <div class="flex items-center gap-4 text-sm bg-slate-50 p-3 rounded-xl border border-slate-100">
-                                                <div class="w-12 h-12 bg-white rounded-lg p-1 shrink-0 border border-slate-200 shadow-sm">
-                                                    <img src="/img/@item.MaSanPhamNavigation?.HinhAnh" alt="Ảnh" class="w-full h-full object-contain" />
+                                            <div class="flex items-center gap-4 text-sm bg-white hover:bg-slate-50 p-3 rounded-2xl border border-slate-100 hover:border-slate-200 transition-colors shadow-sm group">
+                                                <div class="w-14 h-14 bg-white rounded-xl p-1.5 shrink-0 border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] group-hover:shadow-[0_2px_10px_rgba(6,182,212,0.1)] transition-shadow">
+                                                    <img src="/img/@item.MaSanPhamNavigation?.HinhAnh" alt="Ảnh" class="w-full h-full object-contain" onerror="this.src='https://via.placeholder.com/150'" />
                                                 </div>
-                                                <div class="flex-1">
-                                                    <span class="text-slate-700 font-bold line-clamp-1">@item.MaSanPhamNavigation?.TenSanPham</span>
-                                                    <span class="text-xs text-slate-500">Đơn giá: @(item.Gia?.ToString("N0")) đ</span>
+                                                <div class="flex-1 min-w-0">
+                                                    <span class="text-slate-700 font-bold line-clamp-1 group-hover:text-cyan-600 transition-colors">@item.MaSanPhamNavigation?.TenSanPham</span>
+                                                    <span class="text-[11px] text-slate-400 font-medium uppercase tracking-wider block mt-0.5">Đơn giá: @(item.Gia?.ToString("N0")) đ</span>
                                                 </div>
-                                                <div class="text-right">
-                                                    <div class="text-xs font-bold text-slate-400 mb-1">x @item.SoLuong</div>
-                                                    <div class="font-black text-brand-navy">@(((item.Gia ?? 0) * (item.SoLuong ?? 0)).ToString("N0")) đ</div>
+                                                <div class="text-right shrink-0 pl-2">
+                                                    <div class="text-[11px] font-bold text-slate-400 mb-0.5 bg-slate-100 rounded-md inline-block px-1.5 py-0.5">SL: @item.SoLuong</div>
+                                                    <div class="font-black text-slate-800 text-[13px]">@(((item.Gia ?? 0) * (item.SoLuong ?? 0)).ToString("N0")) đ</div>
                                                 </div>
                                             </div>
                                         }
                                     }
                                 </div>
+                                <!--Vouchers-->
+                                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mb-6">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-ticket text-brand-cyan mr-2"></i>Mã giảm giá</h3>
+                                        <button type="button" onclick="showMyVouchers()" class="text-sm font-bold text-cyan-600 hover:text-cyan-700 underline underline-offset-2">
+                                            <i class="fa-solid fa-gift mr-1"></i> Xem ưu đãi của tôi
+                                        </button>
+                                    </div>
 
-                                <div class="flex justify-between text-base border-b border-slate-100 pb-4 mb-4">
-                                    <span class="font-bold text-slate-500">Tổng tiền hàng:</span>
-                                    <span class="font-black text-slate-800">@tongTienHang.ToString("N0") VNĐ</span>
+                                    <div class="flex gap-3 relative">
+                                        <input type="text" id="voucherCode" placeholder="Nhập mã AuraHome của bạn..." class="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:border-brand-cyan uppercase font-semibold text-slate-700 transition-colors">
+                                        <button type="button" onclick="checkVoucher()" id="btnApplyVoucher" class="bg-slate-800 text-white font-bold px-6 py-3 rounded-xl hover:bg-brand-cyan transition-colors whitespace-nowrap">
+                                            Áp dụng
+                                        </button>
+                                    </div>
+
+                                    <p id="voucherMessage" class="text-sm mt-3 font-medium hidden"></p>
                                 </div>
 
-                                <div class="mb-6">
-                                    <label for="CanLapDat" class="cursor-pointer relative flex items-start p-4 rounded-2xl border-2 border-slate-200 hover:border-cyan-300 bg-white transition-all overflow-hidden group">
+                                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                                    <div class="flex justify-between mb-2 text-slate-600">
+                                        <span>Tạm tính:</span>
+                                        <span id="subTotalDisplay" data-value="@Model.TongTien">@String.Format("{0:N0}", Model.TongTien) đ</span>
+                                    </div>
 
-                                        <input id="CanLapDat" name="CanLapDat" type="checkbox" value="true" checked class="peer sr-only">
+                                    <div id="discountRow" class="flex justify-between mb-2 text-emerald-600 font-bold hidden">
+                                        <span>Đã giảm (Voucher):</span>
+                                        <span id="discountDisplay">-0 đ</span>
+                                    </div>
 
-                                        <div class="absolute inset-0 bg-cyan-50 opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none"></div>
-                                        <div class="absolute inset-0 border-2 border-brand-cyan rounded-2xl opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none"></div>
+                                    <hr class="my-4 border-slate-200">
 
-                                        <div class="relative flex items-center justify-center w-5 h-5 mt-0.5 shrink-0 rounded border-2 border-slate-300 peer-checked:bg-brand-cyan peer-checked:border-brand-cyan peer-checked:[&>i]:opacity-100 transition-colors pointer-events-none">
-
-                                            <i class="fa-solid fa-check text-white text-[11px] opacity-0 transition-opacity"></i>
-
-                                        </div>
-
-                                        <div class="relative ml-3 text-sm pointer-events-none">
-                                            <span class="font-black text-brand-navy block mb-0.5">Cần kỹ thuật viên đến lắp đặt</span>
-                                            <span class="text-slate-500 text-xs">Mang hàng đến tận nhà thi công. Phí lắp đặt sẽ được báo sau. (Bỏ check nếu tự lắp)</span>
-                                        </div>
-                                    </label>
-
-                                    <input name="CanLapDat" type="hidden" value="false" />
-                                </div>
-                                <div class="mb-6">
-                                    <h3 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wider">Hình thức thanh toán</h3>
-                                    <div class="grid grid-cols-2 gap-3">
-                                        <label class="cursor-pointer relative">
-                                            <input type="radio" name="PaymentMode" value="100" class="peer sr-only" checked>
-                                            <div class="p-3 text-center rounded-xl border-2 border-slate-200 peer-checked:border-brand-navy peer-checked:bg-slate-50 transition-all hover:bg-slate-50">
-                                                <div class="font-black text-brand-navy text-sm mb-1">Trả trước 100%</div>
-                                                <div class="text-[10px] text-slate-500">Thanh toán toàn bộ</div>
-                                            </div>
-                                        </label>
-
-                                        <label class="cursor-pointer relative" id="depositOptionWrapper">
-                                            <input type="radio" name="PaymentMode" value="30" id="radioDeposit" class="peer sr-only">
-                                            <div class="p-3 text-center rounded-xl border-2 border-slate-200 peer-checked:border-rose-500 peer-checked:bg-rose-50 transition-all hover:bg-slate-50">
-                                                <div class="font-black text-rose-600 text-sm mb-1">Cọc 30% giữ đơn</div>
-                                                <div class="text-[10px] text-slate-500">Thu phần còn lại sau</div>
-                                            </div>
-                                        </label>
+                                    <div class="flex justify-between text-xl font-black text-slate-900">
+                                        <span>Tổng thanh toán:</span>
+                                        <span id="finalTotalDisplay">@String.Format("{0:N0}", Model.TongTien) đ</span>
                                     </div>
                                 </div>
 
-                                <div class="bg-slate-800 p-5 rounded-2xl mb-6 text-white relative overflow-hidden shadow-inner">
-                                    <div class="absolute -right-4 -top-4 w-16 h-16 bg-brand-cyan/20 rounded-full blur-xl"></div>
+                                <div class="mb-6">
+                                    <label for="CanLapDat" class="cursor-pointer relative flex items-center p-4 rounded-2xl border border-slate-200 bg-white transition-all overflow-hidden group hover:shadow-md hover:border-cyan-300">
+                                        <input id="CanLapDat" name="CanLapDat" type="checkbox" value="true" checked class="peer sr-only">
 
-                                    <div class="flex justify-between items-end relative z-10">
-                                        <div>
-                                            <span class="text-slate-300 text-xs font-bold uppercase tracking-wider block mb-1">Số tiền cần chuyển ngay</span>
-                                            <span id="badgePaymentType" class="text-[10px] bg-white/20 text-white px-2 py-1 rounded">Thanh toán 100%</span>
+                                        <div class="absolute inset-0 bg-cyan-50/50 opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none"></div>
+                                        <div class="absolute inset-0 border-2 border-cyan-400 rounded-2xl opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none"></div>
+
+                                        <div class="relative flex items-center justify-center w-6 h-6 shrink-0 rounded-md border-2 border-slate-300 bg-white peer-checked:bg-cyan-500 peer-checked:border-cyan-500 peer-checked:[&>i]:scale-100 transition-all shadow-sm pointer-events-none">
+                                            <i class="fa-solid fa-check text-white text-[12px] scale-0 transition-transform duration-300"></i>
                                         </div>
-                                        <div class="text-right">
-                                            <span class="font-black text-3xl text-brand-cyan shadow-sm"
+
+                                        <div class="relative ml-4 pointer-events-none flex-1">
+                                            <span class="font-bold text-slate-800 block text-sm peer-checked:text-cyan-700 transition-colors">Cần kỹ thuật viên lắp đặt</span>
+                                            <span class="text-slate-500 text-[11px] leading-tight block mt-0.5">Phí thi công sẽ được báo sau. Bỏ chọn nếu tự lắp.</span>
+                                        </div>
+
+                                        <div class="relative shrink-0 w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 peer-checked:bg-cyan-100 peer-checked:text-cyan-500 transition-colors pointer-events-none">
+                                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                                        </div>
+                                    </label>
+                                    <input name="CanLapDat" type="hidden" value="false" />
+                                </div>
+
+                                <div class="mb-8">
+                                    <h3 class="text-[12px] font-bold text-slate-400 mb-3 uppercase tracking-[0.1em] flex items-center gap-2">
+                                        <i class="fa-solid fa-money-check-dollar"></i> Hình thức thanh toán
+                                    </h3>
+                                    <div class="grid grid-cols-2 gap-3 sm:gap-4">
+
+                                        <label class="cursor-pointer relative h-full">
+                                            <input type="radio" name="PaymentMode" value="100" class="peer sr-only" checked>
+                                            <div class="h-full p-3 sm:p-4 text-center rounded-2xl border-2 border-slate-100 bg-white peer-checked:border-brand-navy peer-checked:bg-slate-50 peer-checked:shadow-[0_0_0_4px_rgba(15,23,42,0.05)] transition-all hover:border-slate-300 flex flex-col justify-center items-center gap-1">
+                                                <i class="fa-solid fa-circle-check text-brand-navy opacity-0 peer-checked:opacity-100 absolute top-3 right-3 transition-opacity"></i>
+                                                <div class="font-black text-brand-navy text-sm sm:text-base">Trả trước 100%</div>
+                                                <div class="text-[11px] text-slate-500 font-medium">Thanh toán toàn bộ</div>
+                                            </div>
+                                        </label>
+
+                                        <label class="cursor-pointer relative h-full" id="depositOptionWrapper">
+                                            <input type="radio" name="PaymentMode" value="30" id="radioDeposit" class="peer sr-only">
+                                            <div class="h-full p-3 sm:p-4 text-center rounded-2xl border-2 border-slate-100 bg-white peer-checked:border-rose-500 peer-checked:bg-rose-50 peer-checked:shadow-[0_0_0_4px_rgba(244,63,94,0.1)] transition-all hover:border-slate-300 flex flex-col justify-center items-center gap-1">
+                                                <i class="fa-solid fa-circle-check text-rose-500 opacity-0 peer-checked:opacity-100 absolute top-3 right-3 transition-opacity"></i>
+                                                <div class="font-black text-rose-600 text-sm sm:text-base">Cọc 30% giữ đơn</div>
+                                                <div class="text-[11px] text-slate-500 font-medium">Thu phần còn lại sau</div>
+                                            </div>
+                                        </label>
+
+                                    </div>
+                                </div>
+
+                                <div class="relative overflow-hidden bg-gradient-to-br from-slate-900 to-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-700/50 shadow-2xl mb-6 group transition-all duration-300 hover:border-slate-600">
+                                    <div class="absolute -top-16 -right-16 w-40 h-40 bg-brand-cyan/20 rounded-full blur-[40px] pointer-events-none group-hover:bg-brand-cyan/30 transition-colors duration-700"></div>
+                                    <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50"></div>
+
+                                    <div class="relative z-10 flex flex-col sm:flex-row justify-between sm:items-end gap-5">
+                                        <div class="flex flex-col items-start gap-3">
+                                            <div class="flex items-center gap-2">
+                                                <i class="fa-solid fa-wallet text-cyan-400"></i>
+                                                <span class="text-slate-400 text-xs font-bold uppercase tracking-[0.15em]">Số tiền cần chuyển</span>
+                                            </div>
+                                            <span id="badgePaymentType" class="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 px-3 py-1.5 rounded-lg backdrop-blur-md shadow-sm">
+                                                <i class="fa-solid fa-check-circle text-[10px]"></i> Thanh toán 100%
+                                            </span>
+                                        </div>
+
+                                        <div class="text-left sm:text-right mt-2 sm:mt-0">
+                                            <span class="block text-[11px] text-slate-500 font-medium mb-1 uppercase tracking-widest">Tổng cộng (VNĐ)</span>
+                                            <span class="font-black text-4xl sm:text-5xl tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white via-cyan-100 to-cyan-500 drop-shadow-[0_0_15px_rgba(6,182,212,0.4)]"
                                                   id="depositAmountDisplay"
                                                   data-total="@tongTienHang"
                                                   data-deposit="@tienCoc"
                                                   data-value="@tongTienHang">
-                                                @tongTienHang.ToString("N0") đ
+                                                @tongTienHang.ToString("N0")
                                             </span>
                                         </div>
                                     </div>
                                 </div>
 
-                                <button id="btn-checkout" type="submit" class="w-full bg-brand-cyan text-white py-4 font-black uppercase tracking-widest hover:bg-cyan-600 transition-all duration-300 shadow-lg shadow-cyan-600/30 rounded-xl flex justify-center items-center gap-2">
-                                    <i class="fa-solid fa-credit-card"></i> Xác nhận thanh toán
+                                <input type="hidden" id="hiddenVoucherCode" name="VoucherCode" value="" />
+
+                                <button id="btn-checkout" type="submit" class="w-full relative group flex justify-center items-center gap-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white py-5 rounded-2xl font-black uppercase tracking-[0.1em] text-[15px] transition-all duration-300 shadow-[0_10px_30px_-10px_rgba(6,182,212,0.6)] hover:shadow-[0_15px_40px_-10px_rgba(6,182,212,0.8)] hover:-translate-y-1">
+                                    <i class="fa-solid fa-shield-halved text-[18px] opacity-90"></i>
+                                    <span>Thanh toán an toàn</span>
+                                    <i class="fa-solid fa-arrow-right text-[15px] opacity-70 group-hover:opacity-100 group-hover:translate-x-1.5 transition-all duration-300"></i>
                                 </button>
+
                             </div>
                         </div>
 
@@ -269,3 +326,168 @@
         </div>
     </div>
 </main>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@@11"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@@11"></script>
+<script>
+    // =====================================================================
+    // 1. HÀM HIỂN THỊ POPUP KHO VOUCHER (Tính năng Ví Voucher thông minh)
+    // =====================================================================
+    function showMyVouchers() {
+        // Lấy email từ ô input của form
+        const emailInput = document.querySelector('input[name="Email"]')?.value.trim();
+
+        if (!emailInput) {
+            Swal.fire('Nhắc nhở', 'Vui lòng nhập Email liên hệ ở form bên trái trước để hệ thống tìm ưu đãi của bạn!', 'warning');
+            return;
+        }
+
+        Swal.fire({
+            title: 'Đang tìm ưu đãi...',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
+        });
+
+        fetch(`/Cart/GetMyVouchers?email=${encodeURIComponent(emailInput)}`)
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) {
+                Swal.fire('Rất tiếc', data.message, 'info');
+                return;
+            }
+
+            let htmlList = '<div class="space-y-3 mt-4 text-left">';
+            data.data.forEach(v => {
+                const dateObj = new Date(v.ngayHetHan);
+                const dateStr = dateObj.toLocaleDateString('vi-VN') + ' ' + dateObj.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'});
+
+                htmlList += `
+                    <div class="p-3 border border-cyan-200 bg-cyan-50 rounded-xl flex justify-between items-center cursor-pointer hover:bg-cyan-100 transition-colors shadow-sm"
+                         onclick="selectVoucher('${v.code}')">
+                        <div>
+                            <div class="font-bold text-slate-800">${v.moTa}</div>
+                            <div class="text-[11px] text-slate-500 mt-1"><i class="fa-regular fa-clock"></i> HSD: ${dateStr}</div>
+                        </div>
+                        <div class="font-black font-mono text-cyan-600 bg-white px-2 py-1 rounded border border-cyan-100">${v.code}</div>
+                    </div>
+                `;
+            });
+            htmlList += '</div><p class="text-xs text-slate-400 mt-4 italic text-center">Bấm vào một mã bất kỳ để áp dụng ngay</p>';
+
+            Swal.fire({
+                title: '<span class="text-xl font-black text-slate-800">Kho Voucher của bạn</span>',
+                html: htmlList,
+                showConfirmButton: false,
+                showCloseButton: true,
+                width: '28em'
+            });
+        })
+        .catch(err => {
+            Swal.fire('Lỗi', 'Không thể kết nối máy chủ', 'error');
+        });
+    }
+
+    // Hàm phụ: Tự động điền mã khi khách bấm chọn trong Popup
+    function selectVoucher(code) {
+        document.getElementById('voucherCode').value = code;
+        Swal.close();
+        checkVoucher();
+    }
+
+    // =====================================================================
+    // 2. HÀM KIỂM TRA VÀ ÁP DỤNG VOUCHER (Đồng bộ với site.js)
+    // =====================================================================
+    function checkVoucher() {
+        const codeInput = document.getElementById('voucherCode');
+        const code = codeInput.value.trim().toUpperCase();
+        const emailInput = document.querySelector('input[name="Email"]')?.value.trim();
+
+        // Lấy giá trị tổng ban đầu từ subTotalDisplay (Giá gốc chưa giảm)
+        const subTotalElement = document.getElementById('subTotalDisplay');
+        const originalTotal = parseFloat(subTotalElement.getAttribute('data-value'));
+
+        const msgElement = document.getElementById('voucherMessage');
+
+        if (!emailInput) {
+            msgElement.textContent = "Vui lòng nhập Email liên hệ ở form bên trái trước!";
+            msgElement.className = "text-sm mt-3 font-medium text-rose-500 block";
+            return;
+        }
+
+        if (!code) {
+            msgElement.textContent = "Vui lòng nhập mã giảm giá!";
+            msgElement.className = "text-sm mt-3 font-medium text-rose-500 block";
+            return;
+        }
+
+        const btn = document.getElementById('btnApplyVoucher');
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+        btn.disabled = true;
+
+        fetch(`/Cart/ApplyVoucher?code=${encodeURIComponent(code)}&totalAmount=${originalTotal}&email=${encodeURIComponent(emailInput)}`, { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+            btn.innerHTML = 'Áp dụng';
+            btn.disabled = false;
+            msgElement.classList.remove('hidden');
+
+            const depositAmountDisplay = document.getElementById('depositAmountDisplay');
+
+            if (data.success) {
+                // Thành công: Hiển thị thông báo
+                msgElement.textContent = data.message;
+                msgElement.className = "text-sm mt-3 font-bold text-emerald-600 block";
+                codeInput.classList.add('border-emerald-500', 'bg-emerald-50');
+
+                // Cập nhật giao diện hóa đơn
+                document.getElementById('discountRow').classList.remove('hidden');
+                document.getElementById('discountDisplay').textContent = `-${data.discountAmount.toLocaleString('vi-VN')} đ`;
+                document.getElementById('finalTotalDisplay').textContent = `${data.newTotal.toLocaleString('vi-VN')} đ`;
+
+                // Đồng bộ dữ liệu ngầm cho site.js đọc (Tính lại cọc 30%)
+                const newTotal = data.newTotal;
+                const newDeposit = newTotal * 0.3;
+
+                if(depositAmountDisplay) {
+                    depositAmountDisplay.setAttribute('data-total', newTotal);
+                    depositAmountDisplay.setAttribute('data-deposit', newDeposit);
+                }
+
+                // Lưu mã giảm giá vào form ẩn để site.js gom gửi đi
+                document.getElementById('hiddenVoucherCode').value = code;
+
+            } else {
+                // Thất bại: Hiển thị thông báo lỗi
+                msgElement.textContent = data.message;
+                msgElement.className = "text-sm mt-3 font-medium text-rose-500 block";
+                codeInput.classList.remove('border-emerald-500', 'bg-emerald-50');
+
+                // Ẩn dòng giảm giá và trả lại giá cũ
+                document.getElementById('discountRow').classList.add('hidden');
+                document.getElementById('finalTotalDisplay').textContent = `${originalTotal.toLocaleString('vi-VN')} đ`;
+
+                // Trả lại dữ liệu ngầm cho site.js
+                if(depositAmountDisplay) {
+                    depositAmountDisplay.setAttribute('data-total', originalTotal);
+                    depositAmountDisplay.setAttribute('data-deposit', originalTotal * 0.3);
+                }
+
+                document.getElementById('hiddenVoucherCode').value = '';
+            }
+
+            // Kích hoạt lại sự kiện change để site.js tự động vẽ lại nút Thanh toán
+            const checkedRadio = document.querySelector('input[name="PaymentMode"]:checked');
+            if (checkedRadio) {
+                checkedRadio.dispatchEvent(new Event('change'));
+            }
+        })
+        .catch(error => {
+            msgElement.textContent = "Lỗi kết nối đến máy chủ!";
+            msgElement.className = "text-sm mt-3 font-medium text-rose-500 block";
+            btn.innerHTML = 'Áp dụng';
+            btn.disabled = false;
+        });
+    }
+</script>

@@ -44,6 +44,10 @@ public partial class AISmartHomeDbContext : DbContext
 
     public virtual DbSet<VaiTro> VaiTros { get; set; }
 
+    public virtual DbSet<Voucher> Vouchers { get; set; }
+
+    public virtual DbSet<VoucherHistory> VoucherHistories { get; set; }
+
     public virtual DbSet<YeuCauLapDat> YeuCauLapDats { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

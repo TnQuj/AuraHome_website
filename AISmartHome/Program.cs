@@ -1,4 +1,5 @@
 ﻿using AISmartHome.Data;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,11 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(60); // Thời gian sống của phiên
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true; // RẤT QUAN TRỌNG: Bỏ qua kiểm tra Cookie Consent
+});
+
+builder.Services.Configure<FormOptions>(options => {
+    options.ValueLengthLimit = int.MaxValue;
+    options.MultipartBodyLengthLimit = int.MaxValue;
 });
 
 var app = builder.Build();

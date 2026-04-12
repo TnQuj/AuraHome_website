@@ -1,12 +1,13 @@
 ﻿@model IEnumerable<AISmartHome.Models.KhachHang>
+@using Microsoft.EntityFrameworkCore; 
+@inject AISmartHome.Data.AISmartHomeDbContext _context
 
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "Danh sách Khách hàng";
 }
-
 <div class="p-6 bg-slate-50 min-h-screen">
-    <div class="max-w-6xl mx-auto">
+    <div class="max-w-7xl mx-auto">
 
         <div class="mb-6 flex items-center justify-between">
             <div>
@@ -31,28 +32,84 @@
                             <th class="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Họ và Tên</th>
                             <th class="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Liên lạc</th>
                             <th class="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Địa chỉ</th>
+                            <th class="px-6 py-4 text-sm font-semibold uppercase tracking-wider text-center">Tình trạng Voucher</th>
                             <th class="px-6 py-4 text-sm font-semibold uppercase tracking-wider text-right">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         @foreach (var item in Model)
                         {
+                            bool daNhanVoucher = false;
+                            if (!string.IsNullOrEmpty(item.Email))
+                            {
+                                daNhanVoucher = _context.VoucherHistories.Any(v => v.Email == item.Email);
+                            }
+
                             <tr class="hover:bg-slate-50 transition-colors group">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
                                         <div class="w-10 h-10 rounded-full bg-[#00E5FF]/10 flex items-center justify-center text-[#001F3F] font-bold">
-                                            @item.TenKhachHang.Substring(0, 1).ToUpper()
+                                            @(string.IsNullOrEmpty(item.TenKhachHang) ? "?" : item.TenKhachHang.Substring(0, 1).ToUpper())
                                         </div>
-                                        <div class="font-bold text-[#001F3F]">@item.TenKhachHang</div>
+                                        <div>
+                                            <div class="font-bold text-[#001F3F]">@item.TenKhachHang</div>
+                                            <div class="text-xs font-medium text-emerald-600">Hạng: @item.HangThanhVien</div>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="text-sm text-slate-700 font-medium">@item.SoDienThoai</div>
                                     <div class="text-xs text-gray-400">@item.Email</div>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">
+                                <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate" title="@item.DiaChi">
                                     @item.DiaChi
                                 </td>
+
+                                <td class="px-6 py-4">
+                                    @{
+                                        // Lấy toàn bộ lịch sử voucher của Email này, join với bảng Voucher để lấy tên mã
+                                        var dsVoucherCuaKhach = new List<AISmartHome.Models.VoucherHistory>();
+                                        if (!string.IsNullOrEmpty(item.Email))
+                                        {
+                                            dsVoucherCuaKhach = _context.VoucherHistories
+                                            .Include(v => v.VoucherNavigation)
+                                            .Where(v => v.Email == item.Email)
+                                            .ToList();
+                                        }
+                                    }
+
+                                    @if (dsVoucherCuaKhach.Any())
+                                    {
+                                        <div class="space-y-1.5">
+                                            @foreach (var v in dsVoucherCuaKhach)
+                                            {
+                                                // Kiểm tra xem mã đã dùng chưa (dựa vào cột MaDonHang mà bạn chụp)
+                                                bool daDung = v.MaDonHang != null;
+
+                                                <div class="text-[11px] font-medium border rounded border-slate-200 flex items-center justify-between p-1 bg-white">
+                                                    <span class="font-mono font-bold text-brand-cyan pl-1" title="@v.VoucherNavigation?.MoTa">
+                                                        @v.VoucherNavigation?.Code
+                                                    </span>
+                                                    @if (daDung)
+                                                    {
+                                                        <span class="bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded text-[10px] uppercase">Đã xài</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="bg-emerald-100 text-emerald-600 px-1.5 py-0.5 rounded text-[10px] uppercase font-bold">Còn hạn</span>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-medium bg-slate-50 text-slate-400 border border-slate-200">
+                                            Chưa tham gia vòng quay
+                                        </span>
+                                    }
+                                </td>
+
                                 <td class="px-6 py-4">
                                     <div class="flex justify-end gap-2">
                                         <a asp-action="Edit" asp-route-id="@item.MaKhachHang" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Sửa">

@@ -19,8 +19,10 @@ namespace AISmartHome.Controllers
         // 1. HÀM XỬ LÝ KHI BẤM NÚT "ĐĂNG NHẬP" TỪ MODAL
         // =========================================================
         [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> Login(string Username, string Password)
         {
+            // TRƯỜNG HỢP 1: Để trống thông tin
             if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
             {
                 TempData["LoginError"] = "Vui lòng nhập đầy đủ tài khoản và mật khẩu.";
@@ -31,37 +33,41 @@ namespace AISmartHome.Controllers
             string cleanUsername = Username.Trim();
             string cleanPassword = Password.Trim();
 
-            // TÌM TÀI KHOẢN (Bỏ điều kiện MaVaiTro == 1 để tìm được cả Nhân viên)
+            // Tìm tài khoản trong DB
             var account = await _context.TaiKhoans.FirstOrDefaultAsync(t =>
                 t.TenDangNhap == cleanUsername &&
                 t.TrangThai == true
             );
 
+            // TRƯỜNG HỢP 2: TÌM THẤY TÀI KHOẢN VÀ ĐÚNG PASS
             if (account != null && account.MatKhau != null && account.MatKhau.Trim() == cleanPassword)
             {
                 // ĐĂNG NHẬP THÀNH CÔNG -> Lưu thông tin chung
                 HttpContext.Session.SetString("Username", account.TenDangNhap);
 
-                // PHÂN LUỒNG DỰA VÀO VAI TRÒ
+                // BỔ SUNG QUAN TRỌNG: Lưu ID tài khoản vào Session để phân biệt
+                HttpContext.Session.SetInt32("AccountId", account.MaTaiKhoan);
+
+                // Phân luồng vai trò
                 if (account.MaVaiTro == 1)
                 {
-                    // 1. Dành cho Admin
                     HttpContext.Session.SetString("Role", "Admin");
                     return RedirectToAction("Index", "Admin");
                 }
                 else if (account.MaVaiTro == 2)
                 {
-                    // 2. Dành cho Nhân viên
                     HttpContext.Session.SetString("Role", "Employee");
-                    return RedirectToAction("Index", "Employee"); // Sẽ tạo Controller này ở Bước 3
+                    return RedirectToAction("Index", "Employee");
                 }
                 else
                 {
+                    // Sai quyền
                     TempData["LoginError"] = "Tài khoản không được phân quyền hợp lệ!";
                     TempData["ShowLoginModal"] = "true";
                     return Redirect(Request.Headers["Referer"].ToString());
                 }
             }
+            // TRƯỜNG HỢP 3: SAI TÀI KHOẢN HOẶC SAI MẬT KHẨU (Đoạn lúc nãy bị thiếu)
             else
             {
                 TempData["LoginError"] = "Tài khoản hoặc mật khẩu không chính xác!";

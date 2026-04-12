@@ -4,6 +4,9 @@ using AISmartHome.Models;
 using AISmartHome.Data;
 using Microsoft.AspNetCore.Http; // Bắt buộc để dùng ISession
 using System.Text.Json;          // Bắt buộc để dùng JsonSerializer
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AISmartHome.Controllers
 {
@@ -17,95 +20,40 @@ namespace AISmartHome.Controllers
         }
 
         // =======================================================
-        // TRANG DANH SÁCH & TRANG CHỦ
+        // HÀM HỖ TRỢ: ĐỊNH DANH KHÁCH HÀNG QUA SESSION (BẢO MẬT GIỎ HÀNG)
         // =======================================================
-        public async Task<IActionResult> Index(int? category, string sortOrder)
+        private async Task<int> GetOrSetGuestCustomerId()
         {
-            // Giữ lại tham số cho View
-            ViewBag.CurrentCategory = category;
-
-            // Load danh mục
-            var viewModel = new HomeViewModel
+            string guestIdStr = HttpContext.Session.GetString("GuestCustomerId");
+            if (!string.IsNullOrEmpty(guestIdStr))
             {
-                DanhMucs = await _context.DanhMucSanPhams.ToListAsync()
+                return int.Parse(guestIdStr);
+            }
+
+            // Khách mới tinh -> Tạo Khách vãng lai ảo
+            var newGuest = new KhachHang
+            {
+                TenKhachHang = "Khách vãng lai",
+                SoDienThoai = "",
+                DiaChi = ""
             };
 
-            // 1. BẮT ĐẦU TẠO CÂU TRUY VẤN (Chưa lấy dữ liệu vội)
-            var query = _context.SanPhams.AsQueryable();
+            _context.KhachHangs.Add(newGuest);
+            await _context.SaveChangesAsync();
 
-            // 2. LỌC THEO DANH MỤC (Nếu người dùng có bấm vào danh mục)
-            if (category.HasValue)
-            {
-                query = query.Where(sp => sp.MaDanhMuc == category.Value);
-            }
+            // Lưu Session
+            HttpContext.Session.SetString("GuestCustomerId", newGuest.MaKhachHang.ToString());
 
-            // 3. SẮP XẾP SẢN PHẨM (Giá, Tên)
-            switch (sortOrder)
-            {
-                case "price_asc": // Giá: Thấp đến Cao
-                    query = query.OrderBy(sp => sp.GiaBan);
-                    break;
-                case "price_desc": // Giá: Cao đến Thấp
-                    query = query.OrderByDescending(sp => sp.GiaBan);
-                    break;
-                case "name_asc": // Tên: A đến Z
-                    query = query.OrderBy(sp => sp.TenSanPham);
-                    break;
-                case "name_desc": // Tên: Z đến A
-                    query = query.OrderByDescending(sp => sp.TenSanPham);
-                    break;
-                default:
-                    // Mặc định: Sản phẩm mới nhất lên đầu (hoặc bạn có thể bỏ dòng này đi)
-                    query = query.OrderByDescending(sp => sp.MaSanPham);
-                    break;
-            }
-
-            // 4. CHỐT SỔ: Chạy xuống Database lấy dữ liệu thực tế và gán vào ViewModel
-            viewModel.SanPhams = await query.ToListAsync();
-
-            return View(viewModel);
+            return newGuest.MaKhachHang;
         }
 
-        // =======================================================
-        // TRANG CHI TIẾT SẢN PHẨM
-        // =======================================================
-        public async Task<IActionResult> Detail(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var sanPham = await _context.SanPhams
-                .Include(sp => sp.HinhAnhSanPhams)
-                .FirstOrDefaultAsync(m => m.MaSanPham == id);
-
-            if (sanPham == null)
-            {
-                return NotFound();
-            }
-
-            // Gửi thêm sản phẩm tương tự sang View (Tùy chọn)
-            ViewBag.SanPhamsTuongTu = await _context.SanPhams
-                .Where(x => x.MaDanhMuc == sanPham.MaDanhMuc && x.MaSanPham != id)
-                .Take(4)
-                .ToListAsync();
-
-            return View(sanPham);
-            // =======================================================
-            // QUẢN LÝ GIỎ HÀNG (LƯU TRỰC TIẾP VÀO DATABASE)
-            // =======================================================
-        }
-        // 1. Hàm hỗ trợ: Lấy Giỏ hàng của khách hàng (Nếu chưa có thì tự tạo mới)
         private async Task<GioHang> GetOrCreateCartAsync(int maKhachHang)
         {
-            // Tìm giỏ hàng của khách này, Include luôn ChiTietGioHang và thông tin SanPham bên trong
             var cart = await _context.GioHangs
                 .Include(g => g.ChiTietGioHangs)
                     .ThenInclude(c => c.MaSanPhamNavigation)
                 .FirstOrDefaultAsync(g => g.MaKhachHang == maKhachHang);
 
-            // Nếu khách chưa có giỏ hàng nào trong CSDL, tạo giỏ hàng rỗng mới
             if (cart == null)
             {
                 cart = new GioHang
@@ -120,26 +68,99 @@ namespace AISmartHome.Controllers
             return cart;
         }
 
-        // 2. Hiển thị trang giỏ hàng
-        public async Task<IActionResult> Cart()
+        // =======================================================
+        // TRANG DANH SÁCH & TRANG CHỦ
+        // =======================================================
+        public async Task<IActionResult> Index(int? category, string sortOrder)
         {
-            int maKhachHangHienTai = 1; // TẠM THỜI GÁN CỨNG LÀ KHÁCH HÀNG SỐ 1
-            var cart = await GetOrCreateCartAsync(maKhachHangHienTai);
+            ViewBag.CurrentCategory = category;
 
-            return View(cart); // Gửi nguyên đối tượng GioHang sang View
+            var viewModel = new HomeViewModel
+            {
+                DanhMucs = await _context.DanhMucSanPhams.ToListAsync()
+            };
+
+            var query = _context.SanPhams.AsQueryable();
+
+            if (category.HasValue)
+            {
+                query = query.Where(sp => sp.MaDanhMuc == category.Value);
+            }
+
+            switch (sortOrder)
+            {
+                case "price_asc": query = query.OrderBy(sp => sp.GiaBan); break;
+                case "price_desc": query = query.OrderByDescending(sp => sp.GiaBan); break;
+                case "name_asc": query = query.OrderBy(sp => sp.TenSanPham); break;
+                case "name_desc": query = query.OrderByDescending(sp => sp.TenSanPham); break;
+                default: query = query.OrderByDescending(sp => sp.MaSanPham); break;
+            }
+
+            viewModel.SanPhams = await query.ToListAsync();
+            return View(viewModel);
         }
 
-        //3. Thêm hàm này vào dưới hàm AddToCart cũ
+        // =======================================================
+        // TÌM KIẾM SẢN PHẨM
+        // =======================================================
+        [Route("Customers/Search")]
+        public async Task<IActionResult> Search(string keyword)
+        {
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.Keyword = keyword;
+
+            var searchResults = await _context.SanPhams
+                .Where(s => s.TenSanPham.Contains(keyword) || s.MoTa.Contains(keyword))
+                .OrderByDescending(s => s.MaSanPham)
+                .ToListAsync();
+
+            return View(searchResults);
+        }
+
+        // =======================================================
+        // TRANG CHI TIẾT SẢN PHẨM
+        // =======================================================
+        public async Task<IActionResult> Detail(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var sanPham = await _context.SanPhams
+                .Include(sp => sp.HinhAnhSanPhams)
+                .FirstOrDefaultAsync(m => m.MaSanPham == id);
+
+            if (sanPham == null) return NotFound();
+
+            ViewBag.SanPhamsTuongTu = await _context.SanPhams
+                .Where(x => x.MaDanhMuc == sanPham.MaDanhMuc && x.MaSanPham != id)
+                .Take(4)
+                .ToListAsync();
+
+            return View(sanPham);
+        }
+
+        // =======================================================
+        // QUẢN LÝ GIỎ HÀNG (AJAX & TRANG CHÍNH)
+        // =======================================================
+        public async Task<IActionResult> Cart()
+        {
+            int maKhachHangHienTai = await GetOrSetGuestCustomerId(); // Đã bảo mật
+            var cart = await GetOrCreateCartAsync(maKhachHangHienTai);
+            return View(cart);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddToCartAjax(int id, int quantity = 1)
         {
-            int maKhachHangHienTai = 1; // Tạm gán khách hàng số 1
+            int maKhachHangHienTai = await GetOrSetGuestCustomerId(); // Đã bảo mật
             var cart = await GetOrCreateCartAsync(maKhachHangHienTai);
             var sp = await _context.SanPhams.FindAsync(id);
 
             if (sp == null) return Json(new { success = false, message = "Không tìm thấy sản phẩm" });
 
-            // Thêm hoặc tăng số lượng
             var chiTiet = cart.ChiTietGioHangs.FirstOrDefault(c => c.MaSanPham == id);
             if (chiTiet != null)
             {
@@ -157,17 +178,14 @@ namespace AISmartHome.Controllers
             }
             await _context.SaveChangesAsync();
 
-            // Cập nhật tổng tiền
             cart.TongTien = cart.ChiTietGioHangs.Sum(c => c.SoLuong * c.Gia);
             _context.GioHangs.Update(cart);
             await _context.SaveChangesAsync();
 
-            // Lấy lại dữ liệu giỏ hàng mới nhất để trả về cho Javascript
             var updatedCart = await _context.GioHangs
                 .Include(g => g.ChiTietGioHangs).ThenInclude(c => c.MaSanPhamNavigation)
                 .FirstOrDefaultAsync(g => g.MaKhachHang == maKhachHangHienTai);
 
-            // Đóng gói dữ liệu thành JSON
             var items = updatedCart.ChiTietGioHangs.Select(c => new {
                 maSanPham = c.MaSanPham,
                 tenSanPham = c.MaSanPhamNavigation.TenSanPham,
@@ -185,37 +203,33 @@ namespace AISmartHome.Controllers
                 items = items
             });
         }
-        [HttpPost] // Nếu thiếu dòng này, Javascript gọi POST sẽ bị lỗi 404/405
+
+        [HttpPost]
         public async Task<IActionResult> RemoveFromCartAjax(int id)
         {
-            int maKhachHangHienTai = 1; // Đang test với khách hàng số 1
-            var cart = await GetOrCreateCartAsync(maKhachHangHienTai); // Hoặc cách bạn lấy giỏ hàng
+            int maKhachHangHienTai = await GetOrSetGuestCustomerId(); // Đã bảo mật
+            var cart = await GetOrCreateCartAsync(maKhachHangHienTai);
 
-            // 1. TÌM VÀ XÓA SẢN PHẨM TRONG GIỎ
             var chiTiet = cart.ChiTietGioHangs.FirstOrDefault(c => c.MaSanPham == id);
             if (chiTiet != null)
             {
                 _context.ChiTietGioHangs.Remove(chiTiet);
                 await _context.SaveChangesAsync();
 
-                // Cập nhật lại tổng tiền (Quan trọng)
                 cart.TongTien = cart.ChiTietGioHangs.Where(c => c.MaSanPham != id).Sum(c => (c.SoLuong ?? 0) * (c.Gia ?? 0));
                 _context.GioHangs.Update(cart);
                 await _context.SaveChangesAsync();
             }
 
-            // 2. LẤY LẠI GIỎ HÀNG SAU KHI XÓA ĐỂ TRẢ VỀ CHO JAVASCRIPT
             var updatedCart = await _context.GioHangs
                 .Include(g => g.ChiTietGioHangs).ThenInclude(c => c.MaSanPhamNavigation)
                 .FirstOrDefaultAsync(g => g.MaKhachHang == maKhachHangHienTai);
 
-            // Xử lý an toàn: Nếu xóa xong mà giỏ hàng rỗng
             if (updatedCart == null || updatedCart.ChiTietGioHangs == null || !updatedCart.ChiTietGioHangs.Any())
             {
                 return Json(new { success = true, totalItems = 0, totalPrice = 0, items = new object[0] });
             }
 
-            // Đóng gói danh sách sản phẩm còn lại
             var items = updatedCart.ChiTietGioHangs.Select(c => new {
                 maSanPham = c.MaSanPham,
                 tenSanPham = c.MaSanPhamNavigation?.TenSanPham ?? "",
@@ -225,57 +239,48 @@ namespace AISmartHome.Controllers
                 thanhTien = (c.SoLuong ?? 0) * (c.Gia ?? 0)
             }).ToList();
 
-            // 3. TRẢ VỀ KẾT QUẢ CHO JAVASCRIPT
             return Json(new
             {
                 success = true,
-                totalItems = items.Sum(x => x.soLuong) ?? 0, // Tính lại tổng số món
-                totalPrice = updatedCart.TongTien ?? 0, // Tổng tiền mới
-                items = items // Danh sách HTML
+                totalItems = items.Sum(x => x.soLuong) ?? 0,
+                totalPrice = updatedCart.TongTien ?? 0,
+                items = items
             });
         }
-        // =========================================================
-        // HÀM DÀNH RIÊNG CHO TRANG GIỎ HÀNG CHÍNH (Cart.cshtml)
-        // Không dùng AJAX, xóa xong thì F5 load lại trang
-        // =========================================================
+
         [HttpGet]
         public async Task<IActionResult> RemoveFromCart(int id)
         {
-            int maKhachHangHienTai = 1; // Khách hàng số 1
+            int maKhachHangHienTai = await GetOrSetGuestCustomerId(); // Đã bảo mật
             var cart = await GetOrCreateCartAsync(maKhachHangHienTai);
 
-            // Tìm và xóa sản phẩm
             var chiTiet = cart.ChiTietGioHangs.FirstOrDefault(c => c.MaSanPham == id);
             if (chiTiet != null)
             {
                 _context.ChiTietGioHangs.Remove(chiTiet);
                 await _context.SaveChangesAsync();
 
-                // Tính lại tổng tiền
                 cart.TongTien = cart.ChiTietGioHangs.Where(c => c.MaSanPham != id).Sum(c => (c.SoLuong ?? 0) * (c.Gia ?? 0));
                 _context.GioHangs.Update(cart);
                 await _context.SaveChangesAsync();
             }
 
-            // Tự động load lại trang Cart sau khi xóa xong
             return RedirectToAction("Cart");
         }
-        // Lấy dữ liệu cho Giỏ hàng trượt
+
         [HttpGet]
         public async Task<IActionResult> GetMiniCartAjax()
         {
-            int maKhachHangHienTai = 1; // Khách hàng số 1
+            int maKhachHangHienTai = await GetOrSetGuestCustomerId(); // Đã bảo mật
             var cart = await _context.GioHangs
                 .Include(g => g.ChiTietGioHangs).ThenInclude(c => c.MaSanPhamNavigation)
                 .FirstOrDefaultAsync(g => g.MaKhachHang == maKhachHangHienTai);
 
-            // Nếu giỏ hàng trống
             if (cart == null || cart.ChiTietGioHangs == null || !cart.ChiTietGioHangs.Any())
             {
                 return Json(new { success = true, totalItems = 0, totalPrice = 0, items = new object[0] });
             }
 
-            // Nếu có sản phẩm, đóng gói dữ liệu
             var items = cart.ChiTietGioHangs.Select(c => new {
                 maSanPham = c.MaSanPham,
                 tenSanPham = c.MaSanPhamNavigation?.TenSanPham ?? "",
@@ -294,201 +299,48 @@ namespace AISmartHome.Controllers
             });
         }
 
-        // GET: Customers/Checkout
-        public async Task<IActionResult> Checkout()
-        {
-            int maKhachHangHienTai = 1; // Thay bằng ID thực tế
-
-            var gioHang = await _context.GioHangs
-                .Include(g => g.ChiTietGioHangs)
-                    .ThenInclude(ct => ct.MaSanPhamNavigation) // Quan trọng để lấy TenSanPham
-                .FirstOrDefaultAsync(g => g.MaKhachHang == maKhachHangHienTai);
-
-            if (gioHang == null) return RedirectToAction("Index");
-
-            // Tính toán tổng tiền ngay tại Controller để truyền sang View cho chính xác
-            ViewBag.TongTien = gioHang.ChiTietGioHangs.Sum(x => (x.Gia ?? 0) * (x.SoLuong ?? 0));
-
-            return View(gioHang);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PlaceOrder(
-            string FullName,
-            string Phone,
-            string Email,
-            string Province, 
-            string District, 
-            string Address,  
-            string Note,
-            string PaymentMethod,
-            string PaymentMode, // BẮT BUỘC THÊM THAM SỐ NÀY VÀO ĐÂY
-            bool CanLapDat = false) 
-        {
-    try
-    {
-        int maKhachHangHienTai = 1; // Giả lập ID khách hàng
-
-        // 1. Lấy thông tin giỏ hàng
-        var gioHang = await _context.GioHangs
-            .Include(g => g.ChiTietGioHangs)
-            .FirstOrDefaultAsync(g => g.MaKhachHang == maKhachHangHienTai);
-
-        if (gioHang == null || !gioHang.ChiTietGioHangs.Any())
-        {
-            return Json(new { success = false, message = "Giỏ hàng trống!" });
-        }
-
-        // Tính tổng tiền từ các món hàng trong giỏ
-        decimal tongTien = gioHang.ChiTietGioHangs.Sum(c => (c.SoLuong ?? 0) * (c.Gia ?? 0));
-
-        // 2. Khởi tạo đơn hàng mới với thông tin từ Form
-        var donHang = new DonHang
-        {
-            MaKhachHang = maKhachHangHienTai,
-            NgayDatHang = DateTime.Now,
-            TongTien = tongTien,
-            TenKhachHang = FullName,
-            SoDienThoai = Phone,
-            DiaChiGiaoHang = $"{Address}, {District}, {Province}", // Ghép chuỗi địa chỉ
-            PhuongThucThanhToan = PaymentMethod ?? "Chuyển khoản",
-            TrangThaiDonHang = "Chờ xử lý" // TRẠNG THÁI GIAO HÀNG (Luôn là Chờ xử lý)
-        };
-
-        // ====================================================================
-        // 3. LOGIC XỬ LÝ TRẠNG THÁI THANH TOÁN (ĐÃ SỬA CHUẨN XÁC)
-        // ====================================================================
-        string paymentMode = Request.Form["PaymentMode"];
-                if (CanLapDat == true && PaymentMode == "30")
-                {
-                    // Có lắp đặt VÀ khách chọn mode cọc 30%
-                    donHang.TrangThaiThanhToan = "Đã cọc";
-                }
-                else
-                {
-                    // Khách trả 100% (Cho dù có lắp đặt hay giao chuẩn)
-                    donHang.TrangThaiThanhToan = "Đã thanh toán";
-                }
-                // 4. Lưu đơn hàng vào Database ĐỂ LẤY ID TỰ TĂNG
-                _context.DonHangs.Add(donHang);
-        await _context.SaveChangesAsync();
-
-        // 5. Nếu có lắp đặt -> Sinh ra Yêu cầu lắp đặt
-        if (CanLapDat == true)
-        {
-            var yeuCauMoi = new YeuCauLapDat
-            {
-                MaDonHang = donHang.MaDonHang,
-                DiaChiLapDat = donHang.DiaChiGiaoHang,
-                NgayLap = DateTime.Now,
-                TrangThaiLapDat = "Chưa lắp đặt", // Đưa vào trạng thái mặc định cho thợ
-                PhiLapDat = null,  
-                GhiChuBaoGia = Note, // Đẩy ghi chú của khách sang cho thợ đọc
-                MaNhanVien = null  
-            };
-            _context.YeuCauLapDats.Add(yeuCauMoi);
-        }
-
-        // 6. Chuyển chi tiết từ Giỏ hàng sang Chi tiết đơn hàng
-        foreach (var item in gioHang.ChiTietGioHangs)
-        {
-            _context.ChiTietDonHangs.Add(new ChiTietDonHang
-            {
-                MaDonHang = donHang.MaDonHang, 
-                MaSanPham = item.MaSanPham,
-                SoLuong = item.SoLuong,
-                Gia = item.Gia
-            });
-        }
-
-        // 7. Dọn dẹp giỏ hàng sau khi đã đặt hàng thành công
-        _context.ChiTietGioHangs.RemoveRange(gioHang.ChiTietGioHangs);
-        gioHang.TongTien = 0;
-        _context.GioHangs.Update(gioHang);
-
-        // 8. Lưu tất cả thay đổi (Yêu cầu lắp đặt, Chi tiết đơn, Dọn giỏ hàng)
-        await _context.SaveChangesAsync();
-
-                // Đánh dấu trình duyệt này đang là của khách hàng có SĐT này
-                HttpContext.Session.SetString("CustomerPhone", Phone);
-
-                // TRẢ VỀ JSON THÀNH CÔNG CHO JAVASCRIPT BẬT QR CODE
-                return Json(new { success = true, orderId = donHang.MaDonHang });
-    }
-    catch (Exception ex)
-    {
-        return Json(new { success = false, message = "Lỗi hệ thống: " + ex.Message });
-    }
-}
-
-        // Tạo class để map với chuỗi JSON từ JS gửi lên
         public class CartUpdateModel
         {
             public int ProductId { get; set; }
             public int Quantity { get; set; }
         }
 
-        // Hàm này giúp kiểm tra xem trình duyệt đã có ID chưa, chưa có thì tạo mới
-        private async Task<int> GetOrSetGuestCustomerId()
-        {
-            // Đọc Session xem đã có ID chưa
-            string guestIdStr = HttpContext.Session.GetString("GuestCustomerId");
-            if (!string.IsNullOrEmpty(guestIdStr))
-            {
-                return int.Parse(guestIdStr);
-            }
-
-            // Nếu chưa có (Khách mới tinh), tạo 1 record "Khách vãng lai" ảo trong DB
-            var newGuest = new KhachHang
-            {
-                TenKhachHang = "Khách vãng lai" // Số điện thoại, địa chỉ... tạm thời để trống
-            };
-
-            _context.KhachHangs.Add(newGuest);
-            await _context.SaveChangesAsync();
-
-            // Lưu ID vừa tạo vào Session để lần sau khách bấm thêm đồ sẽ không bị tạo mới nữa
-            HttpContext.Session.SetString("GuestCustomerId", newGuest.MaKhachHang.ToString());
-
-            return newGuest.MaKhachHang;
-        }
-
         [HttpPost]
         public async Task<IActionResult> UpdateCart([FromBody] CartUpdateModel model)
         {
-            int maKhachHangHienTai = 1; // ID khách hàng (Fix cứng tạm thời)
+            int maKhachHangHienTai = await GetOrSetGuestCustomerId(); // Đã bảo mật
 
-            // Lấy giỏ hàng của khách
             var gioHang = await _context.GioHangs
                 .FirstOrDefaultAsync(g => g.MaKhachHang == maKhachHangHienTai);
 
             if (gioHang == null) return Json(new { success = false, message = "Lỗi giỏ hàng" });
 
-            // Tìm món hàng đó trong giỏ
             var cartItem = await _context.ChiTietGioHangs
                 .FirstOrDefaultAsync(c => c.MaSanPham == model.ProductId && c.MaGioHang == gioHang.MaGioHang);
 
             if (cartItem != null)
             {
-                // Cập nhật số lượng mới và LƯU LẠI
                 cartItem.SoLuong = model.Quantity;
                 await _context.SaveChangesAsync();
-
                 return Json(new { success = true });
             }
 
             return Json(new { success = false, message = "Không tìm thấy sản phẩm" });
         }
 
-        // 1. THÊM THAM SỐ "quantity" VÀO ĐÂY (Mặc định là 1 nếu khách lỡ nhập sai)
+        // =======================================================
+        // MUA NGAY & THANH TOÁN
+        // =======================================================
+        [Route("Customers/BuyNow")]
         public async Task<IActionResult> BuyNow(int id, int quantity = 1)
         {
             int maKhachHangHienTai = await GetOrSetGuestCustomerId();
+
             var sanPham = await _context.SanPhams.FindAsync(id);
-            if (sanPham == null) return NotFound();
+            if (sanPham == null) return NotFound("Sản phẩm không tồn tại.");
 
             var gioHang = await _context.GioHangs
+                .Include(g => g.ChiTietGioHangs)
                 .FirstOrDefaultAsync(g => g.MaKhachHang == maKhachHangHienTai);
 
             if (gioHang == null)
@@ -497,46 +349,216 @@ namespace AISmartHome.Controllers
                 _context.GioHangs.Add(gioHang);
                 await _context.SaveChangesAsync();
             }
-
-            var cartItem = await _context.ChiTietGioHangs
-                .FirstOrDefaultAsync(c => c.MaSanPham == id && c.MaGioHang == gioHang.MaGioHang);
-
-            if (cartItem != null)
-            {
-                // 2. THAY VÌ CỘNG 1, HÃY CỘNG VỚI SỐ LƯỢNG KHÁCH ĐÃ CHỌN
-                cartItem.SoLuong += quantity;
-            }
             else
             {
-                _context.ChiTietGioHangs.Add(new ChiTietGioHang
+                if (gioHang.ChiTietGioHangs != null && gioHang.ChiTietGioHangs.Any())
                 {
-                    MaGioHang = gioHang.MaGioHang,
-                    MaSanPham = id,
-                    SoLuong = quantity, // 3. GÁN ĐÚNG SỐ LƯỢNG KHI MUA MỚI
-                    Gia = sanPham.GiaBan
-                });
+                    _context.ChiTietGioHangs.RemoveRange(gioHang.ChiTietGioHangs);
+                    await _context.SaveChangesAsync();
+                }
             }
 
+            var newItem = new ChiTietGioHang
+            {
+                MaGioHang = gioHang.MaGioHang,
+                MaSanPham = id,
+                SoLuong = quantity,
+                Gia = sanPham.GiaBan
+            };
+
+            _context.ChiTietGioHangs.Add(newItem);
             await _context.SaveChangesAsync();
 
-            // Chuyển thẳng sang trang Thanh toán
-            return RedirectToAction("Checkout");
+            return RedirectToAction("CheckOut");
         }
 
+        [Route("Customers/Checkout")]
+        public async Task<IActionResult> Checkout()
+        {
+            int maKhachHangHienTai = await GetOrSetGuestCustomerId(); // Đã bảo mật
 
+            var gioHang = await _context.GioHangs
+                .Include(g => g.ChiTietGioHangs)
+                    .ThenInclude(c => c.MaSanPhamNavigation)
+                .FirstOrDefaultAsync(g => g.MaKhachHang == maKhachHangHienTai);
 
-        // GET & POST chung 1 đường dẫn: /TraCuuDonHang
+            if (gioHang == null || gioHang.ChiTietGioHangs == null || !gioHang.ChiTietGioHangs.Any())
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View(gioHang);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PlaceOrder(
+            string FullName, string Phone, string Email,
+            string Province, string District, string Address,
+            string Note, string PaymentMethod, string PaymentMode,
+            string VoucherCode, // MỚI THÊM: Nhận mã voucher từ giao diện
+            bool CanLapDat = false)
+        {
+            try
+            {
+                int maKhachHangHienTai = await GetOrSetGuestCustomerId();
+
+                // =======================================================
+                // 1. MỚI THÊM: ĐỒNG BỘ THÔNG TIN KHÁCH HÀNG XUỐNG ADMIN
+                // =======================================================
+                var khachHang = await _context.KhachHangs.FindAsync(maKhachHangHienTai);
+                if (khachHang != null)
+                {
+                    khachHang.TenKhachHang = FullName;
+                    khachHang.SoDienThoai = Phone;
+                    khachHang.Email = Email; // Lưu lại Email khách vừa nhập
+                    khachHang.DiaChi = $"{Address}, {District}, {Province}";
+                    _context.KhachHangs.Update(khachHang);
+                    // Thông tin này sẽ lập tức hiện lên trang Quản lý Khách Hàng của Admin
+                }
+
+                var gioHang = await _context.GioHangs
+                    .Include(g => g.ChiTietGioHangs)
+                    .FirstOrDefaultAsync(g => g.MaKhachHang == maKhachHangHienTai);
+
+                if (gioHang == null || !gioHang.ChiTietGioHangs.Any())
+                {
+                    return Json(new { success = false, message = "Giỏ hàng trống!" });
+                }
+
+                decimal tongTien = gioHang.ChiTietGioHangs.Sum(c => (c.SoLuong ?? 0) * (c.Gia ?? 0));
+
+                // =======================================================
+                // 2. MỚI THÊM: XỬ LÝ VOUCHER (Tính tiền & Khóa mã)
+                // =======================================================
+                VoucherHistory lichSuVoucherDung = null;
+
+                if (!string.IsNullOrEmpty(VoucherCode) && !string.IsNullOrEmpty(Email))
+                {
+                    var voucher = await _context.Vouchers.FirstOrDefaultAsync(v => v.Code == VoucherCode && v.TrangThai == true);
+                    if (voucher != null)
+                    {
+                        // Kiểm tra chéo: Email này có thực sự sở hữu mã này không? Mã đã bị dùng chưa?
+                        lichSuVoucherDung = await _context.VoucherHistories.FirstOrDefaultAsync(vh => vh.Email == Email && vh.MaVoucher == voucher.MaVoucher && vh.MaDonHang == null);
+
+                        if (lichSuVoucherDung != null)
+                        {
+                            // Tính toán số tiền được giảm
+                            decimal soTienGiam = 0;
+                            if (voucher.LoaiGiamGia == "PhanTram")
+                            {
+                                soTienGiam = tongTien * ((decimal)voucher.GiaTriGiam / 100m);
+                                if (voucher.GiamToiDa > 0 && soTienGiam > voucher.GiamToiDa)
+                                {
+                                    soTienGiam = (decimal)voucher.GiamToiDa;
+                                }
+                            }
+                            else
+                            {
+                                soTienGiam = (decimal)voucher.GiaTriGiam;
+                            }
+
+                            // Không cho giảm âm tiền
+                            if (soTienGiam > tongTien) soTienGiam = tongTien;
+
+                            // Trừ tiền vào tổng hóa đơn
+                            tongTien -= soTienGiam;
+
+                            // Tăng số lượt đã dùng của Voucher lên 1
+                            voucher.SoLuongDaDung += 1;
+                            _context.Vouchers.Update(voucher);
+                        }
+                    }
+                }
+
+                // =======================================================
+                // 3. TẠO ĐƠN HÀNG (Giữ nguyên logic của bạn)
+                // =======================================================
+                var donHang = new DonHang
+                {
+                    MaKhachHang = maKhachHangHienTai,
+                    NgayDatHang = DateTime.Now,
+                    TongTien = tongTien, // Lúc này tongTien đã được trừ Voucher (nếu có)
+                    TenKhachHang = FullName,
+                    SoDienThoai = Phone,
+                    DiaChiGiaoHang = $"{Address}, {District}, {Province}",
+                    PhuongThucThanhToan = PaymentMethod ?? "Chuyển khoản",
+                    TrangThaiDonHang = "Chờ xử lý"
+                };
+
+                if (CanLapDat == true && PaymentMode == "30")
+                {
+                    donHang.TrangThaiThanhToan = "Đã cọc";
+                }
+                else
+                {
+                    donHang.TrangThaiThanhToan = "Đã thanh toán";
+                }
+
+                _context.DonHangs.Add(donHang);
+                await _context.SaveChangesAsync(); // Cần Save để sinh ra MaDonHang
+
+                // =======================================================
+                // 4. MỚI THÊM: GẮN MÃ ĐƠN HÀNG VÀO LỊCH SỬ VOUCHER
+                // =======================================================
+                if (lichSuVoucherDung != null)
+                {
+                    lichSuVoucherDung.MaDonHang = donHang.MaDonHang; // Đánh dấu mã đã dùng cho đơn này
+                    lichSuVoucherDung.NgaySuDung = DateTime.Now;
+                    _context.VoucherHistories.Update(lichSuVoucherDung);
+                    await _context.SaveChangesAsync();
+                }
+
+                // --- XỬ LÝ YÊU CẦU LẮP ĐẶT VÀ CHI TIẾT ĐƠN HÀNG (Giữ nguyên) ---
+                if (CanLapDat == true)
+                {
+                    var yeuCauMoi = new YeuCauLapDat
+                    {
+                        MaDonHang = donHang.MaDonHang,
+                        DiaChiLapDat = donHang.DiaChiGiaoHang,
+                        NgayLap = DateTime.Now,
+                        TrangThaiLapDat = "Chưa lắp đặt",
+                        PhiLapDat = null,
+                        GhiChuBaoGia = Note,
+                        MaNhanVien = null
+                    };
+                    _context.YeuCauLapDats.Add(yeuCauMoi);
+                }
+
+                foreach (var item in gioHang.ChiTietGioHangs)
+                {
+                    _context.ChiTietDonHangs.Add(new ChiTietDonHang
+                    {
+                        MaDonHang = donHang.MaDonHang,
+                        MaSanPham = item.MaSanPham,
+                        SoLuong = item.SoLuong,
+                        Gia = item.Gia
+                    });
+                }
+
+                _context.ChiTietGioHangs.RemoveRange(gioHang.ChiTietGioHangs);
+                gioHang.TongTien = 0;
+                _context.GioHangs.Update(gioHang);
+
+                await _context.SaveChangesAsync();
+
+                HttpContext.Session.SetString("CustomerPhone", Phone);
+
+                return Json(new { success = true, orderId = donHang.MaDonHang });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Lỗi hệ thống: " + ex.Message });
+            }
+        }
+
+        // =======================================================
+        // TRA CỨU & HỦY ĐƠN HÀNG
+        // =======================================================
         [Route("Customers/OrderHistory")]
         public async Task<IActionResult> OrderHistory(string phone)
         {
-            // 1. Nếu khách mới bấm vào link (chưa nhập SĐT) -> Trả về giao diện Form trống
-            if (string.IsNullOrEmpty(phone))
-            {
-                return View(null);
-            }
+            if (string.IsNullOrEmpty(phone)) return View(null);
 
-            // 2. Nếu khách đã nhập SĐT -> Tiến hành quét trong DB
-            // Tìm đơn hàng khớp số điện thoại trên Đơn Hàng HOẶC số điện thoại của Khách Hàng
             var orders = await _context.DonHangs
                 .Include(d => d.ChiTietDonHangs)
                     .ThenInclude(c => c.MaSanPhamNavigation)
@@ -545,41 +567,34 @@ namespace AISmartHome.Controllers
                 .OrderByDescending(d => d.NgayDatHang)
                 .ToListAsync();
 
-            // 3. Xử lý kết quả
             if (!orders.Any())
             {
                 ViewBag.Error = $"Không tìm thấy đơn hàng nào với số điện thoại {phone}";
-                return View(null); // Trả lại form trống kèm báo lỗi
+                return View(null);
             }
-            // Lưu số điện thoại vào Session để chuông thông báo bắt đầu hoạt động
-            ViewBag.Phone = phone; // Lưu lại SĐT để hiển thị ra View
 
+            ViewBag.Phone = phone;
             HttpContext.Session.SetString("CustomerPhone", phone);
 
-            return View(orders); // Trả về danh sách đơn hàng
+            return View(orders);
         }
-
 
         [Route("Customers/HuyDonHangXacNhan")]
         public async Task<IActionResult> HuyDonHangXacNhan(int maDonHang, string phone)
         {
-            // 1. Tìm đơn hàng
             var order = await _context.DonHangs
                 .Include(d => d.YeuCauLapDats)
-                .FirstOrDefaultAsync(d => d.MaDonHang == maDonHang && (d.SoDienThoai == phone || d.MaKhachHangNavigation.SoDienThoai == phone));
+                .FirstOrDefaultAsync(d => d.MaDonHang == maDonHang && (d.SoDienThoai == phone || d.MaKhachHangNavigation!.SoDienThoai == phone));
 
             if (order == null) return NotFound();
 
-            // 2. Kiểm tra lại điều kiện (bảo mật kép phòng hờ khách dùng tool hack)
             bool choPhepHuy = order.TrangThaiDonHang == "Chờ xử lý"
                            && (order.YeuCauLapDats == null || !order.YeuCauLapDats.Any() || order.YeuCauLapDats.First().TrangThaiLapDat == "Chưa lắp đặt");
 
             if (choPhepHuy)
             {
-                // 3. Cập nhật trạng thái
                 order.TrangThaiDonHang = "Đã hủy";
 
-                // Hủy luôn yêu cầu lắp đặt (nếu có)
                 if (order.YeuCauLapDats != null && order.YeuCauLapDats.Any())
                 {
                     var lapDat = order.YeuCauLapDats.First();
@@ -591,31 +606,181 @@ namespace AISmartHome.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            // 4. Quay lại trang tra cứu của chính số điện thoại đó
             return RedirectToAction("OrderHistory", new { phone = phone });
         }
 
-        // GET: /SanPhams/Search?keyword=xyz
-        public async Task<IActionResult> Search(string keyword)
+        [HttpPost]
+        public async Task<IActionResult> CheckVoucher(string code, decimal totalAmount)
         {
-            // Nếu khách cố tình gõ khoảng trắng hoặc không gõ gì thì đẩy về trang chủ/trang sản phẩm
-            if (string.IsNullOrWhiteSpace(keyword))
+            var voucher = await _context.Vouchers.FirstOrDefaultAsync(v => v.Code == code && v.TrangThai == true);
+
+            if (voucher == null || DateTime.Now > voucher.NgayHetHan || voucher.SoLuongDaDung >= voucher.SoLuongToiDa)
             {
-                return RedirectToAction("Index");
+                return Json(new { success = false, message = "Mã giảm giá không tồn tại hoặc đã hết hạn." });
             }
 
-            // Lưu lại từ khóa để in ra giao diện "Kết quả tìm kiếm cho: xyz"
-            ViewBag.Keyword = keyword;
+            if (totalAmount < voucher.GiaTriDonToiThieu)
+            {
+                return Json(new { success = false, message = $"Mã này chỉ áp dụng cho đơn hàng từ {voucher.GiaTriDonToiThieu:N0}đ" });
+            }
 
-            // Tìm kiếm tương đối (Contains) trong Tên sản phẩm hoặc Mô tả
-            var searchResults = await _context.SanPhams
-                .Where(s => s.TenSanPham.Contains(keyword) || s.MoTa.Contains(keyword))
-                .OrderByDescending(s => s.MaSanPham) // Có thể đổi thành xếp theo Giá, Số lượng...
+            decimal discountAmount = 0;
+            if (voucher.LoaiGiamGia == "PhanTram")
+            {
+                discountAmount = totalAmount * (voucher.GiaTriGiam / 100);
+                if (discountAmount > voucher.GiamToiDa) discountAmount = voucher.GiamToiDa;
+            }
+            else
+            {
+                discountAmount = voucher.GiaTriGiam;
+            }
+
+            return Json(new { success = true, discount = discountAmount, newTotal = totalAmount - discountAmount });
+        }
+
+        [HttpPost("Cart/ApplyVoucher")]
+        public async Task<IActionResult> ApplyVoucher(string code, decimal totalAmount, string email)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(email))
+                    return Json(new { success = false, message = "Vui lòng nhập Email giao hàng trước khi áp mã!" });
+
+                var voucher = await _context.Vouchers.FirstOrDefaultAsync(v => v.Code == code);
+                if (voucher == null)
+                    return Json(new { success = false, message = "Mã giảm giá không tồn tại!" });
+
+                var lichSu = await _context.VoucherHistories
+                    .FirstOrDefaultAsync(vh => vh.Email == email && vh.MaVoucher == voucher.MaVoucher);
+
+                if (lichSu == null)
+                    return Json(new { success = false, message = "Email này không sở hữu mã giảm giá này!" });
+
+                if (lichSu.MaDonHang != null)
+                    return Json(new { success = false, message = "Bạn đã sử dụng mã này cho một đơn hàng khác rồi!" });
+
+                // LOGIC MỚI: TỰ ĐỘNG HỦY MÃ NẾU HẾT HẠN
+                if (DateTime.Now > voucher.NgayHetHan || voucher.TrangThai == false)
+                {
+                    // Nếu phát hiện quá hạn mà trạng thái vẫn là true, thì tắt nó đi
+                    if (voucher.TrangThai == true)
+                    {
+                        voucher.TrangThai = false;
+                        await _context.SaveChangesAsync();
+                    }
+                    return Json(new { success = false, message = "Rất tiếc, mã giảm giá này đã hết hạn sử dụng và đã bị hệ thống hủy bỏ!" });
+                }
+
+                // Tính toán tiền giảm
+                decimal discountAmount = 0;
+                if (voucher.LoaiGiamGia == "PhanTram")
+                {
+                    discountAmount = totalAmount * (voucher.GiaTriGiam / 100);
+                    if (voucher.GiamToiDa > 0 && discountAmount > voucher.GiamToiDa) discountAmount = voucher.GiamToiDa;
+                }
+                else if (voucher.LoaiGiamGia == "SoTien")
+                {
+                    discountAmount = voucher.GiaTriGiam;
+                }
+
+                if (discountAmount > totalAmount) discountAmount = totalAmount;
+
+                return Json(new { success = true, message = "Áp dụng mã thành công!", discountAmount = discountAmount, newTotal = totalAmount - discountAmount });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Lỗi hệ thống: " + ex.Message });
+            }
+        }
+
+        [HttpGet("Cart/GetMyVouchers")]
+        public async Task<IActionResult> GetMyVouchers(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return Json(new { success = false, message = "Vui lòng nhập email." });
+
+            // Tìm tất cả mã của email này mà CHƯA DÙNG (MaDonHang == null)
+            var myVouchers = await _context.VoucherHistories
+                .Include(vh => vh.VoucherNavigation)
+                .Where(vh => vh.Email == email && vh.MaDonHang == null)
+                .Select(vh => new
+                {
+                    code = vh.VoucherNavigation.Code,
+                    moTa = vh.VoucherNavigation.MoTa,
+                    ngayHetHan = vh.VoucherNavigation.NgayHetHan,
+                    // Kiểm tra xem đã quá hạn chưa
+                    isExpired = DateTime.Now > vh.VoucherNavigation.NgayHetHan || vh.VoucherNavigation.TrangThai == false
+                })
                 .ToListAsync();
 
-            return View(searchResults);
+            // Chỉ lấy những mã còn "Sống"
+            var validVouchers = myVouchers.Where(v => !v.isExpired).ToList();
+
+            if (!validVouchers.Any())
+                return Json(new { success = false, message = "Không tìm thấy ưu đãi nào khả dụng cho email này. Hoặc mã của bạn đã hết hạn!" });
+
+            return Json(new { success = true, data = validVouchers });
         }
 
 
+        // =======================================================
+        // TIN TỨC
+        // =======================================================
+        // GET: /Customers/TinTuc
+        public async Task<IActionResult> News(int? danhMucId)
+        {
+            // 1. Lấy danh sách danh mục để làm Menu lọc
+            ViewBag.Categories = await _context.DanhMucBaiViets.ToListAsync();
+            ViewBag.CurrentCategory = danhMucId;
+
+            // 2. Lấy các bài viết ĐÃ ĐƯỢC DUYỆT
+            var query = _context.BaiViets
+                .Include(b => b.MaDanhMucBaiVietNavigation)
+                .Where(b => b.IsApproved == true);
+
+            // 3. Lọc theo danh mục nếu người dùng có bấm chọn
+            if (danhMucId.HasValue)
+            {
+                query = query.Where(b => b.MaDanhMucBaiViet == danhMucId.Value);
+            }
+
+            var danhSachBaiViet = await query.OrderByDescending(b => b.NgayDang).ToListAsync();
+            return View(danhSachBaiViet);
+        }
+
+        // GET: /Customers/TinTucDetails/5
+        public async Task<IActionResult> NewDetail(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var baiViet = await _context.BaiViets
+                .Include(b => b.MaDanhMucBaiVietNavigation)
+                .Include(b => b.MaTaiKhoanNavigation) // Để hiện tác giả nếu cần
+                .FirstOrDefaultAsync(m => m.MaBaiViet == id && m.IsApproved == true);
+
+            if (baiViet == null) return NotFound();
+
+            // Lấy thêm tin liên quan (cùng danh mục, trừ bài hiện tại)
+            ViewBag.RelatedPosts = await _context.BaiViets
+                .Where(b => b.MaDanhMucBaiViet == baiViet.MaDanhMucBaiViet && b.MaBaiViet != id && b.IsApproved == true)
+                .Take(3)
+                .ToListAsync();
+
+            return View(baiViet);
+        }
+
+        public IActionResult Guide()
+        {
+            ViewData["Title"] = "Trung tâm hỗ trợ & Hướng dẫn sử dụng";
+            return View();
+        }
+
+        // Nếu bạn muốn làm trang hướng dẫn chi tiết theo ID thiết bị
+        // GET: Customers/GuideDetail/5
+        public IActionResult GuideDetail(int id)
+        {
+            // Logic lấy dữ liệu hướng dẫn từ DB dựa trên id
+            return View();
+        }
     }
 }

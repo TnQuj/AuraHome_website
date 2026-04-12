@@ -15,11 +15,13 @@ namespace AISmartHome.Controllers
     {
         private readonly AISmartHomeDbContext _context;
         private readonly TaoTinTuDong _taoTinService;
-
-        public BaiVietsController(AISmartHomeDbContext context, TaoTinTuDong taoTinService)
+        private readonly IWebHostEnvironment _hostEnvironment;
+        
+        public BaiVietsController(AISmartHomeDbContext context, TaoTinTuDong taoTinService, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
             _taoTinService = taoTinService;
+            _hostEnvironment = hostEnvironment;
         }
 
         // GET: BaiViets
@@ -75,7 +77,9 @@ namespace AISmartHome.Controllers
             return View(baiViet);
         }
 
+        // 1. HÀM GET: Hiển thị giao diện chỉnh sửa
         // GET: BaiViets/Edit/5
+        [HttpGet] // Thêm rõ ràng để tránh nhầm lẫn
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -88,49 +92,94 @@ namespace AISmartHome.Controllers
             {
                 return NotFound();
             }
-            ViewData["MaDanhMucBaiViet"] = new SelectList(_context.DanhMucBaiViets, "MaDanhMucBaiViet", "MaDanhMucBaiViet", baiViet.MaDanhMucBaiViet);
-            ViewData["MaTaiKhoan"] = new SelectList(_context.TaiKhoans, "MaTaiKhoan", "MaTaiKhoan", baiViet.MaTaiKhoan);
+            // Chỉnh sửa Text hiển thị trong SelectList để dễ nhìn hơn (tên danh mục thay vì ID)
+            ViewData["MaDanhMucBaiViet"] = new SelectList(_context.DanhMucBaiViets, "MaDanhMucBaiViet", "TenDanhMuc", baiViet.MaDanhMucBaiViet);
+            ViewData["MaTaiKhoan"] = new SelectList(_context.TaiKhoans, "MaTaiKhoan", "HoTen", baiViet.MaTaiKhoan);
             return View(baiViet);
         }
 
+        // 2. HÀM POST: Xử lý lưu dữ liệu và Upload ảnh
         // POST: BaiViets/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: BaiViets/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("MaBaiViet,TieuDe,NoiDung,HinhAnh,NgayDang,MaDanhMucBaiViet,MaTaiKhoan")] BaiViet baiViet)
+        public async Task<IActionResult> Edit(int id, BaiViet baiViet, IFormFile HinhAnhUpload)
         {
-            if (id != baiViet.MaBaiViet)
+            if (id != baiViet.MaBaiViet) return NotFound();
+
+            // 1. Lấy bài viết cũ từ Database lên
+            var baiVietDb = await _context.BaiViets.FindAsync(id);
+            if (baiVietDb == null) return NotFound();
+
+            // 2. QUAN TRỌNG: Xóa các lỗi Validation không cần thiết để tránh bị load lại trang
+            ModelState.Remove("MaTaiKhoan"); // Form không gửi lên
+            ModelState.Remove("MaTaiKhoanNavigation"); // Thuộc tính liên kết (nếu có)
+            ModelState.Remove("MaDanhMucBaiVietNavigation"); // Thuộc tính liên kết (nếu có)
+
+            // Nếu ô Ngày đăng trên Form bị bỏ trống, ta xóa lỗi và sẽ dùng lại ngày cũ
+            if (baiViet.NgayDang == default(DateTime) || baiViet.NgayDang == null)
             {
-                return NotFound();
+                ModelState.Remove("NgayDang");
             }
 
+            // 3. Kiểm tra xem dữ liệu còn lại (Tiêu đề, Nội dung) đã hợp lệ chưa
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(baiViet);
+                    // Cập nhật nội dung Text
+                    baiVietDb.TieuDe = baiViet.TieuDe;
+                    baiVietDb.NoiDung = baiViet.NoiDung;
+                    baiVietDb.MaDanhMucBaiViet = baiViet.MaDanhMucBaiViet;
+
+                    // Chỉ cập nhật ngày đăng nếu người dùng có chọn ngày mới trên form
+                    if (baiViet.NgayDang != default(DateTime))
+                    {
+                        baiVietDb.NgayDang = baiViet.NgayDang;
+                    }
+
+                    // Xử lý Upload Ảnh mới (nếu người dùng có chọn)
+                    if (HinhAnhUpload != null && HinhAnhUpload.Length > 0)
+                    {
+                        string wwwRootPath = _hostEnvironment.WebRootPath;
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(HinhAnhUpload.FileName);
+                        string path = Path.Combine(wwwRootPath, "img", fileName);
+
+                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        {
+                            await HinhAnhUpload.CopyToAsync(fileStream);
+                        }
+                        baiVietDb.HinhAnh = fileName; // Gán ảnh mới
+                    }
+                    // Nếu không chọn ảnh mới, baiVietDb.HinhAnh vẫn giữ nguyên giá trị cũ tự động
+
+                    // Lưu vào Database
+                    _context.Update(baiVietDb);
                     await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BaiVietExists(baiViet.MaBaiViet))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!BaiVietExists(baiVietDb.MaBaiViet)) return NotFound();
+                    else throw;
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["MaDanhMucBaiViet"] = new SelectList(_context.DanhMucBaiViets, "MaDanhMucBaiViet", "MaDanhMucBaiViet", baiViet.MaDanhMucBaiViet);
-            ViewData["MaTaiKhoan"] = new SelectList(_context.TaiKhoans, "MaTaiKhoan", "MaTaiKhoan", baiViet.MaTaiKhoan);
-            return View(baiViet);
-        }
 
-        // GET: BaiViets/Delete/5
+            // 4. Nếu vẫn bị load lại trang, đoạn code này sẽ giúp in ra lỗi thực sự trong cửa sổ Output (Debug) của Visual Studio
+            foreach (var modelStateKey in ModelState.Keys)
+            {
+                var modelStateVal = ModelState[modelStateKey];
+                foreach (var error in modelStateVal.Errors)
+                {
+                    System.Diagnostics.Debug.WriteLine($"LỖI VALIDATION - Thuộc tính: {modelStateKey}, Lỗi: {error.ErrorMessage}");
+                }
+            }
+
+            // Load lại danh mục nếu lưu thất bại
+            ViewData["MaDanhMucBaiViet"] = new SelectList(_context.DanhMucBaiViets, "MaDanhMucBaiViet", "TenDanhMuc", baiVietDb.MaDanhMucBaiViet);
+            return View(baiVietDb);
+        }
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -233,6 +282,33 @@ namespace AISmartHome.Controllers
                 var errorDetail = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                 return Json(new { success = false, message = "Lỗi SQL: " + errorDetail });
             }
+        }
+
+        // POST: BaiViets/Hide/5 (Nút Hạ Bài)
+        [HttpPost]
+        public async Task<IActionResult> Hide(int id)
+        {
+            var baiViet = await _context.BaiViets.FindAsync(id);
+            if (baiViet != null)
+            {
+                baiViet.IsApproved = false; // Đổi trạng thái thành chưa duyệt (bị ẩn khỏi web)
+                _context.Update(baiViet);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: BaiViets/DeleteConfirmed/5 (Nút Xóa nhanh)
+        [HttpPost, ActionName("DeleteConfirmed")]
+        public async Task<IActionResult> DeleteConfirmedPost(int id)
+        {
+            var baiViet = await _context.BaiViets.FindAsync(id);
+            if (baiViet != null)
+            {
+                _context.BaiViets.Remove(baiViet);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
         }
 
     }

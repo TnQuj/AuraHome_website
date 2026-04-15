@@ -23,7 +23,7 @@ namespace AISmartHome.Models
         [ForeignKey("MaKhachHang")]
         public virtual KhachHang KhachHangNavigation { get; set; }
 
-        public DateTime NgaySuDung { get; set; } = DateTime.Now;
+        public DateTime? NgaySuDung { get; set; } = DateTime.Now;
 
         // Lưu lại mã đơn hàng để biết khách dùng voucher này cho đơn nào
         public int? MaDonHang { get; set; }

@@ -1,233 +1,267 @@
 ﻿@model IEnumerable<AISmartHome.Models.YeuCauLapDat>
 
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["Title"] = "Không gian làm việc - Nhân viên";
+    Layout = null; // TẮT LAYOUT CỦA KHÁCH HÀNG Ở ĐÂY
 }
 
-<main class="w-full min-h-[70vh] py-12 bg-slate-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Không gian làm việc - Nhân viên | AuraHome</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* Tùy chỉnh thanh cuộn cho bảng chi tiết */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
 
-        <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <div class="flex items-center gap-4">
-                <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center">
-                    <i class="fa-solid fa-user-gear text-2xl"></i>
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .swal-glass-backdrop {
+            backdrop-filter: blur(4px);
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        .ambient-blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.6;
+            animation: float 10s infinite alternate ease-in-out;
+        }
+
+        @@keyframes float {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+        }
+    </style>
+</head>
+    
+
+<body class="bg-[#FAFCFF] font-body text-slate-800 relative overflow-x-hidden">
+    <div class="ambient-blob bg-cyan-300/40 w-[30rem] h-[30rem] rounded-full top-[-5%] left-[-10%] pointer-events-none dark:opacity-10"></div>
+    <div class="ambient-blob bg-indigo-300/30 w-[40rem] h-[40rem] rounded-full top-[20%] right-[-15%] pointer-events-none dark:opacity-10" style="animation-delay: -5s;"></div>
+
+    <main class="w-full min-h-screen py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center">
+                        <i class="fa-solid fa-user-gear text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black text-brand-navy uppercase tracking-wide">Cổng Nhân Viên</h1>
+                        <p class="text-slate-500 text-sm">Xin chào, <strong class="text-cyan-600">@ViewBag.TenNhanVien</strong>! Dưới đây là công việc của bạn.</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="text-2xl font-black text-brand-navy uppercase tracking-wide">Cổng Nhân Viên</h1>
-                    <p class="text-slate-500 text-sm">Xin chào, <strong class="text-brand-cyan">@ViewBag.TenNhanVien</strong>! Dưới đây là công việc của bạn.</p>
+
+                <div class="flex items-center gap-3">
+                    <a asp-action="History" class="flex items-center gap-2 px-5 py-3 bg-slate-100 text-slate-700 hover:bg-slate-800 hover:text-white rounded-xl font-bold transition-colors shadow-sm">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Lịch sử công việc
+                    </a>
+
+                    <a asp-controller="Admin" asp-action="Logout" class="flex items-center gap-2 px-5 py-3 bg-rose-50 text-rose-600 hover:bg-rose-500 hover:text-white rounded-xl font-bold transition-colors">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất
+                    </a>
                 </div>
             </div>
 
-            <div class="flex items-center gap-3">
-                <a asp-action="History" class="flex items-center gap-2 px-5 py-3 bg-slate-100 text-slate-700 hover:bg-brand-navy hover:text-white rounded-xl font-bold transition-colors shadow-sm">
-                    <i class="fa-solid fa-clock-rotate-left"></i> Lịch sử công việc
-                </a>
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="p-6 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                    <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-clipboard-list text-cyan-600"></i>
+                        Yêu cầu thi công & Thu tiền
+                    </h2>
+                    <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold">
+                        @Model?.Count() đơn đang chờ
+                    </span>
+                </div>
 
-                <a asp-controller="Employee" asp-action="Logout" class="flex items-center gap-2 px-5 py-3 bg-rose-50 text-rose-600 hover:bg-rose-500 hover:text-white rounded-xl font-bold transition-colors">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất
-                </a>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-            <div class="p-6 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
-                <h2 class="text-lg font-bold text-brand-navy flex items-center gap-2">
-                    <i class="fa-solid fa-clipboard-list text-brand-cyan"></i>
-                    Yêu cầu thi công & Thu tiền
-                </h2>
-                <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold">
-                    @Model?.Count() đơn đang chờ
-                </span>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left">
-                    <thead class="bg-slate-50 text-slate-500 font-bold uppercase text-[11px] tracking-wider">
-                        <tr>
-                            <th class="px-6 py-4">Khách hàng & Địa chỉ</th>
-                            <th class="px-6 py-4">Lịch thi công</th>
-                            <th class="px-6 py-4 bg-cyan-50/50">Tài chính (Cần thu)</th>
-                            <th class="px-6 py-4 text-center">Tiến độ</th>
-                            <th class="px-6 py-4 text-center">Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        @if (Model != null && Model.Any())
-                        {
-                            @foreach (var item in Model)
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-slate-50 text-slate-500 font-bold uppercase text-[11px] tracking-wider">
+                            <tr>
+                                <th class="px-6 py-4">Khách hàng & Địa chỉ</th>
+                                <th class="px-6 py-4">Lịch thi công</th>
+                                <th class="px-6 py-4 bg-cyan-50/50">Tài chính (Cần thu)</th>
+                                <th class="px-6 py-4 text-center">Tiến độ</th>
+                                <th class="px-6 py-4 text-center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @if (Model != null && Model.Any())
                             {
-                                // ========================================================
-                                // 1. LOGIC TÍNH TIỀN (SỬ DỤNG ĐÚNG CỘT TrangThaiThanhToan)
-                                // ========================================================
-                                decimal tongTienHang = item.MaDonHangNavigation?.TongTien ?? 0;
-                                string trangThaiTT = item.MaDonHangNavigation?.TrangThaiThanhToan ?? "";
-                                decimal phiLapDat = item.PhiLapDat ?? 0;
-                                bool isCancelled = item.TrangThaiLapDat == "Bị hủy" || item.MaDonHangNavigation?.TrangThaiDonHang == "Đã hủy";
-
-                                decimal tienDaThu = 0;
-                                string textDaThu = "Chưa thanh toán";
-                                if (trangThaiTT == "Đã thanh toán")
+                                @foreach (var item in Model)
                                 {
-                                    tienDaThu = tongTienHang;
-                                    textDaThu = "Đã trả 100%";
-                                }
-                                else if (trangThaiTT == "Đã cọc")
-                                {
-                                    tienDaThu = tongTienHang * 0.3m;
-                                    textDaThu = "Đã cọc 30%";
-                                }
+                                    // LOGIC TÍNH TIỀN
+                                    decimal tongTienHang = item.MaDonHangNavigation?.TongTien ?? 0;
+                                    string trangThaiTT = item.MaDonHangNavigation?.TrangThaiThanhToan ?? "";
+                                    decimal phiLapDat = item.PhiLapDat ?? 0;
+                                    bool isCancelled = item.TrangThaiLapDat == "Bị hủy" || item.MaDonHangNavigation?.TrangThaiDonHang == "Đã hủy";
 
-                                decimal conLaiPhaiThu = (tongTienHang - tienDaThu) + phiLapDat;
-                                if (isCancelled) conLaiPhaiThu = 0;
-                                // ========================================================
+                                    decimal tienDaThu = 0;
+                                    string textDaThu = "Chưa thanh toán";
+                                    if (trangThaiTT == "Đã thanh toán") { tienDaThu = tongTienHang; textDaThu = "Đã trả 100%"; }
+                                    else if (trangThaiTT == "Đã cọc") { tienDaThu = tongTienHang * 0.3m; textDaThu = "Đã cọc 30%"; }
 
-                                <tr class="hover:bg-slate-50 transition-colors @(isCancelled ? "bg-rose-50/30" : "")">
+                                    decimal conLaiPhaiThu = (tongTienHang - tienDaThu) + phiLapDat;
+                                    if (isCancelled) conLaiPhaiThu = 0;
 
-                                    <td class="px-6 py-4">
-                                        <div class="font-bold text-slate-800 text-[15px] mb-1">
-                                            @(item.MaDonHangNavigation?.TenKhachHang ?? item.MaDonHangNavigation?.MaKhachHangNavigation?.TenKhachHang ?? "Khách hàng ẩn danh")
-                                        </div>
-                                        <div class="text-brand-cyan font-bold flex items-center gap-2 mb-2">
-                                            <i class="fa-solid fa-phone-volume"></i> @(item.MaDonHangNavigation?.SoDienThoai ?? "Chưa có SĐT")
-                                        </div>
-                                        <div class="text-slate-600 font-medium max-w-[250px] text-xs leading-relaxed">
-                                            <i class="fa-solid fa-location-dot text-rose-500 mr-1"></i> @item.DiaChiLapDat
-                                        </div>
-                                    </td>
-
-                                    <td class="px-6 py-4">
-                                        <div class="font-bold text-slate-800">
-                                            @(item.NgayLap?.ToString("HH:mm") ?? "--:--")
-                                        </div>
-                                        <div class="text-xs text-slate-500 mt-1">
-                                            Ngày: @(item.NgayLap?.ToString("dd/MM/yyyy") ?? "Chưa chốt")
-                                        </div>
-                                        @if (!string.IsNullOrEmpty(item.GhiChuBaoGia))
-                                        {
-                                            <div class="mt-2 text-[10px] bg-amber-50 text-amber-700 px-2 py-1 rounded border border-amber-100 w-max max-w-[200px] truncate" title="@item.GhiChuBaoGia">
-                                                <i class="fa-solid fa-triangle-exclamation mr-1"></i> @item.GhiChuBaoGia
+                                    <tr class="hover:bg-slate-50 transition-colors @(isCancelled ? "bg-rose-50/30" : "")">
+                                        <td class="px-6 py-4">
+                                            <div class="font-bold text-slate-800 text-[15px] mb-1">
+                                                @(item.MaDonHangNavigation?.TenKhachHang ?? item.MaDonHangNavigation?.MaKhachHangNavigation?.TenKhachHang ?? "Khách hàng ẩn danh")
                                             </div>
-                                        }
-                                    </td>
+                                            <div class="text-cyan-600 font-bold flex items-center gap-2 mb-2">
+                                                <i class="fa-solid fa-phone-volume"></i> @(item.MaDonHangNavigation?.SoDienThoai ?? "Chưa có SĐT")
+                                            </div>
+                                            <div class="text-slate-600 font-medium max-w-[250px] text-xs leading-relaxed">
+                                                <i class="fa-solid fa-location-dot text-rose-500 mr-1"></i> @item.DiaChiLapDat
+                                            </div>
+                                        </td>
 
-                                    <td class="px-6 py-4 bg-cyan-50/30">
-                                        @if (isCancelled)
-                                        {
-                                            <div class="text-center font-bold text-rose-500 uppercase tracking-widest text-xs">
-                                                Không thu tiền
+                                        <td class="px-6 py-4">
+                                            <div class="font-bold text-slate-800">
+                                                @(item.NgayLap?.ToString("HH:mm") ?? "--:--")
                                             </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="text-xs text-slate-500 mb-1 flex justify-between">
-                                                <span>@textDaThu:</span>
-                                                <span class="font-bold text-emerald-600">@tienDaThu.ToString("N0") đ</span>
+                                            <div class="text-xs text-slate-500 mt-1">
+                                                Ngày: @(item.NgayLap?.ToString("dd/MM/yyyy") ?? "Chưa chốt")
                                             </div>
-                                            <div class="text-xs text-slate-500 mb-2 flex justify-between border-b border-slate-200 pb-1">
-                                                <span>Phí lắp đặt:</span>
-                                                <span class="font-bold text-slate-700">@phiLapDat.ToString("N0") đ</span>
-                                            </div>
-                                            <div class="flex justify-between items-center">
-                                                <span class="text-xs font-bold uppercase text-brand-navy">Cần thu:</span>
-                                                <span class="text-lg font-black text-rose-600">@conLaiPhaiThu.ToString("N0") đ</span>
-                                            </div>
-                                        }
-                                    </td>
-
-                                    <td class="px-6 py-4 text-center">
-                                        @{
-                                            var statusClass = isCancelled ? "bg-rose-100 text-rose-700" :
-                                            item.TrangThaiLapDat switch
+                                            @if (!string.IsNullOrEmpty(item.GhiChuBaoGia))
                                             {
-                                                "Chưa lắp đặt" => "bg-amber-100 text-amber-700",
-                                                "Đang xử lý" => "bg-blue-100 text-blue-700",
-                                                "Đã hoàn thành" => "bg-emerald-100 text-emerald-700",
-                                                _ => "bg-slate-100 text-slate-700"
-                                            };
+                                                <div class="mt-2 text-[10px] bg-amber-50 text-amber-700 px-2 py-1 rounded border border-amber-100 w-max max-w-[200px] truncate" title="@item.GhiChuBaoGia">
+                                                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> @item.GhiChuBaoGia
+                                                </div>
+                                            }
+                                        </td>
 
-                                            var statusText = isCancelled ? "Đã Hủy" : item.TrangThaiLapDat;
-                                        }
-                                        <span class="px-3 py-1 @statusClass text-xs font-bold rounded-full whitespace-nowrap">
-                                            @statusText
-                                        </span>
-                                    </td>
+                                        <td class="px-6 py-4 bg-cyan-50/30">
+                                            @if (isCancelled)
+                                            {
+                                                <div class="text-center font-bold text-rose-500 uppercase tracking-widest text-xs">
+                                                    Không thu tiền
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="text-xs text-slate-500 mb-1 flex justify-between">
+                                                    <span>@textDaThu:</span>
+                                                    <span class="font-bold text-emerald-600">@tienDaThu.ToString("N0") đ</span>
+                                                </div>
+                                                <div class="text-xs text-slate-500 mb-2 flex justify-between border-b border-slate-200 pb-1">
+                                                    <span>Phí lắp đặt:</span>
+                                                    <span class="font-bold text-slate-700">@phiLapDat.ToString("N0") đ</span>
+                                                </div>
+                                                <div class="flex justify-between items-center">
+                                                    <span class="text-xs font-bold uppercase text-slate-800">Cần thu:</span>
+                                                    <span class="text-lg font-black text-rose-600">@conLaiPhaiThu.ToString("N0") đ</span>
+                                                </div>
+                                            }
+                                        </td>
 
-                                    <td class="px-6 py-4 text-center space-y-2">
-                                        <button type="button" onclick="showDetails(@item.MaYeuCauLapDat)" class="w-full px-4 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-lg hover:bg-slate-200 transition-colors border border-slate-200">
-                                            <i class="fa-solid fa-eye mr-1"></i> Xem chi tiết
-                                        </button>
+                                        <td class="px-6 py-4 text-center">
+                                            @{
+                                                var statusClass = isCancelled ? "bg-rose-100 text-rose-700" :
+                                                item.TrangThaiLapDat switch
+                                                {
+                                                    "Chưa lắp đặt" => "bg-amber-100 text-amber-700",
+                                                    "Đang xử lý" => "bg-blue-100 text-blue-700",
+                                                    "Đã hoàn thành" => "bg-emerald-100 text-emerald-700",
+                                                    _ => "bg-slate-100 text-slate-700"
+                                                };
+                                                var statusText = isCancelled ? "Đã Hủy" : item.TrangThaiLapDat;
+                                            }
+                                            <span class="px-3 py-1 @statusClass text-xs font-bold rounded-full whitespace-nowrap">
+                                                @statusText
+                                            </span>
+                                        </td>
 
-                                        @if (!isCancelled)
-                                        {
-                                            <button onclick="changeStatus(@item.MaYeuCauLapDat, '@item.TrangThaiLapDat')" class="w-full px-4 py-2 bg-brand-cyan text-white text-xs font-bold rounded-lg hover:bg-cyan-600 transition-colors shadow-md">
-                                                <i class="fa-solid fa-wrench mr-1"></i> Cập nhật
+                                        <td class="px-6 py-4 text-center space-y-2">
+                                            <button type="button" onclick="showDetails(@item.MaYeuCauLapDat)" class="w-full px-4 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-lg hover:bg-slate-200 transition-colors border border-slate-200">
+                                                <i class="fa-solid fa-eye mr-1"></i> Xem chi tiết
                                             </button>
-                                        }
-                                        else
-                                        {
-                                            <button disabled class="w-full px-4 py-2 bg-slate-200 text-slate-400 text-xs font-bold rounded-lg cursor-not-allowed">
-                                                <i class="fa-solid fa-ban mr-1"></i> Đã Hủy
-                                            </button>
-                                        }
+
+                                            @if (!isCancelled)
+                                            {
+                                                <button onclick="changeStatus(@item.MaYeuCauLapDat, '@item.TrangThaiLapDat')" class="w-full px-4 py-2 bg-cyan-600 text-white text-xs font-bold rounded-lg hover:bg-cyan-700 transition-colors shadow-md">
+                                                    <i class="fa-solid fa-wrench mr-1"></i> Cập nhật
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button disabled class="w-full px-4 py-2 bg-slate-200 text-slate-400 text-xs font-bold rounded-lg cursor-not-allowed">
+                                                    <i class="fa-solid fa-ban mr-1"></i> Đã Hủy
+                                                </button>
+                                            }
+                                        </td>
+                                    </tr>
+
+                                    <div id="detail-html-@item.MaYeuCauLapDat" class="hidden text-left">
+                                        <div class="space-y-4">
+                                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                                                <p class="text-sm font-bold text-slate-800 mb-2 border-b pb-1">Sản phẩm cần mang theo:</p>
+                                                <ul class="space-y-2">
+                                                    @if (item.MaDonHangNavigation?.ChiTietDonHangs != null)
+                                                    {
+                                                        foreach (var detail in item.MaDonHangNavigation.ChiTietDonHangs)
+                                                        {
+                                                            <li class="flex justify-between items-center text-sm">
+                                                                <span class="text-slate-700 line-clamp-1"><i class="fa-solid fa-check text-emerald-500 mr-2"></i> @detail.MaSanPhamNavigation?.TenSanPham</span>
+                                                                <strong class="text-slate-800 ml-4 whitespace-nowrap">SL: @detail.SoLuong</strong>
+                                                            </li>
+                                                        }
+                                                    }
+                                                </ul>
+                                            </div>
+
+                                            @if (isCancelled)
+                                            {
+                                                <div class="bg-rose-50 text-rose-800 p-3 rounded-lg border border-rose-200 text-sm flex items-center gap-2 font-bold">
+                                                    <i class="fa-solid fa-triangle-exclamation text-rose-600 text-lg"></i>
+                                                    Đơn hàng này đã bị hủy. Nhân viên KHÔNG thi công và KHÔNG thu tiền!
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="bg-cyan-50 text-cyan-800 p-3 rounded-lg border border-cyan-200 text-sm">
+                                                    <p><i class="fa-solid fa-circle-exclamation mr-1"></i> Hãy đảm bảo thu đủ <strong class="text-rose-600 text-lg">@conLaiPhaiThu.ToString("N0") VNĐ</strong> sau khi lắp đặt xong.</p>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" class="px-6 py-16 text-center text-slate-400">
+                                        <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                            <i class="fa-solid fa-mug-hot text-3xl text-slate-300"></i>
+                                        </div>
+                                        <p class="text-base font-bold text-slate-500">Tạm thời chưa có công việc nào!</p>
                                     </td>
                                 </tr>
-
-                                <div id="detail-html-@item.MaYeuCauLapDat" class="hidden text-left">
-                                    <div class="space-y-4">
-                                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
-                                            <p class="text-sm font-bold text-brand-navy mb-2 border-b pb-1">Sản phẩm cần mang theo:</p>
-                                            <ul class="space-y-2">
-                                                @if (item.MaDonHangNavigation?.ChiTietDonHangs != null)
-                                                {
-                                                    foreach (var detail in item.MaDonHangNavigation.ChiTietDonHangs)
-                                                    {
-                                                        <li class="flex justify-between items-center text-sm">
-                                                            <span class="text-slate-700 line-clamp-1"><i class="fa-solid fa-check text-emerald-500 mr-2"></i> @detail.MaSanPhamNavigation?.TenSanPham</span>
-                                                            <strong class="text-brand-navy ml-4 whitespace-nowrap">SL: @detail.SoLuong</strong>
-                                                        </li>
-                                                    }
-                                                }
-                                            </ul>
-                                        </div>
-
-                                        @if (isCancelled)
-                                        {
-                                            <div class="bg-rose-50 text-rose-800 p-3 rounded-lg border border-rose-200 text-sm flex items-center gap-2 font-bold">
-                                                <i class="fa-solid fa-triangle-exclamation text-rose-600 text-lg"></i>
-                                                Đơn hàng này đã bị hủy. Nhân viên KHÔNG thi công và KHÔNG thu tiền!
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="bg-cyan-50 text-cyan-800 p-3 rounded-lg border border-cyan-200 text-sm">
-                                                <p><i class="fa-solid fa-circle-exclamation mr-1"></i> Hãy đảm bảo thu đủ số tiền <strong class="text-rose-600 text-lg">@conLaiPhaiThu.ToString("N0") VNĐ</strong> sau khi lắp đặt xong.</p>
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
                             }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="5" class="px-6 py-16 text-center text-slate-400">
-                                    <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <i class="fa-solid fa-mug-hot text-3xl text-slate-300"></i>
-                                    </div>
-                                    <p class="text-base font-bold text-slate-500">Tạm thời chưa có công việc nào!</p>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-
-    </div>
-</main>
-
-@section Scripts {
+    </main>
     <script>
         // Bật popup thông báo thành công
         @if (TempData["SuccessMessage"] != null)
@@ -244,11 +278,10 @@
             </text>
         }
 
-        // Bật Popup xem chi tiết
         function showDetails(maYeuCau) {
             const htmlContent = document.getElementById('detail-html-' + maYeuCau).innerHTML;
             Swal.fire({
-                title: `<span class="text-brand-navy">Chi tiết mã YC #${maYeuCau}</span>`,
+                title: `<span class="text-slate-800">Chi tiết mã YC #${maYeuCau}</span>`,
                 html: htmlContent,
                 confirmButtonText: 'Đã hiểu',
                 confirmButtonColor: '#06b6d4',
@@ -257,10 +290,9 @@
             });
         }
 
-        // Bật Popup cập nhật trạng thái
         function changeStatus(maYeuCau, currentStatus) {
             Swal.fire({
-                title: `<span class="text-brand-navy text-xl">Báo cáo tiến độ mã #${maYeuCau}</span>`,
+                title: `<span class="text-slate-800 text-xl">Báo cáo tiến độ mã #${maYeuCau}</span>`,
                 text: "Xác nhận tình trạng thi công thực tế:",
                 input: 'select',
                 inputOptions: {
@@ -286,7 +318,6 @@
                     inputId.name = 'id';
                     inputId.value = maYeuCau;
 
-                    // Lọc chữ trong ngoặc đơn
                     let rawStatus = result.value;
                     if(rawStatus.includes('(')) {
                         rawStatus = rawStatus.split(' (')[0].trim();
@@ -306,4 +337,5 @@
             });
         }
     </script>
-}
+</body>
+</html>

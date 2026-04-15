@@ -24,6 +24,8 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true; // RẤT QUAN TRỌNG: Bỏ qua kiểm tra Cookie Consent
 });
 
+
+
 builder.Services.Configure<FormOptions>(options => {
     options.ValueLengthLimit = int.MaxValue;
     options.MultipartBodyLengthLimit = int.MaxValue;
@@ -58,6 +60,6 @@ app.MapControllerRoute(
 // 2. ROUTE MẶC ĐỊNH CỦA BẠN DÀNH CHO KHÁCH HÀNG (Giữ nguyên)
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Customers}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

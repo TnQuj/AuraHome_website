@@ -1,5 +1,6 @@
 ﻿@model AISmartHome.Models.HomeViewModel
-
+@using Microsoft.EntityFrameworkCore
+@inject AISmartHome.Data.AISmartHomeDbContext _context
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Thiết bị Smart Home";
@@ -7,9 +8,6 @@
     var activeCategory = Model.DanhMucs?.FirstOrDefault(d => d.MaDanhMuc.ToString() == activeCatId);
     bool isCategorySelected = !string.IsNullOrEmpty(activeCatId);
 }
-@using Microsoft.EntityFrameworkCore
-@inject AISmartHome.Data.AISmartHomeDbContext _context
-
 @{
     // Biến lưu tổng số lượng
     int cartCount = 0;
@@ -24,12 +22,44 @@
     {
         cartCount = cart.ChiTietGioHangs.Sum(c => c.SoLuong ?? 0);
     }
+
+    // ==========================================
+    // 👇 THÊM ĐOẠN NÀY: Lấy 4 sản phẩm nổi bật
+    // ==========================================
+    var topProducts = _context.SanPhams
+         .OrderByDescending(sp => sp.MaSanPham)
+         .Take(4)
+         .ToList();
 }
-<!DOCTYPE html>
-<html class="light" lang="en">
-<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
-    <main class="pt-4 relative px-4 md:px-8 lg:px-16 max-w-[1600px] mx-auto pb-20">
-        <!--Dấu tích điều hướng-->
+
+<style>
+    .ambient-blob {
+        position: absolute;
+        filter: blur(80px);
+        z-index: 0;
+        opacity: 0.6;
+        animation: float 10s infinite alternate ease-in-out;
+    }
+    @@keyframes float {
+        0%
+
+    {
+        transform: translate(0, 0) scale(1);
+    }
+
+    100% {
+        transform: translate(30px, -50px) scale(1.1);
+    }
+
+    }
+</style>
+
+<div class="bg-[#FAFCFF] dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen relative overflow-hidden">
+
+    <div class="ambient-blob bg-cyan-300/40 w-[30rem] h-[30rem] rounded-full top-[-5%] left-[-10%] pointer-events-none dark:opacity-10"></div>
+    <div class="ambient-blob bg-indigo-300/30 w-[40rem] h-[40rem] rounded-full top-[20%] right-[-15%] pointer-events-none dark:opacity-10" style="animation-delay: -5s;"></div>
+
+    <main class="pt-4 relative z-10 px-4 md:px-8 lg:px-16 max-w-[1600px] mx-auto pb-20">
         <nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
             <a class="hover:text-cyan-500 transition-colors" asp-controller="Home" asp-action="Index">Trang chủ</a>
 
@@ -52,7 +82,7 @@
         <div class="flex flex-col lg:flex-row gap-8 items-start">
 
             <aside class="w-full lg:w-[340px] xl:w-[400px] flex-shrink-0 space-y-8 lg:sticky lg:top-24 max-h-[calc(100vh-6rem)] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
-                <div class="relative bg-white dark:bg-slate-800/50 p-5 rounded-3xl border border-slate-100 dark:border-slate-700/50 shadow-sm">
+                <div class="relative bg-white/80 backdrop-blur-md dark:bg-slate-800/50 p-5 rounded-3xl border border-slate-100 dark:border-slate-700/50 shadow-sm">
                     <div class="absolute -top-10 -left-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none z-0"></div>
 
                     <h3 class="text-xs font-black uppercase tracking-[0.2em] flex items-center gap-3 mb-6 relative z-10">
@@ -76,7 +106,7 @@
                     <div class="space-y-3 relative z-10">
                         @if (Model.DanhMucs != null && Model.DanhMucs.Any())
                         {
-                            <a href="/Customers/Index" class="relative flex items-center px-3 py-3 rounded-2xl transition-all duration-300 group/link bg-white dark:bg-slate-800/80 border shadow-sm hover:shadow-md @(isAllActive ? "bg-gradient-to-r from-cyan-500/15 to-transparent border-cyan-400/50" : "border-slate-100 dark:border-slate-700/50 hover:border-cyan-300")">
+                            <a href="/Customers/Index" class="relative flex items-center px-3 py-3 rounded-2xl transition-all duration-300 group/link bg-white/50 dark:bg-slate-800/80 border shadow-sm hover:shadow-md @(isAllActive ? "bg-gradient-to-r from-cyan-500/15 to-transparent border-cyan-400/50" : "border-slate-100 dark:border-slate-700/50 hover:border-cyan-300")">
 
                                 @if (isAllActive)
                                 {
@@ -98,17 +128,15 @@
                                 </span>
                             </a>
 
-                            // KHÔNG CẦN DÙNG @{ } Ở ĐÂY NỮA, VÌ CHÚNG TA ĐANG Ở BÊN TRONG @if {} RỒI
                             int index = 0;
 
-                            // CŨNG KHÔNG CẦN DÙNG @ TRƯỚC VÒNG LẶP FOREACH NỮA
                             foreach (var danhmuc in Model.DanhMucs)
                             {
                                 bool isActive = currentCategoryId == danhmuc.MaDanhMuc.ToString();
                                 var style = styles[index % styles.Length];
                                 index++;
 
-                                <a href="/Customers/Index?category=@danhmuc.MaDanhMuc" class="relative flex items-center px-3 py-3 rounded-2xl transition-all duration-300 group/link bg-white dark:bg-slate-800/80 border shadow-sm hover:shadow-md @(isActive ? style.ActiveBg : "border-slate-100 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600")">
+                                <a href="/Customers/Index?category=@danhmuc.MaDanhMuc" class="relative flex items-center px-3 py-3 rounded-2xl transition-all duration-300 group/link bg-white/50 dark:bg-slate-800/80 border shadow-sm hover:shadow-md @(isActive ? style.ActiveBg : "border-slate-100 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600")">
 
                                     @if (isActive)
                                     {
@@ -134,42 +162,28 @@
                     </div>
                 </div>
 
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 sticky top-28">
+    
+                <h3 class="text-lg font-black text-brand-navy tracking-wide flex items-center gap-2">
+                    <i class="fa-solid fa-heart text-rose-500"></i> Yêu thích
+                </h3>
+                <div class="w-12 h-1 bg-rose-400 mt-2 mb-6 rounded-full"></div>
 
-                <div class="relative overflow-hidden bg-gradient-to-br from-cyan-500 to-blue-600 p-6 rounded-3xl shadow-[0_15px_30px_-10px_rgba(6,182,212,0.4)] text-white">
-                    <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
-                    <div class="absolute -bottom-8 -left-8 w-24 h-24 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
-
-                    <div class="relative z-10">
-                        <h3 class="text-xs font-black uppercase tracking-[0.2em] text-cyan-100 mb-2">Cộng đồng AuraHome</h3>
-                        <p class="text-[13px] text-cyan-50 mb-5 leading-relaxed">Theo dõi chúng tôi để nhận mẹo setup nhà thông minh mỗi ngày.</p>
-
-                        <div class="grid grid-cols-2 gap-3">
-                            <a href="#" class="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-xl py-3 transition-all duration-300 group">
-                                <i class="fa-brands fa-facebook-f text-white group-hover:scale-110 transition-transform"></i>
-                                <span class="text-[12px] font-bold">Facebook</span>
-                            </a>
-                            <a href="#" class="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-xl py-3 transition-all duration-300 group">
-                                <i class="fa-brands fa-youtube text-white group-hover:scale-110 transition-transform"></i>
-                                <span class="text-[12px] font-bold">YouTube</span>
-                            </a>
-                            <a href="#" class="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-xl py-3 transition-all duration-300 group">
-                                <i class="fa-brands fa-tiktok text-white group-hover:scale-110 transition-transform"></i>
-                                <span class="text-[12px] font-bold">TikTok</span>
-                            </a>
-                            <a href="#" class="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-xl py-3 transition-all duration-300 group">
-                                <i class="fa-solid fa-comment-dots text-white group-hover:scale-110 transition-transform"></i>
-                                <span class="text-[12px] font-bold">Zalo OA</span>
-                            </a>
-                        </div>
+                <div id="favorite-products-list" class="flex flex-col max-h-[400px] overflow-y-auto pr-2 hide-scrollbar">
                     </div>
+
+                <div class="mt-4 pt-4 border-t border-slate-100 hidden" id="clear-fav-container">
+                    <button onclick="clearFavorites()" class="w-full text-xs font-bold text-slate-400 hover:text-rose-500 transition-colors">
+                        Xóa tất cả danh sách
+                    </button>
                 </div>
+            </div>
             </aside>
-            <!--Banner main-->
             <div class="flex-1 min-w-0">
 
                 <div class="relative w-full rounded-3xl bg-[#0a0f1c] shadow-2xl flex items-center px-8 md:px-16 group
-        transition-all duration-1000 ease-in-out transform origin-top
-        @(isCategorySelected ? "h-0 opacity-0 mb-0 scale-y-0 overflow-hidden" : "h-[280px] md:h-[320px] mb-5 opacity-100 scale-y-100 overflow-hidden")">
+                    transition-all duration-1000 ease-in-out transform origin-top
+                    @(isCategorySelected ? "h-0 opacity-0 mb-0 scale-y-0 overflow-hidden" : "h-[280px] md:h-[320px] mb-5 opacity-100 scale-y-100 overflow-hidden")">
 
                     <div class="absolute inset-0 z-0 bg-[#0a0f1c]">
                         <img id="banner-img" src="https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=2070&auto=format&fit=crop"
@@ -203,8 +217,8 @@
                     <div id="banner-dots" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20 items-center">
                     </div>
                 </div>
-
-                <div class="mb-6 flex flex-col sm:flex-row items-center justify-between bg-white dark:bg-slate-800 p-2 sm:p-3 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 gap-3">
+                <!--Bộ lọc sản phẩm-->
+                <div class="mb-6 flex flex-col sm:flex-row items-center justify-between bg-white/80 backdrop-blur-md dark:bg-slate-800/80 p-2 sm:p-3 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 gap-3">
 
                     <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start pl-1">
 
@@ -243,7 +257,6 @@
                     </form>
                 </div>
 
-                <!--Sản Phẩm-->
                 <div id="product-list-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 
                     @if (Model.SanPhams != null && Model.SanPhams.Any())
@@ -261,110 +274,35 @@
                                 tatCaHinhAnh.AddRange(sp.HinhAnhSanPhams.Select(x => x.UrlHinhAnh));
                             }
 
-                            <div class="bg-white dark:bg-slate-800/50 rounded-3xl border border-slate-100 dark:border-slate-700/50 overflow-hidden hover:shadow-[0_20px_40px_-15px_rgba(6,182,212,0.15)] hover:border-cyan-200 dark:hover:border-cyan-800 transition-all duration-500 group flex flex-col h-full">
-
-                                <div class="relative aspect-square bg-slate-50 dark:bg-slate-900/50 overflow-hidden p-4 flex items-center justify-center">
+                            <div class="bg-white/70 backdrop-blur-md dark:bg-slate-800/50 rounded-3xl border border-slate-100 dark:border-slate-700/50 overflow-hidden hover:shadow-[0_20px_40px_-15px_rgba(6,182,212,0.15)] hover:border-cyan-200 dark:hover:border-cyan-800 transition-all duration-500 group flex flex-col h-full animate-fade-in">
+                                <div class="relative aspect-square bg-slate-50/50 dark:bg-slate-900/50 overflow-hidden p-4 flex items-center justify-center">
                                     <img class="block w-full h-full object-cover origin-center group-hover:scale-110 transition-transform duration-500 will-change-transform"
                                          src="@(string.IsNullOrEmpty(sp.HinhAnh) ? "https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=500&auto=format&fit=crop" : $"/img/{sp.HinhAnh}")"
-                                         alt="@sp.TenSanPham" />
+                                         alt="@sp.TenSanPham" onerror="this.src='/img/placeholder.jpg'" />
 
-                                    <span class="absolute top-3 left-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider shadow-md z-10">New</span>
-
-                                    <div class="absolute top-3 right-3 translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 z-10">
-                                        <button class="size-8 rounded-full bg-white text-slate-400 hover:text-rose-500 hover:shadow-md flex items-center justify-center transition-all">
+                                    <span class="absolute top-3 left-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider shadow-md z-10">
+                                        New
+                                    </span>
+                                    <!--Yêu thích sản phẩm-->
+                                    <div class="absolute top-3 right-3 z-30">
+                                        <button onclick="toggleFavorite('@sp.MaSanPham', '@Html.Raw(sp.TenSanPham?.Replace("'", "\\'").Replace("\"", "&quot;"))', '@sp.GiaBan', '@sp.HinhAnh')"
+                                                class="size-8 rounded-full bg-white border border-slate-100 text-slate-400 hover:text-rose-500 hover:shadow-md flex items-center justify-center transition-all fav-btn-@sp.MaSanPham">
                                             <i class="fa-solid fa-heart text-sm"></i>
                                         </button>
                                     </div>
-
+                                    <!--Xem nhanh sản phẩm-->
                                     <button type="button" onclick="openQuickView('@sp.MaSanPham')"
                                             class="w-full absolute bottom-0 inset-x-0 bg-indigo-600/90 backdrop-blur-sm text-white text-[13px] font-black uppercase tracking-widest py-3 text-center translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-20 shadow-[0_-10px_20px_rgba(0,0,0,0.1)]">
                                         Xem nhanh
                                     </button>
 
-                                    <div id="quickview-@sp.MaSanPham" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 sm:p-6">
-                                        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="closeQuickView('@sp.MaSanPham')"></div>
-
-                                        <div class="relative w-full max-w-4xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl flex flex-col md:flex-row overflow-hidden max-h-[90vh] z-10 transform transition-all">
-
-                                            <button onclick="closeQuickView('@sp.MaSanPham')" class="absolute top-4 right-4 z-50 size-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-rose-500 hover:text-white transition-colors shadow-sm">
-                                                <i class="fa-solid fa-xmark text-lg"></i>
-                                            </button>
-
-                                            <div class="w-full md:w-1/2 bg-slate-50 dark:bg-slate-800/50 p-6 md:p-8 flex flex-col items-center justify-start relative">
-
-                                                <div class="relative w-full h-[40vh] md:h-[50vh] flex items-center justify-center mb-6">
-                                                    <img id="main-img-@sp.MaSanPham"
-                                                         src="@(tatCaHinhAnh.Any() ? $"/img/{tatCaHinhAnh.First()}" : "https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=500&auto=format&fit=crop")"
-                                                         alt="@sp.TenSanPham"
-                                                         class="max-h-full max-w-full object-contain drop-shadow-xl transition-all duration-300" />
-                                                </div>
-
-                                                <div class="flex gap-3 overflow-x-auto w-full pb-2 hide-scrollbar justify-center">
-                                                    @if (tatCaHinhAnh.Any())
-                                                    {
-                                                        for (int i = 0; i < tatCaHinhAnh.Count; i++)
-                                                        {
-                                                            // Ảnh đầu tiên (i==0) được đánh dấu viền đậm mặc định
-                                                            string activeBorder = (i == 0) ? "border-[#2b3a82] dark:border-indigo-400" : "border-transparent hover:border-slate-300 dark:hover:border-slate-600";
-
-                                                            <img onclick="changeMainImage('@sp.MaSanPham', '/img/@tatCaHinhAnh[i]', this)"
-                                                                 src="/img/@tatCaHinhAnh[i]"
-                                                                 class="size-16 md:size-20 rounded-xl border-2 @activeBorder cursor-pointer object-cover shadow-sm flex-shrink-0 transition-all qv-thumb-@sp.MaSanPham"
-                                                                 onerror="this.style.display='none'" />
-                                                        }
-                                                    }
-                                                </div>
-
-                                            </div>
-
-                                            <div class="w-full md:w-1/2 p-8 lg:p-12 flex flex-col overflow-y-auto">
-                                                <h2 class="text-2xl font-semibold text-slate-900 dark:text-white mb-2 leading-snug">@sp.TenSanPham</h2>
-
-                                                <div class="w-12 h-1 bg-slate-200 dark:bg-slate-700 mb-6"></div>
-
-                                                <div class="mb-6">
-                                                    <span class="text-3xl font-bold text-[#2b3a82] dark:text-indigo-400">@sp.GiaBan.ToString("N0") VND</span>
-                                                </div>
-
-                                                <div class="mb-8">
-                                                    <label class="block text-sm font-black text-slate-900 dark:text-white mb-3">Màu Sắc Chung</label>
-                                                    <div class="relative">
-                                                        <select class="w-full appearance-none border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg px-4 py-3 outline-none focus:border-[#2b3a82] focus:ring-1 focus:ring-[#2b3a82] transition-all text-sm cursor-pointer">
-                                                            <option value="">Chọn một tùy chọn</option>
-                                                            <option value="Den">Màu Đen (Black)</option>
-                                                            <option value="Dong">Màu Đồng (Bronze)</option>
-                                                            <option value="Bac">Màu Bạc (Silver)</option>
-                                                        </select>
-                                                        <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-xs"></i>
-                                                    </div>
-                                                </div>
-
-                                                <div class="flex flex-col gap-3 mt-auto">
-                                                    <form onsubmit="addToCartAjax(event)" class="m-0 p-0">
-
-                                                        <input type="hidden" name="id" value="@sp.MaSanPham" />
-
-                                                        <input type="hidden" name="quantity" value="1" />
-
-                                                        <button class="w-full flex items-center justify-center gap-2 bg-[#2b3a82] hover:bg-indigo-900 text-white font-semibold py-3.5 rounded-xl transition-colors shadow-md">
-                                                            <i class="fa-solid fa-cart-plus"></i> Thêm Vào Giỏ
-                                                        </button>
-
-                                                    </form>
-
-                                                    <a asp-controller="Customers" asp-action="BuyNow" asp-route-id="@sp.MaSanPham" asp-route-quantity="1" class="w-full flex items-center justify-center bg-[#e3001f] hover:bg-red-700 text-white font-semibold py-3.5 rounded-xl transition-colors shadow-md">
-                                                        Mua ngay
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
 
+                                <!--Thông tin sản phẩm-->
                                 <div class="p-5 flex flex-col flex-1">
                                     <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">AuraHome</p>
 
-                                    <a asp-controller="Customers" asp-action="Detail" asp-route-id="@sp.MaSanPham" class="font-bold text-slate-900 dark:text-white text-[15px] mb-2 line-clamp-2 leading-snug group-hover:text-cyan-600 transition-colors">
+                                    <a asp-controller="Customers" asp-action="Detail" asp-route-id="@sp.MaSanPham" class="font-bold text-slate-900 dark:text-white text-[15px] mb-2 line-clamp-2 leading-snug group-hover:text-cyan-600 transition-colors" title="@sp.TenSanPham">
                                         @sp.TenSanPham
                                     </a>
 
@@ -375,55 +313,50 @@
                                         <span class="text-[11px] text-slate-400 font-medium ml-1">(42)</span>
                                     </div>
 
-                                    <div class="mt-auto flex flex-col gap-3 border-t border-slate-100 dark:border-slate-700 pt-4">
+                                    <div class="mt-auto flex flex-col gap-3 border-t border-slate-100/50 dark:border-slate-700 pt-4">
+
                                         <div>
                                             <span class="text-[18px] font-black text-rose-600 dark:text-rose-400">@sp.GiaBan.ToString("N0") ₫</span>
                                         </div>
 
                                         <div class="flex items-center gap-2">
-                                            <a asp-controller="Customers" asp-action="BuyNow" asp-route-id="@sp.MaSanPham"
-                                               class="flex-1 flex items-center justify-center whitespace-nowrap px-2 sm:px-3 py-2 rounded-xl bg-cyan-500 text-white hover:bg-cyan-600 transition-all duration-300 font-bold text-[13px] shadow-[0_4px_10px_rgba(6,182,212,0.3)]">
+                                            <a asp-controller="Customers" asp-action="BuyNow" asp-route-id="@sp.MaSanPham" asp-route-quantity="1"
+                                               class="flex-1 flex items-center justify-center whitespace-nowrap px-2 sm:px-3 py-2 rounded-xl bg-cyan-500 text-white hover:bg-cyan-600 transition-all duration-300 font-bold text-[13px] shadow-[0_4px_10px_rgba(6,182,212,0.3)] hover:shadow-lg active:scale-95">
                                                 Mua ngay
                                             </a>
-                                            <form onsubmit="addToCartAjax(event)" class="m-0 p-0">
 
+                                            <form onsubmit="addToCartAjax(event)" class="m-0 p-0 shrink-0">
                                                 <input type="hidden" name="id" value="@sp.MaSanPham" />
-
                                                 <input type="hidden" name="quantity" value="1" />
-
-                                                <button type="submit" class="shrink-0 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-cyan-50 dark:bg-slate-800 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-all duration-300 font-bold text-[13px] group/btn outline-none">
+                                                <button type="submit" class="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-cyan-50 dark:bg-slate-800 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-all duration-300 font-bold text-[13px] group/btn outline-none active:scale-95 border border-transparent hover:border-cyan-200">
                                                     <i class="fa-solid fa-cart-plus group-hover/btn:animate-bounce"></i>
                                                     <span class="hidden sm:inline">Thêm</span>
                                                 </button>
-
                                             </form>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         }
                     }
                     else
                     {
-                        <div class="col-span-full py-20 text-center text-slate-500 font-medium">
+                        <div class="col-span-full py-20 text-center text-slate-500 font-medium bg-white/50 backdrop-blur-md rounded-3xl border border-dashed border-slate-300">
                             Không tìm thấy sản phẩm nào!
                         </div>
                     }
 
                 </div>
-                <!--Xem thêm sản phẩm-->
                 <div class="mt-12 flex items-center justify-center gap-2">
-                    <button class="size-10 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-cyan-500 hover:text-white transition-all"><i class="fa-solid fa-chevron-left text-sm"></i></button>
+                    <button class="size-10 rounded-xl bg-white/80 backdrop-blur-md border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-cyan-500 hover:text-white transition-all shadow-sm"><i class="fa-solid fa-chevron-left text-sm"></i></button>
                     <button class="size-10 rounded-xl bg-cyan-500 text-white font-bold flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.4)]">1</button>
-                    <button class="size-10 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-slate-50 transition-all font-semibold">2</button>
+                    <button class="size-10 rounded-xl bg-white/80 backdrop-blur-md border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-slate-50 transition-all font-semibold shadow-sm">2</button>
                     <span class="px-2 text-slate-400">...</span>
-                    <button class="size-10 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-cyan-500 hover:text-white transition-all"><i class="fa-solid fa-chevron-right text-sm"></i></button>
+                    <button class="size-10 rounded-xl bg-white/80 backdrop-blur-md border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-cyan-500 hover:text-white transition-all shadow-sm"><i class="fa-solid fa-chevron-right text-sm"></i></button>
                 </div>
             </div>
         </div>
-        <!-- Giới thiệu thông tin-->
-        <div class="mt-16 bg-white dark:bg-slate-800/50 rounded-3xl p-6 md:p-10 border border-slate-100 dark:border-slate-700/50 shadow-sm">
+        <div class="mt-16 bg-white/80 backdrop-blur-md dark:bg-slate-800/50 rounded-3xl p-6 md:p-10 border border-slate-100 dark:border-slate-700/50 shadow-sm relative z-10">
 
             @if (activeCatId == "1")
             {
@@ -474,7 +407,7 @@
                     </div>
 
                     <div class="text-center mb-12 relative">
-                        <div class="absolute inset-0 bg-gradient-to-t from-background-light dark:from-background-dark via-transparent to-transparent opacity-60 z-10 rounded-2xl"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#FAFCFF] dark:from-background-dark via-transparent to-transparent opacity-60 z-10 rounded-2xl"></div>
                         <img src="~/img/5f438ee5c7a0341bb203dcd255b828e4.jpg" alt="Giám sát Camera AI trên điện thoại" class="rounded-2xl mx-auto shadow-xl w-full max-w-4xl object-cover border border-slate-100 dark:border-slate-700" />
                         <p class="text-sm text-slate-400 mt-3 italic relative z-10">Quản lý toàn bộ hệ thống Camera AI, xem trực tiếp và xem lại video dễ dàng qua App AuraHome</p>
                     </div>
@@ -647,7 +580,7 @@
                         Cảm biến thông minh: Đánh thức mọi "giác quan" của ngôi nhà
                     </h2>
                     <p class="text-slate-600 dark:text-slate-400 mb-4 leading-relaxed text-[15px]">
-                        Nếu bộ điều khiển trung tâm là "bộ não", thì <strong class="text-slate-800 dark:text-slate-200">Cảm biến thông minh (Smart Sensors)</strong> chính là các "giác quan" nhạy bén của một ngôi nhà thông minh thực thụ. Chúng hoạt động âm thầm nhưng lại là chìa khóa để thiết lập mọi kịch bản tự động hóa (Automation) đắt giá nhất.
+                        Nếu bộ điều khiển trung tâm là "bộ脑", thì <strong class="text-slate-800 dark:text-slate-200">Cảm biến thông minh (Smart Sensors)</strong> chính là các "giác quan" nhạy bén của một ngôi nhà thông minh thực thụ. Chúng hoạt động âm thầm nhưng lại là chìa khóa để thiết lập mọi kịch bản tự động hóa (Automation) đắt giá nhất.
                     </p>
                     <p class="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed text-[15px]">
                         Với thiết kế nhỏ gọn, kết nối không dây hoàn toàn (Zigbee/Bluetooth), bạn có thể dễ dàng dán chúng ở bất kỳ đâu. Nhà của bạn sẽ tự động biết khi nào bạn về, khi nào trời tối, hay khi nào có nguy hiểm rình rập.
@@ -718,7 +651,7 @@
                     </p>
 
                     <div class="text-center mb-12 relative">
-                        <div class="absolute inset-0 bg-gradient-to-t from-background-light dark:from-background-dark via-transparent to-transparent opacity-40 z-10 rounded-2xl"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#FAFCFF] dark:from-background-dark via-transparent to-transparent opacity-40 z-10 rounded-2xl"></div>
                         <img src="~/img/1448be362eb2e4d36ec4941ac1dc0086.jpg" alt="Hệ thống chiếu sáng thông minh 16 triệu màu" class="rounded-2xl mx-auto shadow-xl w-full max-w-4xl object-cover border border-slate-100 dark:border-slate-700" />
                         <p class="text-sm text-slate-400 mt-3 italic relative z-10">Biến phòng khách thành rạp chiếu phim hay sàn nhảy chỉ với một chạm</p>
                     </div>
@@ -858,155 +791,4 @@
 
         </div>
     </main>
-</body>
-</html>
-<div id="luckyWheelModal" class="fixed inset-0 z-[10000] hidden items-center justify-center bg-[#0a0f1c]/80 backdrop-blur-sm transition-all duration-300 opacity-0">
-
-    <div id="luckyWheelContent" class="relative max-w-4xl w-[95%] mx-auto transform scale-95 transition-transform duration-500">
-
-        <button onclick="closeLuckyWheel()" class="absolute -top-3 -right-3 md:-top-5 md:-right-5 z-50 w-10 h-10 md:w-12 md:h-12 bg-rose-500 text-white rounded-full flex items-center justify-center hover:bg-rose-600 transition-colors border-4 border-[#0a0f1c] shadow-xl">
-            <i class="fa-solid fa-xmark text-lg md:text-xl"></i>
-        </button>
-
-        <div class="bg-[#0a0f1c] p-6 md:p-10 rounded-3xl border border-slate-700 shadow-2xl flex flex-col md:flex-row items-center gap-8 overflow-hidden relative">
-
-            <div class="absolute -top-24 -left-24 w-96 h-96 bg-brand-cyan/20 rounded-full blur-[100px] pointer-events-none"></div>
-
-            <div class="w-full md:w-1/2 space-y-4 md:space-y-6 relative z-10 text-center md:text-left">
-                <h2 class="text-2xl md:text-4xl font-black text-white leading-tight">
-                    Vòng quay tri ân <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan to-blue-500">Trúng 100% quà tặng</span>
-                </h2>
-                <p class="text-slate-400 text-sm md:text-base">Đừng vội mua! Nhập email quay thưởng để nhận Cảm biến cửa, Giảm giá 100k, hoặc Freeship cho đơn hàng này ngay!</p>
-
-                <div class="relative w-full max-w-sm mx-auto md:mx-0">
-                    <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                    <input id="wheelEmail" type="email" placeholder="Nhập địa chỉ email..." class="w-full bg-white/5 border border-slate-700 text-white rounded-xl pl-11 pr-4 py-3 md:py-3.5 focus:border-brand-cyan outline-none transition-all shadow-inner">
-                </div>
-
-                <button onclick="startSpin()" id="btnSpin" class="w-full max-w-sm mx-auto md:mx-0 bg-brand-cyan text-white font-bold py-3 md:py-4 rounded-xl hover:bg-cyan-400 hover:-translate-y-1 transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.4)] block">
-                    BẮT ĐẦU QUAY
-                </button>
-            </div>
-
-            <div class="w-full md:w-1/2 flex justify-center relative z-10 py-4">
-                <div class="absolute top-0 z-20 text-rose-500 text-4xl md:text-5xl drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] translate-y-[-5px]">
-                    <i class="fa-solid fa-location-pin"></i>
-                </div>
-
-                <div id="wheel" class="w-60 h-60 md:w-80 md:h-80 rounded-full border-[8px] md:border-[10px] border-slate-800 shadow-[0_0_40px_rgba(6,182,212,0.2)] relative overflow-hidden"
-                     style="background: conic-gradient(#06b6d4 0deg 60deg, #1e293b 60deg 120deg, #3b82f6 120deg 180deg, #0f172a 180deg 240deg, #10b981 240deg 300deg, #334155 300deg 360deg); transition: transform 4s cubic-bezier(0.14, 0.73, 0.2, 1);">
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 md:w-14 md:h-14 bg-slate-900 border-4 border-slate-700 rounded-full shadow-inner z-10 flex items-center justify-center">
-                        <i class="fa-solid fa-bolt text-yellow-400"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // KIỂM TRA: Nếu khách chưa từng tắt popup này, thì 3 giây sau khi vào trang sẽ hiện lên
-        if (!localStorage.getItem('hasSeenWheel')) {
-            setTimeout(openLuckyWheel, 3000);
-        }
-    });
-
-    function openLuckyWheel() {
-        const modal = document.getElementById('luckyWheelModal');
-        const content = document.getElementById('luckyWheelContent');
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-
-        // Mẹo tạo hiệu ứng mờ dần (Fade-in)
-        setTimeout(() => {
-            modal.classList.remove('opacity-0');
-            content.classList.remove('scale-95');
-        }, 10);
-    }
-
-    function closeLuckyWheel() {
-        const modal = document.getElementById('luckyWheelModal');
-        const content = document.getElementById('luckyWheelContent');
-
-        // Đánh dấu là khách đã xem/tắt để lần sau vào lại web không bị làm phiền nữa
-        localStorage.setItem('hasSeenWheel', 'true');
-
-        modal.classList.add('opacity-0');
-        content.classList.add('scale-95');
-        setTimeout(() => {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }, 300);
-    }
-
-    // ==========================================
-    // LOGIC QUAY CŨ CỦA BẠN (Giữ nguyên)
-    // ==========================================
-    let isSpinning = false;
-
-    function startSpin() {
-        if (isSpinning) return;
-
-        const email = document.getElementById('wheelEmail').value;
-        if (!email || !email.includes('@@')) { // Nhớ 2 dấu @@ để không lỗi C# nhé
-            Swal.fire('Lỗi', 'Vui lòng nhập một email hợp lệ!', 'warning');
-            return;
-        }
-
-        isSpinning = true;
-        const btn = document.getElementById('btnSpin');
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang chờ máy chủ...';
-
-        fetch(`/Home/SpinWheel?email=${encodeURIComponent(email)}`, { method: 'POST' })
-        .then(res => res.json())
-        .then(data => {
-            if (!data.success) {
-                Swal.fire('Rất tiếc', data.message, 'warning');
-                isSpinning = false;
-                btn.disabled = false;
-                btn.innerHTML = 'BẮT ĐẦU QUAY';
-                return;
-            }
-
-            btn.innerHTML = 'ĐANG QUAY...';
-            const wheel = document.getElementById('wheel');
-            const degreePerSlice = 60;
-            const targetDegree = 1800 + (360 - (data.prizeIndex * degreePerSlice)) - (degreePerSlice / 2);
-
-            wheel.style.transform = `rotate(${targetDegree}deg)`;
-
-            setTimeout(() => {
-                if (data.prizeIndex === 3) {
-                    Swal.fire('Thật tiếc...', data.prizeName, 'info').then(() => closeLuckyWheel());
-                } else {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Tuyệt vời!',
-                        html: `Bạn đã trúng: <b class="text-lg text-brand-navy">${data.prizeName}</b><br><br>
-                               <div class="bg-cyan-50 p-3 rounded-lg border border-dashed border-cyan-400">
-                                  <span class="text-xs text-slate-500 uppercase font-bold block mb-1">Mã của bạn:</span>
-                                  <strong class="text-2xl text-brand-cyan tracking-widest">${data.voucherCode}</strong>
-                               </div>`,
-                        confirmButtonColor: '#06b6d4',
-                        confirmButtonText: 'Mua hàng ngay'
-                    }).then(() => closeLuckyWheel()); // Quay trúng xong thì tự đóng popup
-                }
-
-                // Đánh dấu đã chơi xong để khỏi hiện lại
-                localStorage.setItem('hasSeenWheel', 'true');
-
-                isSpinning = false;
-                btn.disabled = false;
-                btn.innerHTML = 'ĐÃ NHẬN QUÀ';
-            }, 4200);
-        })
-        .catch(error => {
-            Swal.fire('Lỗi', 'Không thể kết nối máy chủ', 'error');
-            isSpinning = false;
-            btn.disabled = false;
-            btn.innerHTML = 'BẮT ĐẦU QUAY';
-        });
-    }
-</script>

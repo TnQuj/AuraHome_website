@@ -1,4 +1,6 @@
 ﻿@model AISmartHome.Models.SanPham
+@using Microsoft.EntityFrameworkCore
+@inject AISmartHome.Data.AISmartHomeDbContext _context
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -17,10 +19,6 @@
         tatCaHinhAnh.AddRange(Model.HinhAnhSanPhams.Select(x => x.UrlHinhAnh));
     }
 }
-
-@using Microsoft.EntityFrameworkCore
-@inject AISmartHome.Data.AISmartHomeDbContext _context
-
 @{
     // Biến lưu tổng số lượng
     int cartCount = 0;
@@ -36,23 +34,55 @@
         cartCount = cart.ChiTietGioHangs.Sum(c => c.SoLuong ?? 0);
     }
 }
+
+<style>
+    .ambient-blob {
+        position: absolute;
+        filter: blur(80px);
+        z-index: 0;
+        opacity: 0.6;
+        animation: float 10s infinite alternate ease-in-out;
+    }
+
+    @@keyframes float {
+        0% {
+            transform: translate(0, 0) scale(1);
+        }
+
+        100% {
+            transform: translate(30px, -50px) scale(1.1);
+        }
+    }
+</style>
 <!DOCTYPE html>
 
 <html class="light" lang="en">
-<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<body class="bg-[#FAFCFF] font-body text-slate-800 relative overflow-x-hidden">
+
+    <div class="ambient-blob bg-cyan-300/40 w-[30rem] h-[30rem] rounded-full top-[-10%] left-[-10%]"></div>
+    <div class="ambient-blob bg-indigo-300/30 w-[40rem] h-[40rem] rounded-full top-[20%] right-[-15%]" style="animation-delay: -5s;"></div>
     <main class="w-full pb-20 pt-8">
         <div class="container mx-auto px-4 md:px-8">
 
-            <nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-8 font-medium flex-wrap">
-                <a class="hover:text-cyan-500 transition-colors" asp-controller="Home" asp-action="Index">Trang chủ</a>
-                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            <nav class="inline-flex items-center gap-1 sm:gap-1.5 text-[12px] sm:text-[13px] font-medium text-slate-500 dark:text-slate-400 mb-8 bg-white/70 dark:bg-slate-800/60 backdrop-blur-md border border-slate-200/80 dark:border-slate-700 px-3 sm:px-5 py-2 sm:py-2.5 rounded-full shadow-sm max-w-full transition-all hover:shadow-md">
 
-                <a class="hover:text-cyan-500 transition-colors" asp-controller="Customers" asp-action="Index">Thiết bị thông minh</a>
-                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                <a class="flex items-center gap-1.5 hover:text-cyan-600 dark:hover:text-cyan-400 transition-all duration-300 hover:-translate-y-[1px] shrink-0" asp-controller="Home" asp-action="Index">
+                    <i class="fa-solid fa-house-chimney text-cyan-500"></i>
+                    <span class="hidden sm:inline">Trang chủ</span>
+                </a>
 
-                <span class="text-cyan-600 dark:text-cyan-400 font-semibold line-clamp-1 max-w-[200px] md:max-w-md" title="@Model?.TenSanPham">
+                <i class="fa-solid fa-chevron-right text-[9px] text-slate-300 dark:text-slate-600 mx-0.5 sm:mx-1 shrink-0"></i>
+
+                <a class="hover:text-cyan-600 dark:hover:text-cyan-400 transition-all duration-300 hover:-translate-y-[1px] shrink-0 whitespace-nowrap" asp-controller="Customers" asp-action="Index">
+                    Thiết bị thông minh
+                </a>
+
+                <i class="fa-solid fa-chevron-right text-[9px] text-slate-300 dark:text-slate-600 mx-0.5 sm:mx-1 shrink-0"></i>
+
+                <span class="text-cyan-700 dark:text-cyan-300 font-bold px-2 sm:px-3 py-1 bg-cyan-50 dark:bg-cyan-900/30 rounded-full border border-cyan-100 dark:border-cyan-800 shadow-inner truncate max-w-[100px] sm:max-w-[200px] md:max-w-xs" title="@Model?.TenSanPham">
                     @Model?.TenSanPham
                 </span>
+
             </nav>
 
             <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 md:p-12 mb-12">

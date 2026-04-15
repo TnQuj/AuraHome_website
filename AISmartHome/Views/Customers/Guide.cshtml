@@ -1,155 +1,138 @@
-﻿@{
+﻿@model IEnumerable<AISmartHome.Models.HuongDanSuDung>
+@{
     ViewData["Title"] = "Hướng dẫn sử dụng - AuraHome";
-    Layout = "~/Views/Shared/_Layout.cshtml"; // Sử dụng layout chung của khách hàng
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<style>
-    .glass-panel {
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-    }
+<!DOCTYPE html>
+<html class="light" lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>@ViewData["Title"]</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
-    .material-symbols-outlined {
-        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    }
-</style>
+    <style>
+        /* Hiệu ứng đốm sáng nền lung linh (Ambient Blurs) */
+        .ambient-blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.6;
+            animation: float 10s infinite alternate ease-in-out;
+        }
+        @@keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, -50px) scale(1.1); }
+        }
 
-<div class="pt-10 flex min-h-screen max-w-screen-2xl mx-auto bg-white">
-    <aside class="h-screen w-72 sticky top-20 hidden lg:flex flex-col gap-4 py-8 pl-8 pr-4 border-r border-slate-100">
-        <div class="px-4 mb-6">
-            <h3 class="text-sm font-black text-[#001F3F] uppercase tracking-tighter">Thư viện hướng dẫn</h3>
-            <p class="text-[10px] text-cyan-500 font-bold uppercase tracking-widest">Phiên bản 2024.1</p>
-        </div>
-        <nav class="flex flex-col gap-1">
-            <a class="flex items-center gap-3 py-3 px-4 text-slate-500 hover:text-[#00E5FF] hover:bg-slate-50 rounded-xl transition-all font-medium text-sm" href="#">
-                <span class="material-symbols-outlined">rocket_launch</span>
-                <span>Bắt đầu nhanh</span>
-            </a>
-            <a class="flex items-center gap-3 py-3 px-4 text-[#00E5FF] font-bold bg-cyan-50 rounded-xl font-medium text-sm" href="#">
-                <span class="material-symbols-outlined">settings_remote</span>
-                <span>Thiết lập thiết bị</span>
-            </a>
-            <a class="flex items-center gap-3 py-3 px-4 text-slate-500 hover:text-[#00E5FF] hover:bg-slate-50 rounded-xl transition-all font-medium text-sm" href="#">
-                <span class="material-symbols-outlined">record_voice_over</span>
-                <span>Điều khiển giọng nói</span>
-            </a>
-            <a class="flex items-center gap-3 py-3 px-4 text-slate-500 hover:text-[#00E5FF] hover:bg-slate-50 rounded-xl transition-all font-medium text-sm" href="#">
-                <span class="material-symbols-outlined">auto_awesome</span>
-                <span>Kịch bản tự động</span>
-            </a>
-            <a class="flex items-center gap-3 py-3 px-4 text-slate-500 hover:text-[#00E5FF] hover:bg-slate-50 rounded-xl transition-all font-medium text-sm" href="#">
-                <span class="material-symbols-outlined">build</span>
-                <span>Khắc phục lỗi</span>
-            </a>
-        </nav>
+        /* Hiệu ứng thẻ kính mờ (Glass Card) */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-[#FAFCFF] font-body text-slate-800 relative overflow-x-hidden">
 
-        <div class="mt-auto bg-[#001F3F] p-5 rounded-2xl text-white">
-            <p class="text-xs font-bold mb-2">Cần hỗ trợ trực tiếp?</p>
-            <p class="text-[10px] text-slate-400 mb-4">Kỹ thuật viên AuraHome luôn sẵn sàng giúp đỡ bạn.</p>
-            <a href="/Contact" class="block text-center py-2 bg-[#00E5FF] text-[#001F3F] rounded-lg text-xs font-black">LIÊN HỆ NGAY</a>
-        </div>
-    </aside>
+    <div class="ambient-blob bg-cyan-300/40 w-[30rem] h-[30rem] rounded-full top-[-10%] left-[-10%]"></div>
+    <div class="ambient-blob bg-indigo-300/30 w-[40rem] h-[40rem] rounded-full top-[20%] right-[-15%]" style="animation-delay: -5s;"></div>
 
-    <main class="flex-1 px-6 lg:px-12 py-12 overflow-y-auto">
-        <section class="mb-16">
-            <h1 class="text-5xl font-black font-headline tracking-tighter mb-4 text-[#001F3F] leading-tight">
-                Chào mừng đến với trung tâm <br />
-                <span class="text-white bg-[#001F3F] px-4 py-1 inline-block mt-2">Hỗ trợ AuraHome</span>
+    <div class="pt-24 pb-24 min-h-screen max-w-screen-xl mx-auto px-6 relative z-10">
+
+        <header class="text-center max-w-3xl mx-auto mb-20 space-y-8">
+            <h1 class="text-4xl md:text-6xl font-extrabold font-headline tracking-tight text-slate-900 leading-tight">
+                Làm chủ không gian <br />
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-indigo-600">thông minh của bạn</span>
             </h1>
-            <p class="text-lg text-slate-500 max-w-2xl mb-10">Mọi thông tin bạn cần để xây dựng một ngôi nhà thông minh hoàn hảo.</p>
+            <p class="text-lg text-slate-500 max-w-xl mx-auto font-medium">
+                Khám phá các video hướng dẫn trực quan để tận dụng tối đa sức mạnh của hệ sinh thái AuraHome.
+            </p>
 
-            <div class="max-w-3xl relative">
-                <span class="material-symbols-outlined absolute left-6 top-1/2 -translate-y-1/2 text-cyan-500 text-3xl">search</span>
-                <input class="w-full bg-slate-50 rounded-2xl py-6 pl-16 pr-8 text-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/20 transition-all border border-slate-100 shadow-sm" placeholder="Nhập tên thiết bị hoặc lỗi cần xử lý..." type="text" />
-            </div>
-        </section>
-
-        <section class="mb-24">
-            <div class="flex justify-between items-end mb-8">
-                <h2 class="text-3xl font-black font-headline text-[#001F3F]">Chủ đề nổi bật</h2>
-                <a class="text-cyan-600 font-bold hover:underline" href="#">Xem tất cả tài liệu</a>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="md:col-span-2 group relative overflow-hidden rounded-[2.5rem] bg-[#001F3F] text-white p-10 h-80 flex flex-col justify-end">
-                    <img class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-700" src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&q=80" alt="Setup Guide" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#001F3F] via-[#001F3F]/20 to-transparent"></div>
-                    <div class="relative z-10">
-                        <span class="inline-block px-3 py-1 bg-[#00E5FF] text-[#001F3F] text-[10px] font-black rounded-full mb-4 uppercase tracking-widest">Bắt đầu</span>
-                        <h3 class="text-3xl font-bold mb-2">Thiết lập AuraHome Hub</h3>
-                        <p class="text-slate-400 max-w-md text-sm">Hướng dẫn kết nối "bộ não" trung tâm của ngôi nhà với mạng WiFi và các thiết bị vệ tinh.</p>
-                    </div>
-                </div>
-
-                <div class="group relative overflow-hidden rounded-[2.5rem] bg-slate-50 p-8 h-80 flex flex-col justify-between border border-slate-100 hover:shadow-xl transition-all">
-                    <div class="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center">
-                        <span class="material-symbols-outlined text-3xl text-cyan-500">record_voice_over</span>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold mb-2 text-[#001F3F]">Điều khiển Giọng nói</h3>
-                        <p class="text-slate-500 text-sm">Hướng dẫn liên kết với Google Assistant và Amazon Alexa.</p>
-                    </div>
-                    <button class="flex items-center gap-2 font-bold text-cyan-600 group-hover:gap-4 transition-all">Chi tiết <span class="material-symbols-outlined">arrow_forward</span></button>
+            <div class="relative max-w-2xl mx-auto group mt-8">
+                <div class="absolute inset-0 bg-gradient-to-r from-cyan-400 to-indigo-400 rounded-full blur opacity-25 group-focus-within:opacity-50 transition-opacity duration-500"></div>
+                <div class="relative bg-white/90 backdrop-blur-md rounded-full p-2 flex items-center shadow-xl border border-white/50">
+                    <span class="material-symbols-outlined text-slate-400 ml-4">search</span>
+                    <input type="text" placeholder="Tìm kiếm cách cài đặt khóa cửa, camera..."
+                           class="w-full bg-transparent border-none focus:ring-0 text-slate-700 px-4 py-3 outline-none" />
+                    <button class="bg-slate-900 text-white px-8 py-3 rounded-full font-bold hover:bg-slate-800 transition-colors shadow-md">
+                        Đi
+                    </button>
                 </div>
             </div>
-        </section>
+        </header>
 
-        <section class="mb-24 py-16 px-10 rounded-[3.5rem] bg-[#F7F9FB] border border-slate-100 relative overflow-hidden">
-            <div class="max-w-4xl mx-auto">
-                <div class="flex flex-col md:flex-row gap-16 items-center mb-16">
-                    <div class="w-full md:w-1/2">
-                        <span class="text-cyan-500 font-black text-xs uppercase tracking-widest mb-4 block">Sản phẩm tiêu biểu</span>
-                        <h2 class="text-4xl font-black font-headline mb-6 text-[#001F3F] leading-tight">Hướng dẫn: <br />Bóng đèn AI Pro Smart</h2>
-                        <p class="text-slate-500 mb-8 leading-relaxed">Dòng bóng đèn thông minh có khả năng đồng bộ theo nhịp sinh học và tâm trạng của bạn.</p>
-                        <div class="flex gap-4">
-                            <span class="flex items-center gap-2 text-[10px] font-black text-[#001F3F] bg-white px-4 py-2 rounded-xl shadow-sm uppercase tracking-tighter">
-                                <span class="material-symbols-outlined text-sm">schedule</span> 3 phút thiết lập
-                            </span>
-                        </div>
-                    </div>
-                    <div class="w-full md:w-1/2">
-                        <div class="aspect-square rounded-[2rem] bg-white shadow-2xl overflow-hidden p-8 flex items-center justify-center border border-slate-50">
-                            <img class="w-full h-full object-contain" src="https://images.unsplash.com/photo-1550525811-e5869dd03032?auto=format&fit=crop&q=80" alt="Smart Bulb" />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                    <div class="space-y-4">
-                        <div class="w-10 h-10 rounded-full bg-[#001F3F] text-[#00E5FF] flex items-center justify-center font-black">1</div>
-                        <h4 class="font-bold text-[#001F3F]">Lắp đặt đui đèn</h4>
-                        <p class="text-xs text-slate-500 leading-relaxed">Gắn bóng vào đui E27 tiêu chuẩn và đảm bảo nguồn điện ổn định.</p>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="w-10 h-10 rounded-full bg-[#001F3F] text-[#00E5FF] flex items-center justify-center font-black">2</div>
-                        <h4 class="font-bold text-[#001F3F]">Chế độ Ghép nối</h4>
-                        <p class="text-xs text-slate-500 leading-relaxed">Bật/tắt công tắc 3 lần để bóng đèn chuyển sang nhấp nháy màu xanh.</p>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="w-10 h-10 rounded-full bg-[#001F3F] text-[#00E5FF] flex items-center justify-center font-black">3</div>
-                        <h4 class="font-bold text-[#001F3F]">Thêm vào Ứng dụng</h4>
-                        <p class="text-xs text-slate-500 leading-relaxed">Mở app AuraHome, nhấn (+) và chọn bóng đèn vừa hiển thị.</p>
-                    </div>
+        <section>
+            <div class="flex items-center justify-between mb-10">
+                <h2 class="text-2xl font-bold font-headline text-slate-900">Mới cập nhật</h2>
+                <div class="flex gap-2">
+                    <button class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:bg-white transition-colors text-slate-600"><span class="material-symbols-outlined">chevron_left</span></button>
+                    <button class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:bg-white transition-colors text-slate-600"><span class="material-symbols-outlined">chevron_right</span></button>
                 </div>
             </div>
-        </section>
 
-        <section class="mb-24">
-            <h2 class="text-3xl font-black font-headline text-[#001F3F] mb-10">Video hướng dẫn trực quan</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="group cursor-pointer">
-                    <div class="aspect-video rounded-[2rem] overflow-hidden relative mb-4 shadow-lg">
-                        <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://images.unsplash.com/photo-1585232351009-aa87416fca90?auto=format&fit=crop&q=80" alt="Video thumb" />
-                        <div class="absolute inset-0 bg-[#001F3F]/40 flex items-center justify-center">
-                            <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 group-hover:scale-110 transition-transform">
-                                <span class="material-symbols-outlined text-white text-4xl fill-1">play_arrow</span>
-                            </div>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <div class="group relative rounded-[2rem] p-4 glass-card hover:-translate-y-2 transition-transform duration-500 cursor-pointer">
+
+                            <a asp-action="GuideDetail" asp-route-id="@item.MaHuongDan" class="block h-full flex flex-col">
+
+                                <div class="relative aspect-[4/3] rounded-[1.5rem] overflow-hidden mb-6 shadow-inner">
+                                    @{
+                                        string imgUrl = "/images/default-thumbnail.jpg";
+                                        if (item.MaSanPhamNavigation != null && !string.IsNullOrEmpty(item.MaSanPhamNavigation.HinhAnh))
+                                        {
+                                            imgUrl = $"/img/{item.MaSanPhamNavigation.HinhAnh}";
+                                        }
+                                    }
+                                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                                         src="@imgUrl" alt="@item.TieuDe" />
+
+                                    <div class="absolute inset-0 bg-slate-900/10 group-hover:bg-slate-900/30 transition-colors duration-500 flex items-center justify-center">
+                                        <div class="w-16 h-16 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white scale-90 group-hover:scale-110 transition-transform duration-500 shadow-[0_0_30px_rgba(255,255,255,0.3)]">
+                                            <span class="material-symbols-outlined text-4xl ml-1">play_arrow</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="absolute top-4 left-4 bg-white/80 backdrop-blur text-slate-800 text-[11px] font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-sm">
+                                        @(item.MaSanPhamNavigation?.TenSanPham ?? "Hướng dẫn chung")
+                                    </div>
+                                </div>
+
+                                <div class="px-2 flex-1 flex flex-col justify-start">
+                                    <h3 class="text-xl font-bold text-slate-900 mb-2 line-clamp-2 leading-snug group-hover:text-cyan-600 transition-colors">
+                                        @item.TieuDe
+                                    </h3>
+                                    <p class="text-slate-500 text-sm line-clamp-2 mb-4">
+                                        @Html.Raw(item.NoiDung)
+                                    </p>
+
+                                    <div class="mt-auto flex items-center gap-2 text-sm font-bold text-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        Xem chi tiết <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-span-full py-20 flex flex-col items-center justify-center glass-card rounded-[2rem]">
+                        <span class="material-symbols-outlined text-6xl text-slate-300 mb-4">video_library</span>
+                        <h3 class="text-xl font-bold text-slate-700 mb-2">Chưa có video nào</h3>
+                        <p class="text-slate-500">Hệ thống đang cập nhật các video hướng dẫn mới nhất.</p>
                     </div>
-                    <h4 class="font-bold text-[#001F3F] group-hover:text-cyan-500 transition-colors">Thiết lập hệ thống an ninh AuraGuard</h4>
-                </div>
+                }
             </div>
         </section>
-    </main>
-</div>
+    </div>
+</body>
+</html>

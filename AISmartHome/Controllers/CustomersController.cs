@@ -7,30 +7,38 @@ using System.Text.Json;          // Bắt buộc để dùng JsonSerializer
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace AISmartHome.Controllers
 {
     public class CustomersController : Controller
     {
         private readonly AISmartHomeDbContext _context;
+        private readonly IMemoryCache _cache;
 
-        public CustomersController(AISmartHomeDbContext context)
+        public CustomersController(AISmartHomeDbContext context, IMemoryCache cache)
         {
             _context = context;
+            _cache = cache;
         }
-
-        // =======================================================
-        // HÀM HỖ TRỢ: ĐỊNH DANH KHÁCH HÀNG QUA SESSION (BẢO MẬT GIỎ HÀNG)
-        // =======================================================
         private async Task<int> GetOrSetGuestCustomerId()
         {
-            string guestIdStr = HttpContext.Session.GetString("GuestCustomerId");
-            if (!string.IsNullOrEmpty(guestIdStr))
+            // 1. ƯU TIÊN ĐỌC TỪ COOKIE (Vì nó sống 30 ngày)
+            if (Request.Cookies.TryGetValue("GuestCustomerId", out string cookieId) && int.TryParse(cookieId, out int parsedCookieId))
             {
-                return int.Parse(guestIdStr);
+                // Cập nhật lại Session cho đồng bộ với Cookie
+                HttpContext.Session.SetString("GuestCustomerId", parsedCookieId.ToString());
+                return parsedCookieId;
             }
 
-            // Khách mới tinh -> Tạo Khách vãng lai ảo
+            // 2. NẾU KHÔNG CÓ COOKIE, THỬ ĐỌC TỪ SESSION
+            string guestIdStr = HttpContext.Session.GetString("GuestCustomerId");
+            if (!string.IsNullOrEmpty(guestIdStr) && int.TryParse(guestIdStr, out int parsedSessionId))
+            {
+                return parsedSessionId;
+            }
+
+            // 3. KHÁCH MỚI TINH -> TẠO KHÁCH VÃNG LAI
             var newGuest = new KhachHang
             {
                 TenKhachHang = "Khách vãng lai",
@@ -41,7 +49,17 @@ namespace AISmartHome.Controllers
             _context.KhachHangs.Add(newGuest);
             await _context.SaveChangesAsync();
 
-            // Lưu Session
+            // Lưu Cookie
+            CookieOptions options = new CookieOptions
+            {
+                Expires = DateTime.Now.AddDays(30),
+                HttpOnly = true,
+                IsEssential = true,
+                Path = "/"
+            };
+            Response.Cookies.Append("GuestCustomerId", newGuest.MaKhachHang.ToString(), options);
+
+            // Lưu Session đồng bộ
             HttpContext.Session.SetString("GuestCustomerId", newGuest.MaKhachHang.ToString());
 
             return newGuest.MaKhachHang;
@@ -145,10 +163,24 @@ namespace AISmartHome.Controllers
         // =======================================================
         // QUẢN LÝ GIỎ HÀNG (AJAX & TRANG CHÍNH)
         // =======================================================
-        public async Task<IActionResult> Cart()
+        [HttpGet]
+        public async Task<IActionResult> Cart() // (Hoặc tên hàm giỏ hàng của bạn)
         {
-            int maKhachHangHienTai = await GetOrSetGuestCustomerId(); // Đã bảo mật
-            var cart = await GetOrCreateCartAsync(maKhachHangHienTai);
+            // 1. Lấy ID từ Cookie cực chuẩn xác
+            int guestId = await GetOrSetGuestCustomerId();
+
+            // 2. Tìm giỏ hàng của đúng ID này
+            var cart = await _context.GioHangs
+                .Include(g => g.ChiTietGioHangs)
+                    .ThenInclude(c => c.MaSanPhamNavigation) // Nhớ Include Sản phẩm để hiển thị tên, ảnh
+                .FirstOrDefaultAsync(g => g.MaKhachHang == guestId);
+
+            // 3. Nếu chưa có giỏ thì tạo giỏ rỗng truyền ra View
+            if (cart == null)
+            {
+                cart = new GioHang { MaKhachHang = guestId, ChiTietGioHangs = new List<ChiTietGioHang>() };
+            }
+
             return View(cart);
         }
 
@@ -198,7 +230,8 @@ namespace AISmartHome.Controllers
             return Json(new
             {
                 success = true,
-                totalItems = items.Sum(x => x.soLuong),
+                // ĐỔI TỪ: totalItems = items.Sum(x => x.soLuong),
+                totalItems = items.Count(), // Lấy số lượng loại sản phẩm
                 totalPrice = updatedCart.TongTien,
                 items = items
             });
@@ -242,7 +275,8 @@ namespace AISmartHome.Controllers
             return Json(new
             {
                 success = true,
-                totalItems = items.Sum(x => x.soLuong) ?? 0,
+                // ĐỔI TỪ: totalItems = items.Sum(x => x.soLuong) ?? 0,
+                totalItems = items.Count, // Lấy số lượng loại sản phẩm
                 totalPrice = updatedCart.TongTien ?? 0,
                 items = items
             });
@@ -293,7 +327,8 @@ namespace AISmartHome.Controllers
             return Json(new
             {
                 success = true,
-                totalItems = items.Sum(x => x.soLuong) ?? 0,
+                // ĐỔI TỪ: totalItems = items.Sum(x => x.soLuong) ?? 0,
+                totalItems = items.Count, // Lấy số lượng loại sản phẩm
                 totalPrice = cart.TongTien ?? 0,
                 items = items
             });
@@ -310,17 +345,26 @@ namespace AISmartHome.Controllers
         {
             int maKhachHangHienTai = await GetOrSetGuestCustomerId(); // Đã bảo mật
 
+            // BẮT BUỘC: Phải Include ChiTietGioHangs để có thể tính lại tổng tiền
             var gioHang = await _context.GioHangs
+                .Include(g => g.ChiTietGioHangs)
                 .FirstOrDefaultAsync(g => g.MaKhachHang == maKhachHangHienTai);
 
             if (gioHang == null) return Json(new { success = false, message = "Lỗi giỏ hàng" });
 
-            var cartItem = await _context.ChiTietGioHangs
-                .FirstOrDefaultAsync(c => c.MaSanPham == model.ProductId && c.MaGioHang == gioHang.MaGioHang);
+            var cartItem = gioHang.ChiTietGioHangs
+                .FirstOrDefault(c => c.MaSanPham == model.ProductId);
 
             if (cartItem != null)
             {
+                // 1. Cập nhật số lượng mới
                 cartItem.SoLuong = model.Quantity;
+                _context.ChiTietGioHangs.Update(cartItem);
+
+                // 2. TÍNH LẠI TỔNG TIỀN CHO TOÀN BỘ GIỎ HÀNG NGAY TẠI ĐÂY
+                gioHang.TongTien = gioHang.ChiTietGioHangs.Sum(c => (c.SoLuong ?? 0) * (c.Gia ?? 0));
+                _context.GioHangs.Update(gioHang);
+
                 await _context.SaveChangesAsync();
                 return Json(new { success = true });
             }
@@ -328,6 +372,105 @@ namespace AISmartHome.Controllers
             return Json(new { success = false, message = "Không tìm thấy sản phẩm" });
         }
 
+        [HttpPost]
+        [Route("Customers/RestoreCartAjax")]
+        public async Task<IActionResult> RestoreCartAjax(string phone, string otp, string name)
+        {
+            try
+            {
+                string formattedPhone = phone.StartsWith("0") ? "84" + phone.Substring(1) : phone;
+
+                if (!_cache.TryGetValue($"OTP_{formattedPhone}", out string savedOtp) || savedOtp != otp)
+                {
+                    return Json(new { success = false, message = "Mã OTP không chính xác!" });
+                }
+                _cache.Remove($"OTP_{formattedPhone}");
+
+                HttpContext.Session.SetString("VerifiedPhone", phone);
+                HttpContext.Session.SetString("CustomerPhone", phone);
+
+                var khachCu = await _context.KhachHangs
+                     .OrderByDescending(k => k.MaKhachHang)
+                     .FirstOrDefaultAsync(k => k.SoDienThoai == phone);
+
+                int currentGuestId = await GetOrSetGuestCustomerId();
+
+                if (khachCu != null)
+                {
+                    khachCu.TenKhachHang = name;
+                    _context.Update(khachCu);
+
+                    // 1. ÉP COOKIE DÙNG ID KHÁCH CŨ
+                    CookieOptions options = new CookieOptions { Expires = DateTime.Now.AddDays(30), HttpOnly = true, IsEssential = true, Path = "/" };
+                    Response.Cookies.Append("GuestCustomerId", khachCu.MaKhachHang.ToString(), options);
+
+                    // 2. ÉP SESSION DÙNG ID KHÁCH CŨ (ĐÂY LÀ DÒNG QUAN TRỌNG NHẤT VỪA THÊM)
+                    HttpContext.Session.SetString("GuestCustomerId", khachCu.MaKhachHang.ToString());
+
+                    // --- Logic Gộp Giỏ Hàng ---
+                    var gioHangHienTai = await _context.GioHangs.Include(g => g.ChiTietGioHangs).FirstOrDefaultAsync(g => g.MaKhachHang == currentGuestId);
+                    var gioHangCu = await GetOrCreateCartAsync(khachCu.MaKhachHang);
+
+                    if (gioHangHienTai != null && gioHangHienTai.ChiTietGioHangs.Any() && currentGuestId != khachCu.MaKhachHang)
+                    {
+                        foreach (var item in gioHangHienTai.ChiTietGioHangs)
+                        {
+                            var tonTai = gioHangCu.ChiTietGioHangs.FirstOrDefault(c => c.MaSanPham == item.MaSanPham);
+                            if (tonTai != null)
+                            {
+                                tonTai.SoLuong += item.SoLuong;
+                                _context.ChiTietGioHangs.Update(tonTai); // Đảm bảo lưu thay đổi
+                            }
+                            else
+                            {
+                                item.MaGioHang = gioHangCu.MaGioHang;
+                                _context.ChiTietGioHangs.Update(item);
+                            }
+                        }
+                        gioHangCu.TongTien = gioHangCu.ChiTietGioHangs.Sum(c => c.Gia * c.SoLuong);
+                        _context.GioHangs.Update(gioHangCu);
+
+                        // Xóa giỏ tạm sau khi gộp xong
+                        _context.ChiTietGioHangs.RemoveRange(gioHangHienTai.ChiTietGioHangs.Where(c => c.MaGioHang == gioHangHienTai.MaGioHang));
+                        _context.GioHangs.Remove(gioHangHienTai);
+                    }
+                    await _context.SaveChangesAsync();
+                    return Json(new { success = true, message = "Khôi phục giỏ hàng thành công!" });
+                }
+                else
+                {
+                    // SỐ ĐIỆN THOẠI MỚI TINH
+                    var currentGuest = await _context.KhachHangs.FindAsync(currentGuestId);
+                    if (currentGuest != null)
+                    {
+                        if (!string.IsNullOrEmpty(currentGuest.SoDienThoai) && currentGuest.SoDienThoai != phone)
+                        {
+                            var newCustomer = new KhachHang { TenKhachHang = name, SoDienThoai = phone };
+                            _context.KhachHangs.Add(newCustomer);
+                            await _context.SaveChangesAsync();
+
+                            CookieOptions opt = new CookieOptions { Expires = DateTime.Now.AddDays(30), HttpOnly = true, IsEssential = true, Path = "/" };
+                            Response.Cookies.Append("GuestCustomerId", newCustomer.MaKhachHang.ToString(), opt);
+
+                            // ĐỒNG BỘ SESSION (THÊM DÒNG NÀY)
+                            HttpContext.Session.SetString("GuestCustomerId", newCustomer.MaKhachHang.ToString());
+                        }
+                        else
+                        {
+                            currentGuest.SoDienThoai = phone;
+                            currentGuest.TenKhachHang = name;
+                            _context.Update(currentGuest);
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+                    return Json(new { success = true, message = "Xác thực thành công!" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Lỗi: " + ex.Message });
+            }
+        }
         // =======================================================
         // MUA NGAY & THANH TOÁN
         // =======================================================
@@ -373,9 +516,10 @@ namespace AISmartHome.Controllers
         }
 
         [Route("Customers/Checkout")]
-        public async Task<IActionResult> Checkout()
+        // THÊM THAM SỐ: List<int> selectedProducts
+        public async Task<IActionResult> Checkout([FromQuery] List<int> selectedProducts)
         {
-            int maKhachHangHienTai = await GetOrSetGuestCustomerId(); // Đã bảo mật
+            int maKhachHangHienTai = await GetOrSetGuestCustomerId();
 
             var gioHang = await _context.GioHangs
                 .Include(g => g.ChiTietGioHangs)
@@ -387,20 +531,83 @@ namespace AISmartHome.Controllers
                 return RedirectToAction("Index");
             }
 
+            // LỌC: CHỈ LẤY NHỮNG SẢN PHẨM KHÁCH HÀNG ĐÃ TICK CHỌN
+            if (selectedProducts != null && selectedProducts.Any())
+            {
+                gioHang.ChiTietGioHangs = gioHang.ChiTietGioHangs
+                    .Where(c => selectedProducts.Contains(c.MaSanPham ?? 0 ))
+                    .ToList();
+
+                // Nếu chọn xong mà mảng rỗng (khách hack F12), đẩy về giỏ hàng
+                if (!gioHang.ChiTietGioHangs.Any()) return RedirectToAction("Cart");
+            }
+            else
+            {
+                // Bắt lỗi nếu khách cố tình gõ link trực tiếp mà không chọn gì
+                return RedirectToAction("Cart");
+            }
+
             return View(gioHang);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PlaceOrder(
             string FullName, string Phone, string Email,
             string Province, string District, string Address,
             string Note, string PaymentMethod, string PaymentMode,
-            string VoucherCode, // MỚI THÊM: Nhận mã voucher từ giao diện
+            string VoucherCode,
+            string OtpCode,
+            List<int> SelectedProducts,
             bool CanLapDat = false)
         {
             try
             {
+                // =======================================================
+                // 1. LÀM SẠCH SỐ ĐIỆN THOẠI (Xóa khoảng trắng, quy về đầu 0)
+                // =======================================================
+                string cleanPhone = Phone?.Replace(" ", "").Replace(".", "").Replace("-", "").Trim() ?? "";
+                if (cleanPhone.StartsWith("84")) cleanPhone = "0" + cleanPhone.Substring(2);
+
+                // Lấy SĐT từ Session (Tìm trong cả 2 túi: VerifiedPhone và CustomerPhone)
+                string sessionPhone = HttpContext.Session.GetString("VerifiedPhone") ?? HttpContext.Session.GetString("CustomerPhone") ?? "";
+                string cleanSessionPhone = sessionPhone.Replace(" ", "").Replace(".", "").Replace("-", "").Trim();
+                if (cleanSessionPhone.StartsWith("84")) cleanSessionPhone = "0" + cleanSessionPhone.Substring(2);
+
+                // =======================================================
+                // 2. KIỂM TRA QUYỀN MIỄN TRỪ OTP
+                // =======================================================
+                // Nếu SĐT nhập vào TRÙNG với SĐT đang đăng nhập -> Cấp quyền Miễn OTP
+                bool isAlreadyVerified = (!string.IsNullOrEmpty(cleanSessionPhone) && cleanSessionPhone == cleanPhone);
+
+                if (!isAlreadyVerified)
+                {
+                    if (string.IsNullOrEmpty(cleanPhone))
+                        return Json(new { success = false, message = "Vui lòng nhập số điện thoại!" });
+
+                    // Nếu SĐT chưa xác thực, tạo thêm bản copy đầu "84" để quét tìm Cache
+                    string phoneFormat84 = cleanPhone.Length > 1 ? "84" + cleanPhone.Substring(1) : cleanPhone;
+
+                    // Tìm OTP trong Cache (Bao quét cả dạng 09... và 849...)
+                    if (string.IsNullOrEmpty(OtpCode) ||
+                        (!_cache.TryGetValue($"OTP_{cleanPhone}", out string savedOtp) &&
+                         !_cache.TryGetValue($"OTP_{phoneFormat84}", out savedOtp)) ||
+                        savedOtp != OtpCode)
+                    {
+                        return Json(new { success = false, message = "Mã OTP không chính xác hoặc yêu cầu đăng nhập!" });
+                    }
+
+                    // Nhập đúng -> Xóa Cache, cấp quyền miễn trừ cho các lần sau
+                    _cache.Remove($"OTP_{cleanPhone}");
+                    _cache.Remove($"OTP_{phoneFormat84}");
+                    HttpContext.Session.SetString("VerifiedPhone", cleanPhone);
+                }
+
+                // =======================================================
+                // Lấy giỏ hàng, lọc sản phẩm và tạo đơn hàng (Giữ nguyên code bên dưới của bạn)
+                // =======================================================
                 int maKhachHangHienTai = await GetOrSetGuestCustomerId();
+                // ... var gioHang = await _context.GioHangs...
 
                 // =======================================================
                 // 1. MỚI THÊM: ĐỒNG BỘ THÔNG TIN KHÁCH HÀNG XUỐNG ADMIN
@@ -420,13 +627,18 @@ namespace AISmartHome.Controllers
                     .Include(g => g.ChiTietGioHangs)
                     .FirstOrDefaultAsync(g => g.MaKhachHang == maKhachHangHienTai);
 
-                if (gioHang == null || !gioHang.ChiTietGioHangs.Any())
+                // BƯỚC LỌC: CHỈ LẤY CÁC MÓN KHÁCH ĐÃ CHỌN TỪ BƯỚC TRƯỚC
+                var itemsToBuy = gioHang.ChiTietGioHangs
+                    .Where(c => SelectedProducts.Contains(c.MaSanPham ?? 0))
+                    .ToList();
+
+                if (gioHang == null || !itemsToBuy.Any())
                 {
-                    return Json(new { success = false, message = "Giỏ hàng trống!" });
+                    return Json(new { success = false, message = "Không có sản phẩm nào để thanh toán!" });
                 }
 
-                decimal tongTien = gioHang.ChiTietGioHangs.Sum(c => (c.SoLuong ?? 0) * (c.Gia ?? 0));
-
+                // TÍNH TỔNG TIỀN DỰA TRÊN CÁC MÓN ĐƯỢC CHỌN THÔI
+                decimal tongTien = itemsToBuy.Sum(c => (c.SoLuong ?? 0) * (c.Gia ?? 0));
                 // =======================================================
                 // 2. MỚI THÊM: XỬ LÝ VOUCHER (Tính tiền & Khóa mã)
                 // =======================================================
@@ -524,8 +736,9 @@ namespace AISmartHome.Controllers
                     _context.YeuCauLapDats.Add(yeuCauMoi);
                 }
 
-                foreach (var item in gioHang.ChiTietGioHangs)
+                foreach (var item in itemsToBuy)
                 {
+                    // 1. Tạo chi tiết đơn hàng
                     _context.ChiTietDonHangs.Add(new ChiTietDonHang
                     {
                         MaDonHang = donHang.MaDonHang,
@@ -533,10 +746,28 @@ namespace AISmartHome.Controllers
                         SoLuong = item.SoLuong,
                         Gia = item.Gia
                     });
+
+                    // =======================================================
+                    // 2. MỚI THÊM: TRỪ SỐ LƯỢNG TỒN KHO CỦA SẢN PHẨM
+                    // =======================================================
+                    var sanPhamTrongKho = await _context.SanPhams.FindAsync(item.MaSanPham);
+                    if (sanPhamTrongKho != null)
+                    {
+                        // Trừ số lượng khách mua
+                        sanPhamTrongKho.SoLuong = sanPhamTrongKho.SoLuong - item.SoLuong;
+
+                        // Đảm bảo kho không bao giờ bị âm (rớt xuống dưới 0)
+                        if (sanPhamTrongKho.SoLuong < 0) sanPhamTrongKho.SoLuong = 0;
+
+                        _context.SanPhams.Update(sanPhamTrongKho);
+                    }
                 }
 
-                _context.ChiTietGioHangs.RemoveRange(gioHang.ChiTietGioHangs);
-                gioHang.TongTien = 0;
+                // CHỈ XÓA NHỮNG MÓN ĐÃ MUA KHỎI GIỎ HÀNG (Món nào khách chưa mua vẫn ở lại)
+                _context.ChiTietGioHangs.RemoveRange(itemsToBuy);
+
+                // Cập nhật lại tổng tiền của giỏ hàng cho những món còn sót lại
+                gioHang.TongTien = gioHang.ChiTietGioHangs.Except(itemsToBuy).Sum(c => (c.SoLuong ?? 0) * (c.Gia ?? 0));
                 _context.GioHangs.Update(gioHang);
 
                 await _context.SaveChangesAsync();
@@ -755,7 +986,6 @@ namespace AISmartHome.Controllers
 
             var baiViet = await _context.BaiViets
                 .Include(b => b.MaDanhMucBaiVietNavigation)
-                .Include(b => b.MaTaiKhoanNavigation) // Để hiện tác giả nếu cần
                 .FirstOrDefaultAsync(m => m.MaBaiViet == id && m.IsApproved == true);
 
             if (baiViet == null) return NotFound();
@@ -769,18 +999,50 @@ namespace AISmartHome.Controllers
             return View(baiViet);
         }
 
-        public IActionResult Guide()
+        // =======================================================
+        // TRUNG TÂM HƯỚNG DẪN & HỖ TRỢ (VIDEO GUIDES)
+        // =======================================================
+        public async Task<IActionResult> Guide()
         {
-            ViewData["Title"] = "Trung tâm hỗ trợ & Hướng dẫn sử dụng";
-            return View();
+            ViewData["Title"] = "Hướng dẫn sử dụng - AuraHome";
+
+            // Lấy toàn bộ danh sách Hướng dẫn, kèm theo thông tin Sản phẩm (MaSanPhamNavigation)
+            var videoGuides = await _context.HuongDanSuDungs
+                .Include(h => h.MaSanPhamNavigation)
+                .ToListAsync();
+
+            return View(videoGuides);
         }
 
-        // Nếu bạn muốn làm trang hướng dẫn chi tiết theo ID thiết bị
-        // GET: Customers/GuideDetail/5
-        public IActionResult GuideDetail(int id)
+        public async Task<IActionResult> GuideDetail(int? id)
         {
-            // Logic lấy dữ liệu hướng dẫn từ DB dựa trên id
-            return View();
+            if (id == null) return NotFound();
+
+            var guide = await _context.HuongDanSuDungs
+                .Include(h => h.MaSanPhamNavigation)
+                // SỬA DÒNG NÀY: Tìm theo MaHuongDan thay vì MaSanPham
+                .FirstOrDefaultAsync(b => b.MaHuongDan == id);
+
+            if (guide == null) return NotFound();
+
+            return View(guide);
+        }
+
+
+        // =======================================================
+        // XÁC NHẬN MÃ OPT SỐ ĐIỆN THOẠI
+        // =======================================================
+        [HttpPost]
+        [Route("Customers/LogoutAjax")]
+        public IActionResult LogoutAjax()
+        {
+            // BẮT BUỘC PHẢI CÓ Path = "/" THÌ TRÌNH DUYỆT MỚI CHỊU XÓA COOKIE
+            Response.Cookies.Delete("GuestCustomerId", new CookieOptions { Path = "/" });
+
+            // Xóa sạch toàn bộ trí nhớ của phiên làm việc hiện tại
+            HttpContext.Session.Clear();
+
+            return Json(new { success = true });
         }
     }
 }

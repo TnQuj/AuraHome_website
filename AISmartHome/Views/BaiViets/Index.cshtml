@@ -3,44 +3,41 @@
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "Quản lý & Thu thập Bài viết";
+    ViewData["HeaderIcon"] = @"<svg class=""w-8 h-8 text-[#00E5FF]"" fill=""none"" stroke=""currentColor"" viewBox=""0 0 24 24""><path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z""></path></svg>";
+
 }
 
-<div class="p-6 bg-slate-50 min-h-screen">
+<div class="px-6 pb-6 pt-2 bg-slate-50 min-h-screen">
+    @section HeaderActions {
+
+        <button onclick="startScanning()" id="scanBtn" class="group flex items-center gap-2 bg-emerald-50 text-emerald-600 border border-emerald-200 px-4 py-2.5 rounded-xl font-bold hover:bg-emerald-500 hover:text-white transition-all duration-300 shadow-sm">
+            <svg id="scanIcon" class="w-5 h-5 transition-transform duration-500 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            <span id="scanText" class="text-sm">Quét tin mới</span>
+        </button>
+
+        <a asp-action="Create" class="flex items-center gap-2 px-6 py-3 bg-brand-cyan text-white hover:bg-cyan-600 rounded-xl font-bold transition-all duration-300 shadow-lg shadow-brand-cyan/20 hover:-translate-y-0.5">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
+            </svg>
+            <span class="text-sm whitespace-nowrap">Viết bài mới</span>
+        </a>
+        <div class="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
+        <div class="hidden sm:flex items-center gap-3 bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl mr-2 shadow-sm">
+            <div class="w-7 h-7 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+            </div>
+            <div class="flex items-baseline gap-1.5">
+                <span class="text-[11px] text-slate-500 font-bold uppercase tracking-wider">Bài viết:</span>
+                <span class="text-lg font-black text-[#001F3F] leading-none">@Model.Count()</span>
+            </div>
+        </div>
+
+    }
     <div class="max-w-7xl mx-auto">
-
-        <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-                <h1 class="text-2xl font-bold text-[#001F3F] flex items-center gap-2">
-                    <svg class="w-8 h-8 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    Trung tâm Nội dung & Crawler
-                </h1>
-                <p class="text-sm text-gray-500 mt-1 pl-10">Tự động thu thập và phê duyệt tin tức công nghệ</p>
-            </div>
-
-            <div class="flex items-center gap-3">
-                <button onclick="startScanning()" id="scanBtn" class="flex items-center gap-2 bg-emerald-500 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-900/10">
-                    <svg id="scanIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                    <span id="scanText">Quét tin mới</span>
-                </button>
-
-                <a asp-action="Create" class="flex items-center gap-2 bg-[#001F3F] text-white px-5 py-2.5 rounded-xl font-bold hover:bg-[#002b5a] transition-all shadow-lg shadow-blue-900/10">
-                    <svg class="w-5 h-5 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
-                    Viết bài mới
-                </a>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4">
-                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                </div>
-                <div>
-                    <p class="text-xs text-gray-400 font-bold uppercase">Tổng bài viết</p>
-                    <p class="text-xl font-black text-[#001F3F]">@Model.Count()</p>
-                </div>
-            </div>
-        </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="overflow-x-auto">

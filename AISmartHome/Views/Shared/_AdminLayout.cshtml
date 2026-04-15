@@ -78,9 +78,8 @@
                     <i class="fa-solid fa-user-tie w-5 text-slate-400 group-hover:text-brand-cyan"></i> Nhân viên
                 </a>
             </div>
-
             <div class="p-4 border-t border-white/10 relative z-10">
-                <a asp-controller="Home" asp-action="Index" class="flex items-center justify-center gap-2 w-full py-3 bg-white/5 hover:bg-brand-cyan hover:text-white rounded-xl transition-all font-bold text-sm border border-white/10">
+                <a asp-controller="Admin" asp-action="ExitToWebsite" class="flex items-center justify-center gap-2 w-full py-3 bg-white/5 hover:bg-brand-cyan hover:text-white rounded-xl transition-all font-bold text-sm border border-white/10">
                     <i class="fa-solid fa-globe"></i> Về trang Website
                 </a>
             </div>
@@ -90,10 +89,34 @@
 
             <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-cyan/5 blur-[100px] rounded-full pointer-events-none"></div>
 
-            <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center px-8 justify-between relative z-30">
-                <h2 class="font-black text-xl text-brand-navy tracking-wide">@ViewData["Title"]</h2>
+            <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 flex flex-col xl:flex-row items-center px-6 lg:px-8 py-4 justify-between relative z-30 min-h-[80px] gap-4">
 
-                <div class="flex items-center gap-6">
+                <div class="w-full xl:w-auto flex-1">
+                    <h1 class="text-2xl font-black text-[#001F3F] flex items-center gap-2 tracking-wide">
+                        @* Icon mặc định nếu trang không truyền icon lên *@
+                        @if (ViewData["HeaderIcon"] != null)
+                        {
+                            @Html.Raw(ViewData["HeaderIcon"])
+                        }
+                        @ViewData["Title"]
+                    </h1>
+
+                    @if (ViewData["Subtitle"] != null)
+                    {
+                        <p class="text-sm text-slate-500 mt-1 pl-10">@ViewData["Subtitle"]</p>
+                    }
+                </div>
+
+                <div class="flex items-center justify-end gap-4 lg:gap-6 w-full xl:w-auto">
+
+                    @if (IsSectionDefined("HeaderActions"))
+                    {
+                        <div class="flex items-center gap-2">
+                            @RenderSection("HeaderActions", required: false)
+                        </div>
+
+                        <div class="h-8 w-px bg-slate-200 hidden md:block"></div>
+                    }
 
                     <div class="relative">
                         <button id="btnNotification" class="relative p-2 w-10 h-10 rounded-full bg-slate-100 text-slate-500 hover:bg-cyan-50 hover:text-brand-cyan transition-all outline-none">
@@ -103,23 +126,36 @@
                                 <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-500 border-2 border-white"></span>
                             </span>
                         </button>
-
                         @await Component.InvokeAsync("Notification")
                     </div>
 
-                    <div class="h-8 w-px bg-slate-200"></div> <div class="flex items-center gap-3 cursor-pointer group">
-                        <div class="text-right hidden md:block">
-                            <p class="text-sm font-bold text-slate-800 leading-tight">Admin Quản Trị</p>
-                            <p class="text-xs text-brand-cyan font-medium">System Manager</p>
+                    <div class="h-8 w-px bg-slate-200"></div>
+
+                    <div class="relative group cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <div class="text-right hidden md:block">
+                                <p class="text-sm font-bold text-slate-800 leading-tight">Admin Quản Trị</p>
+                                <p class="text-xs text-brand-cyan font-medium">System Manager</p>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-[#001F3F] to-[#00E5FF] text-white flex items-center justify-center font-bold shadow-md group-hover:ring-2 ring-offset-2 ring-[#00E5FF] transition-all">
+                                A
+                            </div>
                         </div>
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-navy to-brand-cyan text-white flex items-center justify-center font-bold shadow-md group-hover:ring-2 ring-offset-2 ring-brand-cyan transition-all">
-                            A
+
+                        <div class="absolute right-0 top-full mt-3 w-48 bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 transform origin-top-right scale-95 group-hover:scale-100 overflow-hidden">
+                            <div class="p-1.5">
+                                <div class="h-px bg-slate-100 my-1 hidden"></div>
+                                <button type="button" onclick="confirmLogout()" class="w-full flex items-center gap-3 px-4 py-2.5 text-[14px] font-bold text-rose-500 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors text-left">
+                                    <i class="fa-solid fa-right-from-bracket mt-0.5"></i> Đăng xuất
+                                </button>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </header>
 
-            <div class="flex-1 overflow-y-auto p-6 relative z-10">
+            <div class="flex-1 overflow-y-auto px-6 pb-6 pt-3 relative z-10">
 
                 <div class="relative group h-full">
                     <div class="absolute -inset-[2px] bg-gradient-to-r from-brand-cyan via-blue-400 to-emerald-400 rounded-3xl blur-[8px] opacity-20 group-hover:opacity-40 transition duration-1000"></div>
@@ -151,6 +187,27 @@
                 }
             });
         });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmLogout() {
+            Swal.fire({
+                title: 'Xác nhận đăng xuất?',
+                text: "Bạn có chắc chắn muốn thoát khỏi hệ thống quản trị AuraHome?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#f43f5e',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: '<i class="fa-solid fa-right-from-bracket"></i> Đăng xuất ngay',
+                cancelButtonText: 'Hủy bỏ',
+                customClass: { backdrop: 'swal-glass-backdrop' }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({ title: 'Đang đăng xuất...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
+                    window.location.href = '/Admin/Logout';
+                }
+            });
+        }
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)

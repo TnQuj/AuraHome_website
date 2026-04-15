@@ -1,5 +1,6 @@
 ﻿@model AISmartHome.Models.GioHang
 @using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Http
 @inject AISmartHome.Data.AISmartHomeDbContext _context
 
 @{
@@ -10,328 +11,383 @@
     decimal tongTienHang = Model?.ChiTietGioHangs?.Sum(x => (x.Gia ?? 0) * (x.SoLuong ?? 0)) ?? 0;
     decimal tienCoc = tongTienHang * 0.3m; // Tính 30%
     decimal tienConLai = tongTienHang - tienCoc; // 70% còn lại
+    string serverVerifiedPhone = Context.Session.GetString("VerifiedPhone") ?? "";
 }
+<style>
+    .ambient-blob {
+        position: absolute;
+        filter: blur(80px);
+        z-index: 0;
+        opacity: 0.6;
+        animation: float 10s infinite alternate ease-in-out;
+    }
 
-<main class="w-full pb-20 pt-8 bg-slate-50/50">
-    <div class="container mx-auto px-4 md:px-8">
+    @@keyframes float {
+        0% {
+            transform: translate(0, 0) scale(1);
+        }
 
-        <div class="relative group w-full mx-auto">
-            <div class="absolute -inset-1.5 bg-gradient-to-r from-brand-cyan via-blue-500 to-indigo-500 rounded-[2.5rem] blur-lg opacity-40 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
+        100% {
+            transform: translate(30px, -50px) scale(1.1);
+        }
+    }
+</style>
+<div class="bg-[#FAFCFF] dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen relative overflow-hidden">
 
-            <div class="relative bg-slate-50 rounded-3xl p-6 md:p-10 shadow-2xl h-full w-full border border-white/50">
+    <div class="ambient-blob bg-cyan-300/40 w-[30rem] h-[30rem] rounded-full top-[-5%] left-[-10%] pointer-events-none dark:opacity-10"></div>
+    <div class="ambient-blob bg-indigo-300/30 w-[40rem] h-[40rem] rounded-full top-[20%] right-[-15%] pointer-events-none dark:opacity-10" style="animation-delay: -5s;"></div>
 
-                <nav class="flex items-center gap-2 text-sm text-slate-500 mb-10 font-medium relative z-10">
-                    <a class="hover:text-brand-cyan transition-colors" asp-controller="Customers" asp-action="Index">Trang chủ</a>
-                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                    <a class="hover:text-brand-cyan transition-colors" asp-action="Cart">Giỏ hàng</a>
-                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                    <span class="text-brand-navy font-bold px-2 py-1 bg-white shadow-sm rounded-md border border-slate-100">Thanh toán</span>
-                </nav>
+    <main class="w-full pb-20 pt-8 bg-slate-50/50">
+        <div class="container mx-auto px-4 md:px-8">
 
-                <form id="checkoutForm" asp-action="PlaceOrder" method="post" class="relative z-10">
-                    <div class="flex flex-col lg:flex-row gap-12">
+            <div class="relative group w-full mx-auto">
+                <div class="absolute -inset-1.5 bg-gradient-to-r from-brand-cyan via-blue-500 to-indigo-500 rounded-[2.5rem] blur-lg opacity-40 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
 
-                        <div class="w-full lg:w-[60%]">
-                            <h2 class="text-xl font-black text-brand-navy uppercase tracking-wider mb-8 border-b-2 border-slate-100 pb-2">
-                                Thông tin liên hệ & Giao hàng
-                            </h2>
+                <div class="relative bg-slate-50 rounded-3xl p-6 md:p-10 shadow-2xl h-full w-full border border-white/50">
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="md:col-span-2">
-                                    <label class="block text-sm font-bold text-slate-700 mb-2">Họ và tên *</label>
-                                    <input type="text" name="FullName" required placeholder="Nhập họ và tên"
-                                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/20 outline-none transition-all">
-                                </div>
+                    <nav class="flex items-center gap-2 text-sm text-slate-500 mb-10 font-medium relative z-10">
+                        <a class="hover:text-brand-cyan transition-colors" asp-controller="Customers" asp-action="Index">Trang chủ</a>
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                        <a class="hover:text-brand-cyan transition-colors" asp-action="Cart">Giỏ hàng</a>
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                        <span class="text-brand-navy font-bold px-2 py-1 bg-white shadow-sm rounded-md border border-slate-100">Thanh toán</span>
+                    </nav>
 
-                                <div>
-                                    <label class="block text-sm font-bold text-slate-700 mb-2">Số điện thoại *</label>
-                                    <input type="tel" name="Phone" required placeholder="Nhập số điện thoại"
-                                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/20 outline-none transition-all">
-                                </div>
+                    <form id="checkoutForm" asp-action="PlaceOrder" method="post" class="relative z-10">
 
-                                <div>
-                                    <label class="block text-sm font-bold text-slate-700 mb-2">Địa chỉ email *</label>
-                                    <input type="email" name="Email" required placeholder="Nhập địa chỉ email"
-                                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/20 outline-none transition-all">
-                                </div>
+                        @if (Model?.ChiTietGioHangs != null)
+                        {
+                            foreach (var item in Model.ChiTietGioHangs)
+                            {
+                                <input type="hidden" name="SelectedProducts" value="@item.MaSanPham" />
+                            }
+                        }
+                        <div class="flex flex-col lg:flex-row gap-12">
 
-                                <div>
-                                    <label class="block text-sm font-bold text-slate-700 mb-2">Tỉnh/Thành phố *</label>
-                                    <select id="province" name="Province" required
-                                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan outline-none transition-all bg-white">
-                                        <option value="">Chọn Tỉnh/Thành phố</option>
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label class="block text-sm font-bold text-slate-700 mb-2">Quận/Huyện *</label>
-                                    <select id="district" name="District" required
-                                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan outline-none transition-all bg-white">
-                                        <option value="">Chọn Quận/Huyện</option>
-                                    </select>
-                                </div>
-
-                                <div class="md:col-span-2">
-                                    <label class="block text-sm font-bold text-slate-700 mb-2">Địa chỉ nhận hàng *</label>
-                                    <input type="text" name="Address" required placeholder="Nhập địa chỉ cụ thể. Số nhà, tên đường..."
-                                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/20 outline-none transition-all">
-                                </div>
-                            </div>
-
-                            <h2 class="text-xl font-black text-brand-navy uppercase tracking-wider mt-12 mb-8 border-b-2 border-slate-100 pb-2">
-                                Thông tin bổ sung
-                            </h2>
-                            <div>
-                                <label class="block text-sm font-bold text-slate-700 mb-2">Ghi chú đơn hàng (tuỳ chọn)</label>
-                                <textarea name="Note" rows="4" placeholder="Ghi chú về đơn hàng, ví dụ: thời gian hay chỉ dẫn địa điểm giao hàng chi tiết hơn."
-                                          class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/20 outline-none transition-all"></textarea>
-                            </div>
-                        </div>
-                        <!--Thông tin đơn hàng-->
-                        <div class="w-full lg:w-[40%]">
-                            <div class="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-100 sticky top-28 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] relative overflow-hidden">
-                                <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-cyan-400 to-blue-600"></div>
-
-                                <h2 class="text-xl font-black text-slate-800 uppercase mb-6 tracking-wide flex items-center gap-2">
-                                    <span class="w-8 h-8 rounded-full bg-cyan-50 flex items-center justify-center text-cyan-500 shadow-sm">
-                                        <i class="fa-solid fa-receipt text-sm"></i>
-                                    </span>
-                                    Tổng quan đơn hàng
+                            <div class="w-full lg:w-[60%]">
+                                <h2 class="text-xl font-black text-brand-navy uppercase tracking-wider mb-8 border-b-2 border-slate-100 pb-2">
+                                    Thông tin liên hệ & Giao hàng
                                 </h2>
 
-                                <div class="space-y-3 mb-6 border-b-2 border-dashed border-slate-100 pb-6 max-h-72 overflow-y-auto custom-scrollbar pr-2">
-                                    @if (Model?.ChiTietGioHangs != null)
-                                    {
-                                        @foreach (var item in Model.ChiTietGioHangs)
-                                        {
-                                            <div class="flex items-center gap-4 text-sm bg-white hover:bg-slate-50 p-3 rounded-2xl border border-slate-100 hover:border-slate-200 transition-colors shadow-sm group">
-                                                <div class="w-14 h-14 bg-white rounded-xl p-1.5 shrink-0 border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] group-hover:shadow-[0_2px_10px_rgba(6,182,212,0.1)] transition-shadow">
-                                                    <img src="/img/@item.MaSanPhamNavigation?.HinhAnh" alt="Ảnh" class="w-full h-full object-contain" onerror="this.src='https://via.placeholder.com/150'" />
-                                                </div>
-                                                <div class="flex-1 min-w-0">
-                                                    <span class="text-slate-700 font-bold line-clamp-1 group-hover:text-cyan-600 transition-colors">@item.MaSanPhamNavigation?.TenSanPham</span>
-                                                    <span class="text-[11px] text-slate-400 font-medium uppercase tracking-wider block mt-0.5">Đơn giá: @(item.Gia?.ToString("N0")) đ</span>
-                                                </div>
-                                                <div class="text-right shrink-0 pl-2">
-                                                    <div class="text-[11px] font-bold text-slate-400 mb-0.5 bg-slate-100 rounded-md inline-block px-1.5 py-0.5">SL: @item.SoLuong</div>
-                                                    <div class="font-black text-slate-800 text-[13px]">@(((item.Gia ?? 0) * (item.SoLuong ?? 0)).ToString("N0")) đ</div>
-                                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-bold text-slate-700 mb-2">Họ và tên *</label>
+                                        <input type="text" name="FullName" required placeholder="Nhập họ và tên"
+                                               class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/20 outline-none transition-all">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-bold text-slate-700 mb-2">Số điện thoại *</label>
+                                        <div class="flex gap-3">
+                                            <input type="tel" id="checkoutPhone" name="Phone" required placeholder="Nhập số điện thoại"
+                                                   class="flex-1 px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/20 outline-none transition-all bg-white">
+
+                                            <button type="button" id="btnSendOtpCheckout" onclick="sendOtpCheckout()"
+                                                    class="px-6 py-3 bg-slate-800 text-white font-bold rounded-xl hover:bg-brand-cyan transition-colors shadow-sm whitespace-nowrap hidden">
+                                                Nhận mã OTP
+                                            </button>
+                                        </div>
+
+                                        <div id="otpContainerCheckout" class="hidden animate-fade-in pt-3 mt-3 border-t border-slate-100">
+                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Mã xác nhận OTP <span class="text-rose-500">*</span></label>
+                                            <div class="relative">
+                                                <input type="text" id="checkoutOtpCode" name="OtpCode" placeholder="Nhập 6 chữ số..." maxlength="6"
+                                                       class="w-full px-4 py-3 rounded-xl border border-cyan-300 bg-cyan-50 focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/20 outline-none transition-all text-lg tracking-[0.5em] font-bold text-center">
+                                                <span id="otpTimerCheckout" class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400"></span>
                                             </div>
-                                        }
-                                    }
-                                </div>
-                                <!--Vouchers-->
-                                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mb-6">
-                                    <div class="flex items-center justify-between mb-4">
-                                        <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-ticket text-brand-cyan mr-2"></i>Mã giảm giá</h3>
-                                        <button type="button" onclick="showMyVouchers()" class="text-sm font-bold text-cyan-600 hover:text-cyan-700 underline underline-offset-2">
-                                            <i class="fa-solid fa-gift mr-1"></i> Xem ưu đãi của tôi
-                                        </button>
-                                    </div>
-
-                                    <div class="flex gap-3 relative">
-                                        <input type="text" id="voucherCode" placeholder="Nhập mã AuraHome của bạn..." class="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:border-brand-cyan uppercase font-semibold text-slate-700 transition-colors">
-                                        <button type="button" onclick="checkVoucher()" id="btnApplyVoucher" class="bg-slate-800 text-white font-bold px-6 py-3 rounded-xl hover:bg-brand-cyan transition-colors whitespace-nowrap">
-                                            Áp dụng
-                                        </button>
-                                    </div>
-
-                                    <p id="voucherMessage" class="text-sm mt-3 font-medium hidden"></p>
-                                </div>
-
-                                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
-                                    <div class="flex justify-between mb-2 text-slate-600">
-                                        <span>Tạm tính:</span>
-                                        <span id="subTotalDisplay" data-value="@Model.TongTien">@String.Format("{0:N0}", Model.TongTien) đ</span>
-                                    </div>
-
-                                    <div id="discountRow" class="flex justify-between mb-2 text-emerald-600 font-bold hidden">
-                                        <span>Đã giảm (Voucher):</span>
-                                        <span id="discountDisplay">-0 đ</span>
-                                    </div>
-
-                                    <hr class="my-4 border-slate-200">
-
-                                    <div class="flex justify-between text-xl font-black text-slate-900">
-                                        <span>Tổng thanh toán:</span>
-                                        <span id="finalTotalDisplay">@String.Format("{0:N0}", Model.TongTien) đ</span>
-                                    </div>
-                                </div>
-
-                                <div class="mb-6">
-                                    <label for="CanLapDat" class="cursor-pointer relative flex items-center p-4 rounded-2xl border border-slate-200 bg-white transition-all overflow-hidden group hover:shadow-md hover:border-cyan-300">
-                                        <input id="CanLapDat" name="CanLapDat" type="checkbox" value="true" checked class="peer sr-only">
-
-                                        <div class="absolute inset-0 bg-cyan-50/50 opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none"></div>
-                                        <div class="absolute inset-0 border-2 border-cyan-400 rounded-2xl opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none"></div>
-
-                                        <div class="relative flex items-center justify-center w-6 h-6 shrink-0 rounded-md border-2 border-slate-300 bg-white peer-checked:bg-cyan-500 peer-checked:border-cyan-500 peer-checked:[&>i]:scale-100 transition-all shadow-sm pointer-events-none">
-                                            <i class="fa-solid fa-check text-white text-[12px] scale-0 transition-transform duration-300"></i>
-                                        </div>
-
-                                        <div class="relative ml-4 pointer-events-none flex-1">
-                                            <span class="font-bold text-slate-800 block text-sm peer-checked:text-cyan-700 transition-colors">Cần kỹ thuật viên lắp đặt</span>
-                                            <span class="text-slate-500 text-[11px] leading-tight block mt-0.5">Phí thi công sẽ được báo sau. Bỏ chọn nếu tự lắp.</span>
-                                        </div>
-
-                                        <div class="relative shrink-0 w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 peer-checked:bg-cyan-100 peer-checked:text-cyan-500 transition-colors pointer-events-none">
-                                            <i class="fa-solid fa-screwdriver-wrench"></i>
-                                        </div>
-                                    </label>
-                                    <input name="CanLapDat" type="hidden" value="false" />
-                                </div>
-
-                                <div class="mb-8">
-                                    <h3 class="text-[12px] font-bold text-slate-400 mb-3 uppercase tracking-[0.1em] flex items-center gap-2">
-                                        <i class="fa-solid fa-money-check-dollar"></i> Hình thức thanh toán
-                                    </h3>
-                                    <div class="grid grid-cols-2 gap-3 sm:gap-4">
-
-                                        <label class="cursor-pointer relative h-full">
-                                            <input type="radio" name="PaymentMode" value="100" class="peer sr-only" checked>
-                                            <div class="h-full p-3 sm:p-4 text-center rounded-2xl border-2 border-slate-100 bg-white peer-checked:border-brand-navy peer-checked:bg-slate-50 peer-checked:shadow-[0_0_0_4px_rgba(15,23,42,0.05)] transition-all hover:border-slate-300 flex flex-col justify-center items-center gap-1">
-                                                <i class="fa-solid fa-circle-check text-brand-navy opacity-0 peer-checked:opacity-100 absolute top-3 right-3 transition-opacity"></i>
-                                                <div class="font-black text-brand-navy text-sm sm:text-base">Trả trước 100%</div>
-                                                <div class="text-[11px] text-slate-500 font-medium">Thanh toán toàn bộ</div>
-                                            </div>
-                                        </label>
-
-                                        <label class="cursor-pointer relative h-full" id="depositOptionWrapper">
-                                            <input type="radio" name="PaymentMode" value="30" id="radioDeposit" class="peer sr-only">
-                                            <div class="h-full p-3 sm:p-4 text-center rounded-2xl border-2 border-slate-100 bg-white peer-checked:border-rose-500 peer-checked:bg-rose-50 peer-checked:shadow-[0_0_0_4px_rgba(244,63,94,0.1)] transition-all hover:border-slate-300 flex flex-col justify-center items-center gap-1">
-                                                <i class="fa-solid fa-circle-check text-rose-500 opacity-0 peer-checked:opacity-100 absolute top-3 right-3 transition-opacity"></i>
-                                                <div class="font-black text-rose-600 text-sm sm:text-base">Cọc 30% giữ đơn</div>
-                                                <div class="text-[11px] text-slate-500 font-medium">Thu phần còn lại sau</div>
-                                            </div>
-                                        </label>
-
-                                    </div>
-                                </div>
-
-                                <div class="relative overflow-hidden bg-gradient-to-br from-slate-900 to-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-700/50 shadow-2xl mb-6 group transition-all duration-300 hover:border-slate-600">
-                                    <div class="absolute -top-16 -right-16 w-40 h-40 bg-brand-cyan/20 rounded-full blur-[40px] pointer-events-none group-hover:bg-brand-cyan/30 transition-colors duration-700"></div>
-                                    <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50"></div>
-
-                                    <div class="relative z-10 flex flex-col sm:flex-row justify-between sm:items-end gap-5">
-                                        <div class="flex flex-col items-start gap-3">
-                                            <div class="flex items-center gap-2">
-                                                <i class="fa-solid fa-wallet text-cyan-400"></i>
-                                                <span class="text-slate-400 text-xs font-bold uppercase tracking-[0.15em]">Số tiền cần chuyển</span>
-                                            </div>
-                                            <span id="badgePaymentType" class="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 px-3 py-1.5 rounded-lg backdrop-blur-md shadow-sm">
-                                                <i class="fa-solid fa-check-circle text-[10px]"></i> Thanh toán 100%
-                                            </span>
-                                        </div>
-
-                                        <div class="text-left sm:text-right mt-2 sm:mt-0">
-                                            <span class="block text-[11px] text-slate-500 font-medium mb-1 uppercase tracking-widest">Tổng cộng (VNĐ)</span>
-                                            <span class="font-black text-4xl sm:text-5xl tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white via-cyan-100 to-cyan-500 drop-shadow-[0_0_15px_rgba(6,182,212,0.4)]"
-                                                  id="depositAmountDisplay"
-                                                  data-total="@tongTienHang"
-                                                  data-deposit="@tienCoc"
-                                                  data-value="@tongTienHang">
-                                                @tongTienHang.ToString("N0")
-                                            </span>
                                         </div>
                                     </div>
+
+                                    <div>
+                                        <label class="block text-sm font-bold text-slate-700 mb-2">Địa chỉ email *</label>
+                                        <input type="email" name="Email" required placeholder="Nhập địa chỉ email"
+                                               class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/20 outline-none transition-all">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-bold text-slate-700 mb-2">Tỉnh/Thành phố *</label>
+                                        <select id="province" name="Province" required
+                                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan outline-none transition-all bg-white">
+                                            <option value="">Chọn Tỉnh/Thành phố</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-bold text-slate-700 mb-2">Quận/Huyện *</label>
+                                        <select id="district" name="District" required
+                                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan outline-none transition-all bg-white">
+                                            <option value="">Chọn Quận/Huyện</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-bold text-slate-700 mb-2">Địa chỉ nhận hàng *</label>
+                                        <input type="text" name="Address" required placeholder="Nhập địa chỉ cụ thể. Số nhà, tên đường..."
+                                               class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/20 outline-none transition-all">
+                                    </div>
                                 </div>
 
-                                <input type="hidden" id="hiddenVoucherCode" name="VoucherCode" value="" />
-
-                                <button id="btn-checkout" type="submit" class="w-full relative group flex justify-center items-center gap-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white py-5 rounded-2xl font-black uppercase tracking-[0.1em] text-[15px] transition-all duration-300 shadow-[0_10px_30px_-10px_rgba(6,182,212,0.6)] hover:shadow-[0_15px_40px_-10px_rgba(6,182,212,0.8)] hover:-translate-y-1">
-                                    <i class="fa-solid fa-shield-halved text-[18px] opacity-90"></i>
-                                    <span>Thanh toán an toàn</span>
-                                    <i class="fa-solid fa-arrow-right text-[15px] opacity-70 group-hover:opacity-100 group-hover:translate-x-1.5 transition-all duration-300"></i>
-                                </button>
-
+                                <h2 class="text-xl font-black text-brand-navy uppercase tracking-wider mt-12 mb-8 border-b-2 border-slate-100 pb-2">
+                                    Thông tin bổ sung
+                                </h2>
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-700 mb-2">Ghi chú đơn hàng (tuỳ chọn)</label>
+                                    <textarea name="Note" rows="4" placeholder="Ghi chú về đơn hàng, ví dụ: thời gian hay chỉ dẫn địa điểm giao hàng chi tiết hơn."
+                                              class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan/20 outline-none transition-all"></textarea>
+                                </div>
                             </div>
+                            <!--Thông tin đơn hàng-->
+                            <div class="w-full lg:w-[40%]">
+                                <div class="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-100 sticky top-28 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] relative overflow-hidden">
+                                    <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-cyan-400 to-blue-600"></div>
+
+                                    <h2 class="text-xl font-black text-slate-800 uppercase mb-6 tracking-wide flex items-center gap-2">
+                                        <span class="w-8 h-8 rounded-full bg-cyan-50 flex items-center justify-center text-cyan-500 shadow-sm">
+                                            <i class="fa-solid fa-receipt text-sm"></i>
+                                        </span>
+                                        Tổng quan đơn hàng
+                                    </h2>
+
+                                    <div class="space-y-3 mb-6 border-b-2 border-dashed border-slate-100 pb-6 max-h-72 overflow-y-auto custom-scrollbar pr-2">
+                                        @if (Model?.ChiTietGioHangs != null)
+                                        {
+                                            @foreach (var item in Model.ChiTietGioHangs)
+                                            {
+                                                <div class="flex items-center gap-4 text-sm bg-white hover:bg-slate-50 p-3 rounded-2xl border border-slate-100 hover:border-slate-200 transition-colors shadow-sm group">
+                                                    <div class="w-14 h-14 bg-white rounded-xl p-1.5 shrink-0 border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] group-hover:shadow-[0_2px_10px_rgba(6,182,212,0.1)] transition-shadow">
+                                                        <img src="/img/@item.MaSanPhamNavigation?.HinhAnh" alt="Ảnh" class="w-full h-full object-contain" onerror="this.src='https://via.placeholder.com/150'" />
+                                                    </div>
+                                                    <div class="flex-1 min-w-0">
+                                                        <span class="text-slate-700 font-bold line-clamp-1 group-hover:text-cyan-600 transition-colors">@item.MaSanPhamNavigation?.TenSanPham</span>
+                                                        <span class="text-[11px] text-slate-400 font-medium uppercase tracking-wider block mt-0.5">Đơn giá: @(item.Gia?.ToString("N0")) đ</span>
+                                                    </div>
+                                                    <div class="text-right shrink-0 pl-2">
+                                                        <div class="text-[11px] font-bold text-slate-400 mb-0.5 bg-slate-100 rounded-md inline-block px-1.5 py-0.5">SL: @item.SoLuong</div>
+                                                        <div class="font-black text-slate-800 text-[13px]">@(((item.Gia ?? 0) * (item.SoLuong ?? 0)).ToString("N0")) đ</div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                    <!--Vouchers-->
+                                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mb-6">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-ticket text-brand-cyan mr-2"></i>Mã giảm giá</h3>
+                                            <button type="button" onclick="showMyVouchers()" class="text-sm font-bold text-cyan-600 hover:text-cyan-700 underline underline-offset-2">
+                                                <i class="fa-solid fa-gift mr-1"></i> Xem ưu đãi của tôi
+                                            </button>
+                                        </div>
+
+                                        <div class="flex gap-3 relative">
+                                            <input type="text" id="voucherCode" placeholder="Nhập mã AuraHome của bạn..." class="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:border-brand-cyan uppercase font-semibold text-slate-700 transition-colors">
+                                            <button type="button" onclick="checkVoucher()" id="btnApplyVoucher" class="bg-slate-800 text-white font-bold px-6 py-3 rounded-xl hover:bg-brand-cyan transition-colors whitespace-nowrap">
+                                                Áp dụng
+                                            </button>
+                                        </div>
+
+                                        <p id="voucherMessage" class="text-sm mt-3 font-medium hidden"></p>
+                                    </div>
+
+                                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                                        <div class="flex justify-between mb-2 text-slate-600">
+                                            <span>Tạm tính:</span>
+                                            <span id="subTotalDisplay" data-value="@tongTienHang">@String.Format("{0:N0}", tongTienHang) đ</span>
+                                        </div>
+
+                                        <div id="discountRow" class="flex justify-between mb-2 text-emerald-600 font-bold hidden">
+                                            <span>Đã giảm (Voucher):</span>
+                                            <span id="discountDisplay">-0 đ</span>
+                                        </div>
+
+                                        <hr class="my-4 border-slate-200">
+
+                                        <div class="flex justify-between text-xl font-black text-slate-900">
+                                            <span>Tổng thanh toán:</span>
+                                            <span id="finalTotalDisplay">@String.Format("{0:N0}", tongTienHang) đ</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-6">
+                                        <label for="CanLapDat" class="cursor-pointer relative flex items-center p-4 rounded-2xl border border-slate-200 bg-white transition-all overflow-hidden group hover:shadow-md hover:border-cyan-300">
+                                            <input id="CanLapDat" name="CanLapDat" type="checkbox" value="true" checked class="peer sr-only">
+
+                                            <div class="absolute inset-0 bg-cyan-50/50 opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none"></div>
+                                            <div class="absolute inset-0 border-2 border-cyan-400 rounded-2xl opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none"></div>
+
+                                            <div class="relative flex items-center justify-center w-6 h-6 shrink-0 rounded-md border-2 border-slate-300 bg-white peer-checked:bg-cyan-500 peer-checked:border-cyan-500 peer-checked:[&>i]:scale-100 transition-all shadow-sm pointer-events-none">
+                                                <i class="fa-solid fa-check text-white text-[12px] scale-0 transition-transform duration-300"></i>
+                                            </div>
+
+                                            <div class="relative ml-4 pointer-events-none flex-1">
+                                                <span class="font-bold text-slate-800 block text-sm peer-checked:text-cyan-700 transition-colors">Cần kỹ thuật viên lắp đặt</span>
+                                                <span class="text-slate-500 text-[11px] leading-tight block mt-0.5">Phí thi công sẽ được báo sau. Bỏ chọn nếu tự lắp.</span>
+                                            </div>
+
+                                            <div class="relative shrink-0 w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 peer-checked:bg-cyan-100 peer-checked:text-cyan-500 transition-colors pointer-events-none">
+                                                <i class="fa-solid fa-screwdriver-wrench"></i>
+                                            </div>
+                                        </label>
+                                        <input name="CanLapDat" type="hidden" value="false" />
+                                    </div>
+
+                                    <div class="mb-8">
+                                        <h3 class="text-[12px] font-bold text-slate-400 mb-3 uppercase tracking-[0.1em] flex items-center gap-2">
+                                            <i class="fa-solid fa-money-check-dollar"></i> Hình thức thanh toán
+                                        </h3>
+                                        <div class="grid grid-cols-2 gap-3 sm:gap-4">
+
+                                            <label class="cursor-pointer relative h-full">
+                                                <input type="radio" name="PaymentMode" value="100" class="peer sr-only" checked>
+                                                <div class="h-full p-3 sm:p-4 text-center rounded-2xl border-2 border-slate-100 bg-white peer-checked:border-brand-navy peer-checked:bg-slate-50 peer-checked:shadow-[0_0_0_4px_rgba(15,23,42,0.05)] transition-all hover:border-slate-300 flex flex-col justify-center items-center gap-1">
+                                                    <i class="fa-solid fa-circle-check text-brand-navy opacity-0 peer-checked:opacity-100 absolute top-3 right-3 transition-opacity"></i>
+                                                    <div class="font-black text-brand-navy text-sm sm:text-base">Trả trước 100%</div>
+                                                    <div class="text-[11px] text-slate-500 font-medium">Thanh toán toàn bộ</div>
+                                                </div>
+                                            </label>
+
+                                            <label class="cursor-pointer relative h-full" id="depositOptionWrapper">
+                                                <input type="radio" name="PaymentMode" value="30" id="radioDeposit" class="peer sr-only">
+                                                <div class="h-full p-3 sm:p-4 text-center rounded-2xl border-2 border-slate-100 bg-white peer-checked:border-rose-500 peer-checked:bg-rose-50 peer-checked:shadow-[0_0_0_4px_rgba(244,63,94,0.1)] transition-all hover:border-slate-300 flex flex-col justify-center items-center gap-1">
+                                                    <i class="fa-solid fa-circle-check text-rose-500 opacity-0 peer-checked:opacity-100 absolute top-3 right-3 transition-opacity"></i>
+                                                    <div class="font-black text-rose-600 text-sm sm:text-base">Cọc 30% giữ đơn</div>
+                                                    <div class="text-[11px] text-slate-500 font-medium">Thu phần còn lại sau</div>
+                                                </div>
+                                            </label>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="relative overflow-hidden bg-gradient-to-br from-slate-900 to-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-700/50 shadow-2xl mb-6 group transition-all duration-300 hover:border-slate-600">
+                                        <div class="absolute -top-16 -right-16 w-40 h-40 bg-brand-cyan/20 rounded-full blur-[40px] pointer-events-none group-hover:bg-brand-cyan/30 transition-colors duration-700"></div>
+                                        <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50"></div>
+
+                                        <div class="relative z-10 flex flex-col sm:flex-row justify-between sm:items-end gap-5">
+                                            <div class="flex flex-col items-start gap-3">
+                                                <div class="flex items-center gap-2">
+                                                    <i class="fa-solid fa-wallet text-cyan-400"></i>
+                                                    <span class="text-slate-400 text-xs font-bold uppercase tracking-[0.15em]">Số tiền cần chuyển</span>
+                                                </div>
+                                                <span id="badgePaymentType" class="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 px-3 py-1.5 rounded-lg backdrop-blur-md shadow-sm">
+                                                    <i class="fa-solid fa-check-circle text-[10px]"></i> Thanh toán 100%
+                                                </span>
+                                            </div>
+
+                                            <div class="text-left sm:text-right mt-2 sm:mt-0">
+                                                <span class="block text-[11px] text-slate-500 font-medium mb-1 uppercase tracking-widest">Tổng cộng (VNĐ)</span>
+                                                <span class="font-black text-4xl sm:text-5xl tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white via-cyan-100 to-cyan-500 drop-shadow-[0_0_15px_rgba(6,182,212,0.4)]"
+                                                      id="depositAmountDisplay"
+                                                      data-total="@tongTienHang"
+                                                      data-deposit="@tienCoc"
+                                                      data-value="@tongTienHang">
+                                                    @tongTienHang.ToString("N0")
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <input type="hidden" id="hiddenVoucherCode" name="VoucherCode" value="" />
+
+                                    <button id="btn-checkout" type="submit" class="w-full relative group flex justify-center items-center gap-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white py-5 rounded-2xl font-black uppercase tracking-[0.1em] text-[15px] transition-all duration-300 shadow-[0_10px_30px_-10px_rgba(6,182,212,0.6)] hover:shadow-[0_15px_40px_-10px_rgba(6,182,212,0.8)] hover:-translate-y-1">
+                                        <i class="fa-solid fa-shield-halved text-[18px] opacity-90"></i>
+                                        <span>Thanh toán an toàn</span>
+                                        <i class="fa-solid fa-arrow-right text-[15px] opacity-70 group-hover:opacity-100 group-hover:translate-x-1.5 transition-all duration-300"></i>
+                                    </button>
+
+                                </div>
+                            </div>
+
                         </div>
-
-                    </div>
-                </form>
-            </div>
-        </div>
-
-    </div>
-
-    <div id="otpModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm transition-all">
-        <div class="bg-white p-8 rounded-2xl shadow-2xl w-[90%] max-w-md transform scale-100 transition-transform">
-            <h3 class="text-2xl font-black text-brand-navy mb-2 text-center uppercase">Xác thực số điện thoại</h3>
-            <p class="text-slate-500 text-sm text-center mb-6">
-                Chúng tôi đã gửi một mã gồm 6 chữ số đến số điện thoại <br />
-                <strong id="displayPhone" class="text-brand-cyan"></strong>
-            </p>
-
-            <div class="mb-6">
-                <input type="text" id="otpInput" maxlength="6" placeholder="Nhập mã OTP (VD: 123456)"
-                       class="w-full text-center tracking-widest text-2xl font-bold px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-brand-cyan focus:ring-4 focus:ring-brand-cyan/20 outline-none transition-all">
-            </div>
-
-            <div class="flex gap-4">
-                <button id="btnCancelOtp" type="button" class="w-1/2 py-3 font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
-                    Hủy bỏ
-                </button>
-                <button id="btnVerifyOtp" type="button" class="w-full py-3 font-bold text-white bg-brand-cyan hover:bg-cyan-600 rounded-xl transition-colors shadow-lg shadow-cyan-600/30">
-                    Xác nhận
-                </button>
-            </div>
-            <p class="text-center text-xs text-slate-400 mt-4">
-                Chưa nhận được mã?
-                <button type="button" id="btnResendOtp" class="text-brand-cyan font-bold hover:underline disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline" disabled>
-                    Gửi lại (<span id="otpTimer">60</span>s)
-                </button>
-            </p>
-        </div>
-    </div>
-
-    <div id="qrModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-brand-navy/90 backdrop-blur-sm transition-all p-4">
-        <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm overflow-hidden flex flex-col transform scale-100 transition-transform">
-
-            <div class="bg-gradient-to-br from-brand-navy to-slate-800 p-6 pt-8 pb-16 text-center relative">
-                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-                <h3 id="qrModalTitle" class="text-xl font-black text-white uppercase tracking-widest relative z-10">Thanh toán đơn hàng</h3>
-                <p class="text-brand-cyan text-sm mt-1 relative z-10 font-medium">Mã đơn: <strong id="qrOrderId" class="text-white text-base tracking-wider">#...</strong></p>
-            </div>
-
-            <div class="px-6 pb-6 flex flex-col items-center bg-slate-50 relative rounded-t-[2rem] -mt-10">
-
-                <div class="bg-white p-3 rounded-2xl shadow-xl -mt-12 w-48 h-48 flex items-center justify-center border border-slate-100 relative z-20">
-                    <img id="qrImage" src="" alt="QR Code" class="w-full h-full object-contain hidden" />
-                    <div id="qrLoading" class="text-brand-cyan flex flex-col items-center">
-                        <i class="fa-solid fa-spinner fa-spin text-3xl mb-2"></i>
-                        <span class="text-xs font-bold uppercase tracking-wider">Đang tạo mã...</span>
-                    </div>
-                </div>
-
-                <div class="w-full mt-6 bg-white rounded-xl border border-slate-100 p-1 shadow-sm">
-                    <div class="p-3 border-b border-slate-50 flex justify-between items-center">
-                        <span id="qrAmountLabel" class="text-slate-500 text-xs font-bold uppercase">Số tiền cần quét:</span>
-                        <span id="qrAmount" class="font-black text-rose-600 text-xl">0 đ</span>
-                    </div>
-                    <div class="p-3 flex justify-between items-center bg-slate-50/50 rounded-b-lg">
-                        <span class="text-slate-500 text-xs font-bold uppercase">Nội dung:</span>
-                        <span id="qrContent" class="font-bold text-brand-navy text-sm max-w-[160px] truncate text-right">...</span>
-                    </div>
+                    </form>
                 </div>
             </div>
 
-            <div class="p-6 bg-white border-t border-slate-100">
-                <button id="btnFinishOrder" type="button" class="w-full py-4 font-black text-white bg-brand-cyan hover:bg-cyan-600 rounded-xl transition-all shadow-lg shadow-cyan-600/30 uppercase tracking-widest flex justify-center items-center gap-2">
-                    <i class="fa-solid fa-check-double"></i> Đã chuyển khoản xong
-                </button>
-                <p id="qrFooterNote" class="text-[11px] text-slate-400 mt-4 text-center px-2 leading-relaxed">
+        </div>
+
+        <div id="otpModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm transition-all">
+            <div class="bg-white p-8 rounded-2xl shadow-2xl w-[90%] max-w-md transform scale-100 transition-transform">
+                <h3 class="text-2xl font-black text-brand-navy mb-2 text-center uppercase">Xác thực số điện thoại</h3>
+                <p class="text-slate-500 text-sm text-center mb-6">
+                    Chúng tôi đã gửi một mã gồm 6 chữ số đến số điện thoại <br />
+                    <strong id="displayPhone" class="text-brand-cyan"></strong>
+                </p>
+
+                <div class="mb-6">
+                    <input type="text" id="otpInput" maxlength="6" placeholder="Nhập mã OTP (VD: 123456)"
+                           class="w-full text-center tracking-widest text-2xl font-bold px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-brand-cyan focus:ring-4 focus:ring-brand-cyan/20 outline-none transition-all">
+                </div>
+
+                <div class="flex gap-4">
+                    <button id="btnCancelOtp" type="button" class="w-1/2 py-3 font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+                        Hủy bỏ
+                    </button>
+                    <button id="btnVerifyOtp" type="button" class="w-full py-3 font-bold text-white bg-brand-cyan hover:bg-cyan-600 rounded-xl transition-colors shadow-lg shadow-cyan-600/30">
+                        Xác nhận
+                    </button>
+                </div>
+                <p class="text-center text-xs text-slate-400 mt-4">
+                    Chưa nhận được mã?
+                    <button type="button" id="btnResendOtp" class="text-brand-cyan font-bold hover:underline disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline" disabled>
+                        Gửi lại (<span id="otpTimer">60</span>s)
+                    </button>
                 </p>
             </div>
-
         </div>
-    </div>
-</main>
+
+        <div id="qrModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-brand-navy/90 backdrop-blur-sm transition-all p-4">
+            <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm overflow-hidden flex flex-col transform scale-100 transition-transform">
+
+                <div class="bg-gradient-to-br from-brand-navy to-slate-800 p-6 pt-8 pb-16 text-center relative">
+                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                    <h3 id="qrModalTitle" class="text-xl font-black text-white uppercase tracking-widest relative z-10">Thanh toán đơn hàng</h3>
+                    <p class="text-brand-cyan text-sm mt-1 relative z-10 font-medium">Mã đơn: <strong id="qrOrderId" class="text-white text-base tracking-wider">#...</strong></p>
+                </div>
+
+                <div class="px-6 pb-6 flex flex-col items-center bg-slate-50 relative rounded-t-[2rem] -mt-10">
+
+                    <div class="bg-white p-3 rounded-2xl shadow-xl -mt-12 w-48 h-48 flex items-center justify-center border border-slate-100 relative z-20">
+                        <img id="qrImage" src="" alt="QR Code" class="w-full h-full object-contain hidden" />
+                        <div id="qrLoading" class="text-brand-cyan flex flex-col items-center">
+                            <i class="fa-solid fa-spinner fa-spin text-3xl mb-2"></i>
+                            <span class="text-xs font-bold uppercase tracking-wider">Đang tạo mã...</span>
+                        </div>
+                    </div>
+
+                    <div class="w-full mt-6 bg-white rounded-xl border border-slate-100 p-1 shadow-sm">
+                        <div class="p-3 border-b border-slate-50 flex justify-between items-center">
+                            <span id="qrAmountLabel" class="text-slate-500 text-xs font-bold uppercase">Số tiền cần quét:</span>
+                            <span id="qrAmount" class="font-black text-rose-600 text-xl">0 đ</span>
+                        </div>
+                        <div class="p-3 flex justify-between items-center bg-slate-50/50 rounded-b-lg">
+                            <span class="text-slate-500 text-xs font-bold uppercase">Nội dung:</span>
+                            <span id="qrContent" class="font-bold text-brand-navy text-sm max-w-[160px] truncate text-right">...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-white border-t border-slate-100">
+                    <button id="btnFinishOrder" type="button" class="w-full py-4 font-black text-white bg-brand-cyan hover:bg-cyan-600 rounded-xl transition-all shadow-lg shadow-cyan-600/30 uppercase tracking-widest flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-check-double"></i> Đã chuyển khoản xong
+                    </button>
+                    <p id="qrFooterNote" class="text-[11px] text-slate-400 mt-4 text-center px-2 leading-relaxed">
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@@11"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@@11"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@@11"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@@11"></script>
 <script>
+    // Khai báo biến đếm ngược OTP
+    let checkoutTimerInterval;
+
+    // Khai báo biến serverVerifiedPhone lấy từ C# (Bắt buộc phải có dòng này ở đầu script)
+    const serverVerifiedPhone = '@serverVerifiedPhone';
+
     // =====================================================================
     // 1. HÀM HIỂN THỊ POPUP KHO VOUCHER (Tính năng Ví Voucher thông minh)
     // =====================================================================
@@ -397,17 +453,149 @@
     }
 
     // =====================================================================
-    // 2. HÀM KIỂM TRA VÀ ÁP DỤNG VOUCHER (Đồng bộ với site.js)
+    // 2. KHỞI TẠO VÀ LẮNG NGHE SỰ KIỆN SỐ ĐIỆN THOẠI
+    // =====================================================================
+    document.addEventListener("DOMContentLoaded", function () {
+       const phoneInput = document.getElementById('checkoutPhone');
+
+        // Ưu tiên điền số điện thoại từ Server trước, nếu không có mới lấy ở Browser
+        const savedPhone = serverVerifiedPhone || localStorage.getItem('savedGuestPhone');
+        if(savedPhone) {
+            phoneInput.value = savedPhone;
+        }
+
+        // Chạy hàm kiểm tra ngay lúc vừa load trang
+        checkPhoneVerification(phoneInput.value.trim());
+
+        // Lắng nghe mỗi khi gõ phím
+        phoneInput.addEventListener('input', function() {
+            checkPhoneVerification(this.value.trim());
+        });
+    });
+
+    // HÀM KIỂM TRA "CHỐNG ĐẠN" (BỎ QUA KHOẢNG TRẮNG)
+    function checkPhoneVerification(currentPhone) {
+        const savedPhoneBrowser = localStorage.getItem('savedGuestPhone') || '';
+        const btnOtp = document.getElementById('btnSendOtpCheckout');
+        const otpContainer = document.getElementById('otpContainerCheckout');
+        const otpInput = document.getElementById('checkoutOtpCode');
+
+        if (!currentPhone) return;
+
+        // Xóa bỏ mọi khoảng trắng, dấu chấm, dấu gạch ngang để so sánh
+        let cleanCurrent = currentPhone.replace(/\D/g, '');
+        let cleanBrowser = savedPhoneBrowser.replace(/\D/g, '');
+        let cleanServer = serverVerifiedPhone.replace(/\D/g, '');
+
+        // Quy chuẩn tất cả đầu 84 về đầu 0 để so sánh
+        if (cleanCurrent.startsWith('84')) cleanCurrent = '0' + cleanCurrent.substring(2);
+        if (cleanBrowser.startsWith('84')) cleanBrowser = '0' + cleanBrowser.substring(2);
+        if (cleanServer.startsWith('84')) cleanServer = '0' + cleanServer.substring(2);
+
+        // KỊCH BẢN 1: Số ĐT hiện tại GIỐNG số đã lưu
+        if (cleanCurrent !== '' && (cleanCurrent === cleanBrowser || cleanCurrent === cleanServer)) {
+            btnOtp.classList.add('hidden'); // Giấu nút
+            otpContainer.classList.add('hidden'); // Giấu ô nhập
+            otpInput.value = ''; // Xóa mã cũ
+            otpInput.removeAttribute('required'); // Bỏ ràng buộc
+
+            const phoneInput = document.getElementById('checkoutPhone');
+            phoneInput.classList.add('border-emerald-400', 'bg-emerald-50/30');
+            phoneInput.classList.remove('border-slate-200');
+        }
+        // KỊCH BẢN 2: Số mới hoàn toàn
+        else {
+            btnOtp.classList.remove('hidden'); // Hiện nút nhận mã
+            btnOtp.innerHTML = 'Nhận mã OTP';
+            btnOtp.disabled = false;
+
+            otpInput.setAttribute('required', 'required'); // Bắt buộc nhập mã
+
+            const phoneInput = document.getElementById('checkoutPhone');
+            phoneInput.classList.remove('border-emerald-400', 'bg-emerald-50/30');
+            phoneInput.classList.add('border-slate-200');
+        }
+    }
+
+     // =====================================================================
+     // 3. XỬ LÝ GỬI OTP VÀ SUBMIT FORM
+     // =====================================================================
+     function sendOtpCheckout() {
+         const phone = document.getElementById('checkoutPhone').value.trim();
+         const btn = document.getElementById('btnSendOtpCheckout');
+
+         if (phone.length < 9) {
+             Swal.fire('Chú ý', 'Vui lòng nhập số điện thoại hợp lệ.', 'warning');
+             return;
+         }
+
+         btn.disabled = true;
+         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
+
+         fetch('/api/Otp/send', {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({ phone: phone })
+         })
+         .then(res => res.json())
+         .then(data => {
+             if (data.success) {
+                 document.getElementById('otpContainerCheckout').classList.remove('hidden');
+
+                 // (Xóa dòng này khi chạy thật để khách tự nhập)
+                 if(data.otp) document.getElementById('checkoutOtpCode').value = data.otp;
+
+                 btn.innerHTML = '<i class="fa-solid fa-check"></i> Đã gửi';
+
+                 let timeLeft = 60;
+                 clearInterval(checkoutTimerInterval);
+                 checkoutTimerInterval = setInterval(() => {
+                     if (timeLeft <= 0) {
+                         clearInterval(checkoutTimerInterval);
+                         document.getElementById('otpTimerCheckout').innerText = '';
+                         btn.innerHTML = 'Gửi lại mã';
+                         btn.disabled = false;
+                     } else {
+                         document.getElementById('otpTimerCheckout').innerText = `${timeLeft}s`;
+                         timeLeft--;
+                     }
+                 }, 1000);
+
+             } else {
+                 Swal.fire('Lỗi', data.message, 'error');
+                 btn.disabled = false;
+                 btn.innerHTML = 'Nhận mã OTP';
+             }
+         });
+     }
+
+     // Ràng buộc trước khi form Checkout được Submit
+     document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+         const currentPhone = document.getElementById('checkoutPhone').value.replace(/\D/g, '');
+         let cleanServer = serverVerifiedPhone.replace(/\D/g, '');
+
+         if (currentPhone.startsWith('84')) currentPhone = '0' + currentPhone.substring(2);
+         if (cleanServer.startsWith('84')) cleanServer = '0' + cleanServer.substring(2);
+
+         const otpInput = document.getElementById('checkoutOtpCode').value.trim();
+
+         // Nếu số điện thoại KHÁC số máy chủ lưu, MÀ lại chưa nhập OTP thì chặn lại
+         if (currentPhone !== cleanServer && otpInput.length !== 6) {
+             e.preventDefault();
+             Swal.fire('Bảo mật', 'Bạn đang dùng số điện thoại mới. Vui lòng nhận mã và nhập đủ 6 số OTP trước khi thanh toán!', 'warning');
+         }
+     });
+
+    // =====================================================================
+    // 4. HÀM KIỂM TRA VÀ ÁP DỤNG VOUCHER
     // =====================================================================
     function checkVoucher() {
         const codeInput = document.getElementById('voucherCode');
         const code = codeInput.value.trim().toUpperCase();
         const emailInput = document.querySelector('input[name="Email"]')?.value.trim();
 
-        // Lấy giá trị tổng ban đầu từ subTotalDisplay (Giá gốc chưa giảm)
         const subTotalElement = document.getElementById('subTotalDisplay');
         const originalTotal = parseFloat(subTotalElement.getAttribute('data-value'));
-
         const msgElement = document.getElementById('voucherMessage');
 
         if (!emailInput) {
@@ -436,17 +624,14 @@
             const depositAmountDisplay = document.getElementById('depositAmountDisplay');
 
             if (data.success) {
-                // Thành công: Hiển thị thông báo
                 msgElement.textContent = data.message;
                 msgElement.className = "text-sm mt-3 font-bold text-emerald-600 block";
                 codeInput.classList.add('border-emerald-500', 'bg-emerald-50');
 
-                // Cập nhật giao diện hóa đơn
                 document.getElementById('discountRow').classList.remove('hidden');
                 document.getElementById('discountDisplay').textContent = `-${data.discountAmount.toLocaleString('vi-VN')} đ`;
                 document.getElementById('finalTotalDisplay').textContent = `${data.newTotal.toLocaleString('vi-VN')} đ`;
 
-                // Đồng bộ dữ liệu ngầm cho site.js đọc (Tính lại cọc 30%)
                 const newTotal = data.newTotal;
                 const newDeposit = newTotal * 0.3;
 
@@ -455,20 +640,16 @@
                     depositAmountDisplay.setAttribute('data-deposit', newDeposit);
                 }
 
-                // Lưu mã giảm giá vào form ẩn để site.js gom gửi đi
                 document.getElementById('hiddenVoucherCode').value = code;
 
             } else {
-                // Thất bại: Hiển thị thông báo lỗi
                 msgElement.textContent = data.message;
                 msgElement.className = "text-sm mt-3 font-medium text-rose-500 block";
                 codeInput.classList.remove('border-emerald-500', 'bg-emerald-50');
 
-                // Ẩn dòng giảm giá và trả lại giá cũ
                 document.getElementById('discountRow').classList.add('hidden');
                 document.getElementById('finalTotalDisplay').textContent = `${originalTotal.toLocaleString('vi-VN')} đ`;
 
-                // Trả lại dữ liệu ngầm cho site.js
                 if(depositAmountDisplay) {
                     depositAmountDisplay.setAttribute('data-total', originalTotal);
                     depositAmountDisplay.setAttribute('data-deposit', originalTotal * 0.3);
@@ -477,7 +658,6 @@
                 document.getElementById('hiddenVoucherCode').value = '';
             }
 
-            // Kích hoạt lại sự kiện change để site.js tự động vẽ lại nút Thanh toán
             const checkedRadio = document.querySelector('input[name="PaymentMode"]:checked');
             if (checkedRadio) {
                 checkedRadio.dispatchEvent(new Event('change'));

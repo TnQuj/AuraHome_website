@@ -44,22 +44,22 @@
                 </div>
             </div>
         </div>
-
+    
         <div class="lg:col-span-1 space-y-6">
 
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
                     <i class="fa-solid fa-box"></i> Sản phẩm liên quan
                 </h3>
-                <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100 group hover:border-indigo-200 transition-all">
-                    <div class="w-12 h-12 bg-indigo-600 rounded-xl text-white flex items-center justify-center shadow-lg shadow-indigo-100">
-                        <i class="fa-solid fa-microchip text-xl"></i>
+                <div class="p-4 bg-indigo-50 rounded-xl border border-indigo-100 flex items-center gap-4">
+                    <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center">
+                        <i class="fa-solid fa-box text-xl"></i>
                     </div>
                     <div>
-                        <div class="font-bold text-slate-800">@(Model.MaSanPhamNavigation?.TenSanPham ?? "Sản phẩm #" + Model.MaSanPham)</div>
-                        <div class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded mt-1 inline-block uppercase">
-                            Mã SP: @Model.MaSanPham
-                        </div>
+                        <p class="text-sm text-indigo-600 font-bold uppercase tracking-widest mb-1">Sản phẩm áp dụng</p>
+                        <p class="text-lg font-bold text-slate-800">
+                            @(Model.MaSanPhamNavigation?.TenSanPham ?? "Chưa gắn sản phẩm")
+                        </p>
                     </div>
                 </div>
             </div>

@@ -1,25 +1,45 @@
 ﻿// =========================================================
 // 1. CÁC HÀM QUICK VIEW & ĐỔI ẢNH CHI TIẾT
 // =========================================================
-function openQuickView(id) {
+
+// Gắn vào window để đảm bảo HTML gọi được từ bên ngoài nếu dùng module
+window.openQuickView = function (id) {
     const modal = document.getElementById('quickview-' + id);
-    if (modal) {
+    const content = document.getElementById('content-' + id); // Lấy thẻ chứa nội dung
+
+    if (modal && content) {
+        // 1. Hiện cái nền đen lên
         modal.classList.remove('hidden');
         modal.classList.add('flex');
-        document.body.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden'; // Khóa cuộn trang
+
+        // 2. Chờ 10ms rồi gỡ tàng hình cho nội dung bay ra mượt mà
+        setTimeout(() => {
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        }, 10);
     }
 }
 
-function closeQuickView(id) {
+window.closeQuickView = function (id) {
     const modal = document.getElementById('quickview-' + id);
-    if (modal) {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-        document.body.style.overflow = 'auto';
+    const content = document.getElementById('content-' + id);
+
+    if (modal && content) {
+        // 1. Làm tàng hình và thu nhỏ nội dung trước
+        content.classList.add('scale-95', 'opacity-0');
+        content.classList.remove('scale-100', 'opacity-100');
+        document.body.style.overflow = 'auto'; // Mở lại cuộn trang
+
+        // 2. Chờ 300ms (bằng thời gian CSS transition) rồi mới giấu hẳn nền đen đi
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 300);
     }
 }
 
-function changeMainImage(productId, newSrc, thumbnailElement) {
+window.changeMainImage = function (productId, newSrc, thumbnailElement) {
     const mainImg = document.getElementById('main-img-' + productId) || document.getElementById('main-product-img');
     if (mainImg) {
         mainImg.style.opacity = '0.5';
@@ -472,3 +492,111 @@ function decreaseDetailQty() {
         updateDetailPrice(newQty);
     }
 }
+
+
+// =========================================================
+// PHẦN XỬ LÝ YÊU THÍCH SẢN PHẨM
+// =========================================================
+
+function toggleFavorite(id, name, price, image) {
+    let favs = JSON.parse(localStorage.getItem('favorite_products')) || [];
+    const index = favs.findIndex(x => x.id === id);
+
+    if (index > -1) {
+        // Đã có -> Xóa đi
+        favs.splice(index, 1);
+        Swal.fire({ toast: true, position: 'top-end', showConfirmButton: false, timer: 1500, icon: 'info', title: 'Đã bỏ yêu thích!' });
+    } else {
+        // Chưa có -> Thêm vào
+        favs.push({ id, name, price, image });
+        Swal.fire({ toast: true, position: 'top-end', showConfirmButton: false, timer: 1500, icon: 'success', title: 'Đã thêm vào yêu thích!' });
+    }
+
+    // Lưu lại bộ nhớ và cập nhật giao diện
+    localStorage.setItem('favorite_products', JSON.stringify(favs));
+    renderFavorites();
+    updateHeartIcons();
+}
+
+// 2. Hàm Đổ dữ liệu ra Sidebar
+function renderFavorites() {
+    let favs = JSON.parse(localStorage.getItem('favorite_products')) || [];
+    const container = document.getElementById('favorite-products-list');
+    const clearBtn = document.getElementById('clear-fav-container');
+
+    if (!container) return;
+
+    if (favs.length === 0) {
+        container.innerHTML = '<p class="text-sm text-slate-400 italic py-4 text-center">Bạn chưa có sản phẩm yêu thích nào. Hãy thả tim nhé!</p>';
+        if (clearBtn) clearBtn.classList.add('hidden');
+        return;
+    }
+
+    if (clearBtn) clearBtn.classList.remove('hidden');
+    let html = '';
+
+    // Vẽ từng sản phẩm ra
+    favs.forEach(sp => {
+        // 👇 FIX LỖI GIÁ TIỀN TẠI ĐÂY: Dùng parseFloat để lấy đúng số (ví dụ 200000.00 -> 200000)
+        let parsedPrice = parseFloat(sp.price);
+        let priceFormatted = isNaN(parsedPrice) ? "0 đ" : parsedPrice.toLocaleString('vi-VN') + ' đ';
+
+        let imgSrc = sp.image && sp.image !== 'null' && sp.image !== '' ? '/img/' + sp.image : '/img/placeholder.jpg';
+
+        html += `
+                <div class="py-3 border-b border-slate-100 last:border-0 group relative animate-fade-in">
+                    <div class="flex gap-3">
+                        <div class="w-14 shrink-0">
+                            <a href="/SanPhams/Details/${sp.id}" class="w-14 h-14 bg-slate-50 rounded-xl p-1 border border-slate-100 block hover:border-rose-400 transition-colors">
+                                <img src="${imgSrc}" class="w-full h-full object-contain" onerror="this.src='/img/placeholder.jpg'">
+                            </a>
+                        </div>
+                        <div class="flex-1 min-w-0 flex flex-col justify-center">
+                            <a href="/SanPhams/Details/${sp.id}" class="text-[13px] font-bold text-brand-navy line-clamp-2 leading-tight hover:text-rose-500 transition-colors">
+                                ${sp.name}
+                            </a>
+                            <div class="text-sm font-black text-rose-500 mt-1">${priceFormatted}</div>
+                        </div>
+                        <button onclick="toggleFavorite('${sp.id}', '${sp.name.replace(/'/g, "\\'")}', '${sp.price}', '${sp.image}')" class="absolute top-1/2 -translate-y-1/2 right-0 w-6 h-6 bg-white border border-slate-200 hover:bg-rose-500 text-slate-400 hover:text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-sm">
+                            <i class="fa-solid fa-xmark text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+                `;
+    });
+    container.innerHTML = html;
+}
+
+// 3. Hàm Đổi màu Nút Tim trên trang (Đỏ nếu đã thích)
+function updateHeartIcons() {
+    let favs = JSON.parse(localStorage.getItem('favorite_products')) || [];
+    let favIds = favs.map(x => x.id.toString());
+
+    document.querySelectorAll('[class*="fav-btn-"]').forEach(btn => {
+        btn.classList.remove('text-rose-500', 'shadow-md');
+        btn.classList.add('text-slate-400');
+
+        let classes = btn.className.split(' ');
+        let idClass = classes.find(c => c.startsWith('fav-btn-'));
+        if (idClass) {
+            let id = idClass.replace('fav-btn-', '');
+            if (favIds.includes(id)) {
+                btn.classList.remove('text-slate-400');
+                btn.classList.add('text-rose-500', 'shadow-md');
+            }
+        }
+    });
+}
+
+// 4. Hàm Xóa tất cả
+function clearFavorites() {
+    localStorage.removeItem('favorite_products');
+    renderFavorites();
+    updateHeartIcons();
+}
+
+// Tự động chạy khi load trang
+document.addEventListener("DOMContentLoaded", function () {
+    renderFavorites();
+    updateHeartIcons();
+});

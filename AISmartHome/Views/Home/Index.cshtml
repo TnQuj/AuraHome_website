@@ -175,13 +175,13 @@
 
                         <div id="wheel" class="w-72 h-72 md:w-80 md:h-80 rounded-full border-[10px] border-slate-800 shadow-[0_0_40px_rgba(6,182,212,0.2)] relative overflow-hidden"
                              style="background: conic-gradient(
-                 #06b6d4 0deg 60deg,
-                 #1e293b 60deg 120deg,
-                 #3b82f6 120deg 180deg,
-                 #0f172a 180deg 240deg,
-                 #10b981 240deg 300deg,
-                 #334155 300deg 360deg);
-                 transition: transform 4s cubic-bezier(0.14, 0.73, 0.2, 1);">
+                             #06b6d4 0deg 60deg,
+                             #1e293b 60deg 120deg,
+                             #3b82f6 120deg 180deg,
+                             #0f172a 180deg 240deg,
+                             #10b981 240deg 300deg,
+                             #334155 300deg 360deg);
+                             transition: transform 4s cubic-bezier(0.14, 0.73, 0.2, 1);">
 
                             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-slate-900 border-4 border-slate-700 rounded-full shadow-inner z-10 flex items-center justify-center">
                                 <i class="fa-solid fa-bolt text-yellow-400 text-xl"></i>
@@ -463,76 +463,3 @@
     </main>
 </body>
 </html>
-<script>
-    let isSpinning = false;
-
-    function startSpin() {
-        if (isSpinning) return;
-        
-        const email = document.getElementById('wheelEmail').value;
-        // DÒNG BỊ LỖI
-    if (!email || !email.includes('@@')) {
-        Swal.fire('Lỗi', 'Vui lòng nhập một email hợp lệ!', 'warning');
-        return;
-    }
-
-        isSpinning = true;
-        const btn = document.getElementById('btnSpin');
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang chờ máy chủ...';
-
-        // 1. Gọi về C# để "bốc thăm"
-        fetch(`/Home/SpinWheel?email=${encodeURIComponent(email)}`, { method: 'POST' })
-        .then(res => res.json())
-        .then(data => {
-            if (!data.success) {
-                Swal.fire('Rất tiếc', data.message, 'warning');
-                resetButton();
-                return;
-            }
-
-            btn.innerHTML = 'ĐANG QUAY...';
-
-            // 2. Tính toán góc quay
-            // Múi 0 (0-60 độ), Múi 1 (60-120 độ)... 
-            // Chúng ta xoay thêm 5 vòng (1800 độ) cho đẹp, rồi cộng với góc của múi giải thưởng
-            const wheel = document.getElementById('wheel');
-            const degreePerSlice = 60; // 360 độ / 6 múi = 60
-            
-            // Công thức xoay sao cho mũi tên (đang ở góc 0/360 độ) chỉ đúng vào giữa múi giải thưởng
-            const targetDegree = 1800 + (360 - (data.prizeIndex * degreePerSlice)) - (degreePerSlice / 2);
-            
-            wheel.style.transform = `rotate(${targetDegree}deg)`;
-
-            // 3. Chờ 4 giây cho hiệu ứng quay kết thúc rồi hiện kết quả
-            setTimeout(() => {
-                if (data.prizeIndex === 3) {
-                    Swal.fire('Thật tiếc...', data.prizeName, 'info');
-                } else {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Tuyệt vời!',
-                        html: `Bạn đã trúng: <b class="text-lg text-brand-navy">${data.prizeName}</b><br><br>
-                               <div class="bg-cyan-50 p-3 rounded-lg border border-dashed border-cyan-400">
-                                  <span class="text-xs text-slate-500 uppercase font-bold block mb-1">Mã của bạn:</span>
-                                  <strong class="text-2xl text-brand-cyan tracking-widest">${data.voucherCode}</strong>
-                               </div>`,
-                        confirmButtonColor: '#06b6d4',
-                        confirmButtonText: 'Bắt đầu mua sắm'
-                    });
-                }
-                resetButton(true);
-            }, 4200);
-        })
-        .catch(error => {
-            Swal.fire('Lỗi', 'Không thể kết nối máy chủ', 'error');
-            resetButton();
-        });
-
-        function resetButton(success = false) {
-            isSpinning = false;
-            btn.disabled = false;
-            btn.innerHTML = success ? 'ĐÃ NHẬN QUÀ' : 'BẮT ĐẦU QUAY';
-        }
-    }
-</script>

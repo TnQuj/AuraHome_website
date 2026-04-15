@@ -48,7 +48,7 @@ namespace AISmartHome.Controllers
         // GET: HuongDanSuDungs/Create
         public IActionResult Create()
         {
-            ViewData["MaSanPham"] = new SelectList(_context.SanPhams, "MaSanPham", "MaSanPham");
+            ViewData["MaSanPham"] = new SelectList(_context.SanPhams, "MaSanPham", "TenSanPham");
             return View();
         }
 
@@ -65,7 +65,7 @@ namespace AISmartHome.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MaSanPham"] = new SelectList(_context.SanPhams, "MaSanPham", "MaSanPham", huongDanSuDung.MaSanPham);
+            ViewData["MaSanPham"] = new SelectList(_context.SanPhams, "MaSanPham", "TenSanPham", huongDanSuDung.MaSanPham);
             return View(huongDanSuDung);
         }
 
@@ -82,7 +82,7 @@ namespace AISmartHome.Controllers
             {
                 return NotFound();
             }
-            ViewData["MaSanPham"] = new SelectList(_context.SanPhams, "MaSanPham", "MaSanPham", huongDanSuDung.MaSanPham);
+            ViewData["MaSanPham"] = new SelectList(_context.SanPhams, "MaSanPham", "TenSanPham", huongDanSuDung.MaSanPham);
             return View(huongDanSuDung);
         }
 
@@ -118,7 +118,7 @@ namespace AISmartHome.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MaSanPham"] = new SelectList(_context.SanPhams, "MaSanPham", "MaSanPham", huongDanSuDung.MaSanPham);
+            ViewData["MaSanPham"] = new SelectList(_context.SanPhams, "MaSanPham", "TenSanPham", huongDanSuDung.MaSanPham);
             return View(huongDanSuDung);
         }
 

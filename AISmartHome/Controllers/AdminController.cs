@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using AISmartHome.Models;
 using AISmartHome.Data;
-using Microsoft.AspNetCore.Http; // Thêm thư viện này để dùng Session
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace AISmartHome.Controllers
 {
@@ -16,18 +18,30 @@ namespace AISmartHome.Controllers
         }
 
         // =========================================================
-        // 1. HÀM XỬ LÝ KHI BẤM NÚT "ĐĂNG NHẬP" TỪ MODAL
+        // 1. HIỂN THỊ FORM ĐĂNG NHẬP
+        // =========================================================
+        [HttpGet]
+        public IActionResult Login()
+        {
+            // Kiểm tra: Nếu đã đăng nhập rồi thì đẩy thẳng vào hệ thống, không bắt đăng nhập lại
+            var role = HttpContext.Session.GetString("Role");
+            if (role == "Admin") return RedirectToAction("Index", "Admin");
+            if (role == "Employee") return RedirectToAction("Index", "Employee"); // Nếu bạn có file EmployeeController
+
+            return View(); // Trả về file Login.cshtml mà chúng ta làm ở bước trước
+        }
+
+        // =========================================================
+        // 2. XỬ LÝ LOGIC KHI BẤM "ĐĂNG NHẬP HỆ THỐNG"
         // =========================================================
         [HttpPost]
-        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(string Username, string Password)
         {
-            // TRƯỜNG HỢP 1: Để trống thông tin
             if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
             {
-                TempData["LoginError"] = "Vui lòng nhập đầy đủ tài khoản và mật khẩu.";
-                TempData["ShowLoginModal"] = "true";
-                return Redirect(Request.Headers["Referer"].ToString());
+                ViewBag.Error = "Vui lòng nhập đầy đủ tài khoản và mật khẩu.";
+                return View();
             }
 
             string cleanUsername = Username.Trim();
@@ -39,58 +53,50 @@ namespace AISmartHome.Controllers
                 t.TrangThai == true
             );
 
-            // TRƯỜNG HỢP 2: TÌM THẤY TÀI KHOẢN VÀ ĐÚNG PASS
+            // Kiểm tra mật khẩu (Thực tế nên dùng mã hóa như MD5 hoặc Bcrypt)
             if (account != null && account.MatKhau != null && account.MatKhau.Trim() == cleanPassword)
             {
-                // ĐĂNG NHẬP THÀNH CÔNG -> Lưu thông tin chung
+                // LƯU SESSION ĐĂNG NHẬP
                 HttpContext.Session.SetString("Username", account.TenDangNhap);
-
-                // BỔ SUNG QUAN TRỌNG: Lưu ID tài khoản vào Session để phân biệt
                 HttpContext.Session.SetInt32("AccountId", account.MaTaiKhoan);
 
-                // Phân luồng vai trò
-                if (account.MaVaiTro == 1)
+                // PHÂN LUỒNG QUYỀN HẠN
+                if (account.MaVaiTro == 1) // 1 = Admin
                 {
                     HttpContext.Session.SetString("Role", "Admin");
                     return RedirectToAction("Index", "Admin");
                 }
-                else if (account.MaVaiTro == 2)
+                else if (account.MaVaiTro == 2) // 2 = Nhân viên (Kỹ thuật/Bán hàng)
                 {
                     HttpContext.Session.SetString("Role", "Employee");
                     return RedirectToAction("Index", "Employee");
                 }
                 else
                 {
-                    // Sai quyền
-                    TempData["LoginError"] = "Tài khoản không được phân quyền hợp lệ!";
-                    TempData["ShowLoginModal"] = "true";
-                    return Redirect(Request.Headers["Referer"].ToString());
+                    ViewBag.Error = "Tài khoản không được phân quyền hợp lệ!";
+                    return View();
                 }
             }
-            // TRƯỜNG HỢP 3: SAI TÀI KHOẢN HOẶC SAI MẬT KHẨU (Đoạn lúc nãy bị thiếu)
             else
             {
-                TempData["LoginError"] = "Tài khoản hoặc mật khẩu không chính xác!";
-                TempData["ShowLoginModal"] = "true";
-                return Redirect(Request.Headers["Referer"].ToString());
+                ViewBag.Error = "Tài khoản hoặc mật khẩu không chính xác!";
+                return View();
             }
         }
 
         // =========================================================
-        // 2. HÀM INDEX ĐÃ ĐƯỢC BẢO VỆ (CODE CŨ CỦA BẠN GIỮ NGUYÊN)
+        // 3. TRANG TỔNG QUAN ADMIN (ĐÃ ĐƯỢC BẢO VỆ CHẶT CHẼ)
         // =========================================================
         public async Task<IActionResult> Index()
         {
-            // BƯỚC CHẶN: Kiểm tra xem có đúng là Admin không?
+            // BƯỚC CHẶN: Không phải Admin thì đuổi ra trang Đăng nhập ngay lập tức!
             var role = HttpContext.Session.GetString("Role");
-            if (role != "Admin") // Đổi chỗ này
+            if (role != "Admin")
             {
-                TempData["LoginError"] = "Khu vực này chỉ dành cho Quản trị viên!";
-                TempData["ShowLoginModal"] = "true";
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Login", "Admin");
             }
 
-            // === CODE THỐNG KÊ GIỮ NGUYÊN ===
+            // === LẤY DỮ LIỆU THỐNG KÊ (Giữ nguyên của bạn) ===
             ViewBag.TotalRevenue = await _context.DonHangs.SumAsync(d => d.TongTien);
             ViewBag.OrderCount = await _context.DonHangs.CountAsync();
             ViewBag.ProductCount = await _context.SanPhams.CountAsync();
@@ -102,12 +108,27 @@ namespace AISmartHome.Controllers
         }
 
         // =========================================================
-        // 3. HÀM ĐĂNG XUẤT 
+        // 4. HÀM ĐĂNG XUẤT 
         // =========================================================
         public IActionResult Logout()
         {
-            HttpContext.Session.Clear(); // Xóa sạch dữ liệu đăng nhập
-            return RedirectToAction("Index", "Home"); // Trở về trang chủ
+            // Chỉ xóa thông tin của nhân viên/admin, tránh xóa nhầm giỏ hàng của khách nếu test chung trình duyệt
+            HttpContext.Session.Remove("Username");
+            HttpContext.Session.Remove("AccountId");
+            HttpContext.Session.Remove("Role");
+
+            return RedirectToAction("Login", "Admin");
+        }
+
+        public IActionResult ExitToWebsite()
+        {
+            // 1. Xóa sạch mọi quyền lực của Admin/Nhân viên
+            HttpContext.Session.Remove("Username");
+            HttpContext.Session.Remove("AccountId");
+            HttpContext.Session.Remove("Role");
+
+            // 2. Chuyển hướng về trang chủ của khách hàng (Home/Index)
+            return RedirectToAction("Index", "Home");
         }
     }
 }

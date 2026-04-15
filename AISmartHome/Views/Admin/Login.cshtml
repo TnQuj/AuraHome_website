@@ -1,0 +1,82 @@
+﻿@{
+    Layout = null; // Form đăng nhập nội bộ thường đứng độc lập, không dùng chung Header/Footer của khách
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập Hệ thống - AuraHome</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-900 min-h-screen flex items-center justify-center relative overflow-hidden font-sans">
+
+    <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-cyan-500/20 rounded-full blur-[100px]"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-blue-600/20 rounded-full blur-[100px]"></div>
+
+    <div class="w-full max-w-md relative z-10 px-4">
+        <div class="bg-slate-800/50 backdrop-blur-xl p-8 rounded-3xl border border-slate-700/50 shadow-2xl">
+
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 shadow-lg mb-4">
+                    <i class="fa-solid fa-bolt text-white text-3xl"></i>
+                </div>
+                <h1 class="text-2xl font-black text-white tracking-wider uppercase">AuraHome Portal</h1>
+                <p class="text-slate-400 text-sm mt-1">Hệ thống quản trị & Kỹ thuật</p>
+            </div>
+
+            <form asp-controller="Admin" asp-action="Login" method="post" class="space-y-5">
+
+                @Html.AntiForgeryToken()
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="bg-rose-500/10 border border-rose-500/20 text-rose-400 px-4 py-3 rounded-xl text-sm font-medium flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        @ViewBag.Error
+                    </div>
+                }
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Tài khoản (Email / SĐT)</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-user text-slate-500"></i>
+                        </div>
+                        <input type="text" name="Username" required placeholder="Nhập tài khoản..."
+                               class="w-full pl-11 pr-4 py-3.5 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-all">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Mật khẩu</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-lock text-slate-500"></i>
+                        </div>
+                        <input type="password" name="Password" required placeholder="••••••••"
+                               class="w-full pl-11 pr-4 py-3.5 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-all">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-2">
+                    <label class="flex items-center gap-2 cursor-pointer group">
+                        <input type="checkbox" name="RememberMe" class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-cyan-500 focus:ring-cyan-500 focus:ring-offset-slate-800">
+                        <span class="text-sm text-slate-400 group-hover:text-slate-300 transition-colors">Ghi nhớ đăng nhập</span>
+                    </label>
+                    <a href="#" class="text-sm text-cyan-500 hover:text-cyan-400 font-medium transition-colors">Quên mật khẩu?</a>
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_25px_rgba(6,182,212,0.5)] uppercase tracking-widest mt-4">
+                    Đăng nhập hệ thống
+                </button>
+            </form>
+
+        </div>
+        <p class="text-center text-slate-500 text-xs mt-8">
+            &copy; @DateTime.Now.Year AuraHome. Chỉ dành cho nhân sự nội bộ.
+        </p>
+    </div>
+</body>
+</html>

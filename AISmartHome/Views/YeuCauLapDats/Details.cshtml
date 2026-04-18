@@ -6,18 +6,8 @@
     ViewData["Title"] = "Chi Tiết Yêu Cầu";
 }
 
-<main class="w-full min-h-[75vh] py-12 bg-slate-50">
+<main class="w-full min-h-[75vh] py-1 bg-slate-50">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        <div class="mb-6 flex items-center justify-between">
-            <div>
-                <h1 class="text-2xl font-black text-brand-navy uppercase tracking-wide">Chi Tiết Yêu Cầu</h1>
-                <p class="text-slate-500 text-sm mt-1">Thông tin đầy đủ của mã YC: <strong class="text-brand-cyan">#@Model.MaYeuCauLapDat</strong></p>
-            </div>
-            <a asp-action="Index" class="text-slate-500 hover:text-brand-cyan transition-colors font-medium flex items-center gap-2">
-                <i class="fa-solid fa-arrow-left"></i> Quay lại danh sách
-            </a>
-        </div>
 
         <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
             <div class="p-8 border-b border-slate-100 flex items-center gap-4 bg-slate-50/50">
@@ -64,9 +54,28 @@
                     <p class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Thông tin khách hàng</p>
                     <div class="text-lg font-bold text-slate-800">
                         @(Model.MaDonHangNavigation?.TenKhachHang ?? Model.MaDonHangNavigation?.MaKhachHangNavigation?.TenKhachHang ?? "Khách hàng ẩn danh")
-                        <div class="text-sm font-medium text-slate-500 mt-1">
-                            <i class="fa-solid fa-phone-volume mr-1"></i> @(Model.MaDonHangNavigation?.SoDienThoai ?? Model.MaDonHangNavigation?.MaKhachHangNavigation?.SoDienThoai ?? "Chưa có SĐT")
+
+                        <div class="text-sm font-medium text-slate-500 mt-1.5 flex items-center">
+                            <i class="fa-solid fa-phone-volume w-5 text-brand-cyan"></i>
+                            @(Model.MaDonHangNavigation?.SoDienThoai ?? Model.MaDonHangNavigation?.MaKhachHangNavigation?.SoDienThoai ?? "Chưa có SĐT")
                         </div>
+
+                        <div class="text-sm font-medium text-slate-500 mt-1 flex items-center">
+                            <i class="fa-solid fa-envelope w-5 text-brand-cyan"></i>
+                            @(Model.MaDonHangNavigation?.Email ?? Model.MaDonHangNavigation?.MaKhachHangNavigation?.Email ?? "Chưa cập nhật Email")
+                        </div>
+
+                        @if (!string.IsNullOrWhiteSpace(Model.MaDonHangNavigation?.GhiChu))
+                        {
+                            <div class="mt-3 bg-amber-50 border border-amber-200 text-amber-700 text-sm p-3 rounded-xl shadow-sm">
+                                <div class="font-bold flex items-center gap-1.5 mb-1">
+                                    <i class="fa-solid fa-note-sticky"></i> Ghi chú từ khách hàng:
+                                </div>
+                                <div class="font-normal italic">
+                                    @Model.MaDonHangNavigation.GhiChu
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
 
@@ -102,6 +111,9 @@
             </div>
 
             <div class="p-6 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
+                <a asp-action="Index" class="px-6 py-2.5 rounded-xl font-bold text-gray-600 hover:bg-gray-100 transition-colors">
+                    Hủy bỏ
+                </a>
                 <a asp-action="Edit" asp-route-id="@Model?.MaYeuCauLapDat" class="px-6 py-2.5 bg-brand-cyan text-white font-bold rounded-xl hover:bg-cyan-600 transition-colors shadow-md flex items-center gap-2">
                     <i class="fa-solid fa-pen"></i> Chỉnh sửa yêu cầu
                 </a>

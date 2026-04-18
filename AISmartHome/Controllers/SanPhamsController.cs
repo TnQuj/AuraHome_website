@@ -330,21 +330,32 @@ namespace AISmartHome.Controllers
                         var rows = worksheet.RangeUsed().RowsUsed();
                         int count = 0;
 
-                        foreach (var row in rows.Skip(1))
+                        foreach (var row in rows.Skip(1)) // Bỏ qua dòng tiêu đề
                         {
-                            string tenSP = row.Cell(1).Value.ToString();
+                            // Cột 2 (B) là Tên Sản Phẩm
+                            string tenSP = row.Cell(2).Value.ToString().Trim();
                             if (string.IsNullOrWhiteSpace(tenSP)) continue;
 
                             var sanPham = new SanPham
                             {
                                 TenSanPham = tenSP,
-                                GiaBan = decimal.TryParse(row.Cell(2).Value.ToString(), out decimal gia) ? gia : 0,
-                                SoLuong = int.TryParse(row.Cell(3).Value.ToString(), out int sl) ? sl : 0,
+
+                                // Cột 3 (C) là Giá Bán
+                                GiaBan = decimal.TryParse(row.Cell(3).Value.ToString(), out decimal gia) ? gia : 0,
+
+                                // Cột 4 (D) là Mô Tả
                                 MoTa = row.Cell(4).Value.ToString(),
+
+                                // Cột 5 (E) là Hình Ảnh
                                 HinhAnh = !string.IsNullOrWhiteSpace(row.Cell(5).Value.ToString())
                                             ? row.Cell(5).Value.ToString()
                                             : "default-product.png",
-                                MaDanhMuc = int.TryParse(row.Cell(6).Value.ToString(), out int maDM) ? maDM : null
+
+                                // Cột 6 (F) là Số Lượng
+                                SoLuong = int.TryParse(row.Cell(6).Value.ToString(), out int sl) ? sl : 0,
+
+                                // Cột 7 (G) là Mã Danh Mục
+                                MaDanhMuc = int.TryParse(row.Cell(7).Value.ToString(), out int maDM) ? maDM : null
                             };
 
                             _context.SanPhams.Add(sanPham);

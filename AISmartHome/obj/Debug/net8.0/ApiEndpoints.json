@@ -1,6 +1,38 @@
 [
   {
     "ContainingType": "AISmartHome.Controllers.OtpController",
+    "Method": "CancelOrder",
+    "RelativePath": "api/Otp/CancelOrder",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orderId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AISmartHome.Controllers.OtpController",
+    "Method": "CheckStatus",
+    "RelativePath": "api/Otp/CheckStatus",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orderId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AISmartHome.Controllers.OtpController",
     "Method": "SendOtp",
     "RelativePath": "api/Otp/send",
     "HttpMethod": "POST",
@@ -9,7 +41,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "AISmartHome.Controllers.OtpRequest",
+        "Type": "OtpRequest",
         "IsRequired": true
       }
     ],
@@ -17,16 +49,47 @@
   },
   {
     "ContainingType": "AISmartHome.Controllers.OtpController",
-    "Method": "VerifyOtp",
-    "RelativePath": "api/Otp/verify",
+    "Method": "SimulatePayment",
+    "RelativePath": "api/Otp/SimulatePayment",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orderId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AISmartHome.Controllers.OtpController",
+    "Method": "VerifyOtpLogin",
+    "RelativePath": "api/Otp/VerifyOtpLogin",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "request",
-        "Type": "AISmartHome.Controllers.VerifyRequest",
-        "IsRequired": true
+        "Name": "phone",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "otpCode",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "fullName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "email",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

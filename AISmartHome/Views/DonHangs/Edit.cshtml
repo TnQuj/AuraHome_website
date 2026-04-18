@@ -19,22 +19,8 @@
     }
 </style>
 
-<div class="p-6 bg-slate-50 min-h-screen">
+<div class="p-0 bg-slate-50 min-h-screen">
     <div class="max-w-4xl mx-auto">
-
-        <div class="mb-6 flex items-center justify-between">
-            <div>
-                <h1 class="text-2xl font-bold text-[#001F3F] flex items-center gap-2">
-                    <svg class="w-8 h-8 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                    Quản lý Đơn hàng
-                </h1>
-                <p class="text-sm text-gray-500 mt-1 pl-10">Cập nhật thông tin vận chuyển và trạng thái thanh toán</p>
-            </div>
-            <a asp-action="Index" class="flex items-center gap-2 text-[#001F3F] bg-white border border-gray-200 px-4 py-2 rounded-xl font-medium hover:bg-gray-50 transition-colors shadow-sm">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Quay lại danh sách
-            </a>
-        </div>
 
         <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
             <div class="bg-[#001F3F] px-6 py-4">
@@ -99,7 +85,14 @@
                     <div>
                         <label asp-for="TongTien" class="block text-sm font-bold text-[#001F3F] mb-2">Tổng giá trị (VNĐ)</label>
                         <div class="relative">
-                            <input asp-for="TongTien" class="w-full pl-4 pr-12 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 font-bold text-red-600 bg-slate-50 focus:bg-white" type="number" />
+                            <input type="hidden" asp-for="TongTien" id="RealTongTien" />
+
+                            <input type="text" id="DisplayTongTien"
+                                   value="@String.Format("{0:N0}", Model?.TongTien)"
+                                   class="w-full pl-4 pr-12 py-2.5 rounded-xl border border-gray-200 input-focus-cyan transition-all text-slate-700 font-bold text-red-600 bg-slate-50 focus:bg-white"
+                                   onkeyup="formatCurrency(this)"
+                                   placeholder="0" />
+
                             <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500 font-bold">đ</span>
                         </div>
                         <span asp-validation-for="TongTien" class="text-red-500 text-xs mt-1 block"></span>

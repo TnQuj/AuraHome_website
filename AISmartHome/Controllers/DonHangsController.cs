@@ -50,7 +50,7 @@ namespace AISmartHome.Controllers
         // GET: DonHangs/Create
         public IActionResult Create()
         {
-            ViewData["MaKhachHang"] = new SelectList(_context.KhachHangs, "MaKhachHang", "MaKhachHang");
+            ViewData["MaKhachHang"] = new SelectList(_context.KhachHangs, "MaKhachHang", "TenKhachHang");
             return View();
         }
 
@@ -59,7 +59,7 @@ namespace AISmartHome.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaDonHang,MaKhachHang,TenKhachHang,SoDienThoai,DiaChiGiaoHang,NgayDatHang,TongTien,TrangThaiDonHang")] DonHang donHang)
+        public async Task<IActionResult> Create([Bind("MaDonHang,MaKhachHang,TenKhachHang,SoDienThoai,Email,DiaChiGiaoHang,GhiChu,NgayDatHang,TongTien,TrangThaiDonHang")] DonHang donHang)
         {
             if (ModelState.IsValid)
             {
@@ -67,7 +67,7 @@ namespace AISmartHome.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MaKhachHang"] = new SelectList(_context.KhachHangs, "MaKhachHang", "MaKhachHang", donHang.MaKhachHang);
+            ViewData["MaKhachHang"] = new SelectList(_context.KhachHangs, "MaKhachHang", "TenKhachHang", donHang.MaKhachHang);
             return View(donHang);
         }
 
@@ -84,7 +84,7 @@ namespace AISmartHome.Controllers
             {
                 return NotFound();
             }
-            ViewData["MaKhachHang"] = new SelectList(_context.KhachHangs, "MaKhachHang", "MaKhachHang", donHang.MaKhachHang);
+            ViewData["MaKhachHang"] = new SelectList(_context.KhachHangs, "MaKhachHang", "TenKhachHang", donHang.MaKhachHang);
             return View(donHang);
         }
 
@@ -93,7 +93,7 @@ namespace AISmartHome.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("MaDonHang,MaKhachHang,TenKhachHang,SoDienThoai,DiaChiGiaoHang,NgayDatHang,TongTien,TrangThaiDonHang")] DonHang donHang)
+        public async Task<IActionResult> Edit(int id, [Bind("MaDonHang,MaKhachHang,TenKhachHang,SoDienThoai,Email,DiaChiGiaoHang,GhiChu,NgayDatHang,TongTien,TrangThaiDonHang")] DonHang donHang)
         {
             if (id != donHang.MaDonHang)
             {
@@ -120,7 +120,7 @@ namespace AISmartHome.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MaKhachHang"] = new SelectList(_context.KhachHangs, "MaKhachHang", "MaKhachHang", donHang.MaKhachHang);
+            ViewData["MaKhachHang"] = new SelectList(_context.KhachHangs, "MaKhachHang", "TenKhachHang", donHang.MaKhachHang);
             return View(donHang);
         }
 

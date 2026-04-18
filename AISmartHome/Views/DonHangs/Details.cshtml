@@ -33,16 +33,9 @@
 }
 
 <div class="mb-6 flex items-center justify-between">
-    <div>
-        <h1 class="text-2xl font-bold text-[#001F3F] flex items-center gap-2">
-            <svg class="w-8 h-8 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-            Xem chi tiết đơn hàng
-        </h1>
-        <p class="text-sm text-gray-500 mt-1 pl-10">Cập nhật thông tin vận chuyển và trạng thái thanh toán</p>
-    </div>
-    <a asp-action="Index" class="flex items-center gap-2 text-[#001F3F] bg-white border border-gray-200 px-4 py-2 rounded-xl font-medium hover:bg-gray-50 transition-colors shadow-sm">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-        Quay lại danh sách
+    <a asp-action="Index" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-rose-500 border border-rose-500 rounded-full hover:bg-rose-600 hover:border-rose-600 hover:shadow-[0_0_10px_rgba(244,63,94,0.4)] transition-all">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        Exit
     </a>
 </div>
 
@@ -93,6 +86,7 @@
                 <div class="space-y-3 text-sm">
                     <p><span class="text-slate-500">Tên:</span> <strong class="text-brand-navy float-right">@(Model.TenKhachHang ?? Model.MaKhachHangNavigation?.TenKhachHang)</strong></p>
                     <p><span class="text-slate-500">SĐT:</span> <strong class="text-brand-cyan float-right">@Model.SoDienThoai</strong></p>
+                    <p><span class="text-slate-500">Email:</span> <strong class="text-brand-cyan float-right">@Model.Email</strong></p>
                     <div class="pt-2 border-t border-slate-50 mt-4">
                         <span class="text-slate-500 block mb-1">Địa chỉ giao/lắp:</span>
                         <strong class="text-slate-800 leading-relaxed block bg-slate-50 p-2.5 rounded-lg border border-slate-100">@Model.DiaChiGiaoHang</strong>
@@ -119,7 +113,9 @@
                         <p><span class="text-slate-500">Phí kỹ thuật:</span> <strong class="text-rose-600 float-right">@tienLapDat.ToString("N0") đ</strong></p>
                     </div>
 
-                    <a asp-controller="YeuCauLapDats" asp-action="Edit" asp-route-id="@yeuCau.MaYeuCauLapDat"
+                    <a asp-controller="YeuCauLapDats" asp-action="Edit"
+                       asp-route-id="@yeuCau.MaYeuCauLapDat"
+                       asp-route-autostatus="true"
                        class="mt-5 block w-full text-center py-2.5 bg-white border-2 border-cyan-300 text-brand-cyan font-bold rounded-xl hover:bg-brand-cyan hover:text-white transition-colors text-sm shadow-sm">
                         Cập nhật / Báo giá lắp đặt
                     </a>

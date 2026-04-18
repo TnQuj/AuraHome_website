@@ -54,7 +54,7 @@ namespace AISmartHome.Controllers
 
 
         // =========================================================
-        // 1. TRANG CỔNG NHÂN VIÊN (Chỉ hiện việc ĐANG CHỜ / ĐANG XỬ LÝ)
+        // 1. TRANG CỔNG NHÂN VIÊN (Hiện việc ĐANG CHỜ & ĐANG XỬ LÝ)
         // =========================================================
         public async Task<IActionResult> Index()
         {
@@ -83,26 +83,25 @@ namespace AISmartHome.Controllers
                 return NotFound("Không tìm thấy thông tin nhân viên!");
             }
 
-            // Truyền tên nhân viên ra ngoài file HTML (Khớp với @ViewBag.TenNhanVien của bạn)
+            // Truyền tên nhân viên ra ngoài file HTML
             ViewBag.TenNhanVien = currentEmployee.TenNhanVien;
 
             // =================================================================
-            // 4. LỌC: CHỈ LẤY CÔNG VIỆC CỦA ĐÚNG NHÂN VIÊN NÀY
-            // =================================================================
+            // 4. LỌC: ĐÃ SỬA LỖI NUỐT ĐƠN (Lấy cả "Chưa lắp đặt" VÀ "Đang xử lý")
             var pendingInstalls = await _context.YeuCauLapDats
-                .Include(y => y.MaDonHangNavigation) // Lấy thông tin đơn hàng (Tổng tiền, Trạng thái...)
-                    .ThenInclude(d => d.MaKhachHangNavigation) // Lấy Tên, SĐT khách
-                .Include(y => y.MaDonHangNavigation)
-                    .ThenInclude(d => d.ChiTietDonHangs) // Lấy chi tiết xem mang theo sản phẩm gì
-                        .ThenInclude(c => c.MaSanPhamNavigation)
-                // ĐIỀU KIỆN QUAN TRỌNG NHẤT LÀ ĐÂY:
-                .Where(y => y.TrangThaiLapDat == "Chưa lắp đặt" && y.MaNhanVien == currentEmployee.MaNhanVien)
-                .OrderBy(y => y.NgayLap) // Ưu tiên đơn cũ làm trước
-                .ToListAsync();
+                 .Include(y => y.MaDonHangNavigation)
+                     .ThenInclude(d => d.MaKhachHangNavigation)
+                 .Include(y => y.MaDonHangNavigation)
+                     .ThenInclude(d => d.ChiTietDonHangs)
+                         .ThenInclude(c => c.MaSanPhamNavigation)
+                 // 👇 ĐÃ SỬA: Tìm đúng trạng thái "Đã phân công" và "Đang thi công"
+                 .Where(y => (y.TrangThaiLapDat == "Đã phân công" || y.TrangThaiLapDat == "Đang thi công")
+                          && y.MaNhanVien == currentEmployee.MaNhanVien)
+                 .OrderBy(y => y.NgayLap)
+                 .ToListAsync();
 
             return View(pendingInstalls);
         }
-
         // =========================================================
         // 2. TRANG LỊCH SỬ (Chỉ hiện việc ĐÃ XONG hoặc BỊ HỦY)
         // =========================================================
@@ -142,19 +141,25 @@ namespace AISmartHome.Controllers
 
             if (yeuCau == null) return NotFound();
 
-            yeuCau.TrangThaiLapDat = newStatus;
+            yeuCau.TrangThaiLapDat = newStatus; // Cập nhật trạng thái Lắp đặt
 
+            // CẬP NHẬT DÂY CHUYỀN SANG TRẠNG THÁI ĐƠN HÀNG
             if (yeuCau.MaDonHangNavigation != null)
             {
-                if (newStatus == "Đã hoàn thành")
+                if (newStatus == "Đang thi công")
                 {
-                    // 1. Đơn hàng chuyển sang trạng thái Hoàn thành
-                    yeuCau.MaDonHangNavigation.TrangThaiDonHang = "Hoàn thành";
+                    // Khi nhân viên bắt đầu làm, báo cho Admin và Khách biết là đang lắp
+                    yeuCau.MaDonHangNavigation.TrangThaiDonHang = "Đang lắp đặt";
+                }
+                else if (newStatus == "Đã hoàn thành")
+                {
+                    // 1. Đơn hàng chuyển sang trạng thái Hoàn tất
+                    yeuCau.MaDonHangNavigation.TrangThaiDonHang = "Hoàn tất";
 
-                    // 2. [THÊM DÒNG NÀY]: Tự động gạch nợ, chuyển tài chính thành "Đã thanh toán"
+                    // 2. Tự động gạch nợ, chuyển tài chính thành "Đã thanh toán"
                     yeuCau.MaDonHangNavigation.TrangThaiThanhToan = "Đã thanh toán";
                 }
-                else if (newStatus == "Bị hủy")
+                else if (newStatus == "Bị hủy" || newStatus == "Bị Hủy")
                 {
                     yeuCau.MaDonHangNavigation.TrangThaiDonHang = "Đã hủy";
                 }

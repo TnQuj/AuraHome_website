@@ -136,50 +136,70 @@ namespace AISmartHome.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // Không cần dùng [Bind] nữa vì chúng ta sẽ map dữ liệu thủ công cực kỳ an toàn
-        public async Task<IActionResult> Edit(int id, YeuCauLapDat model)
+        public async Task<IActionResult> Edit(int id, YeuCauLapDat yeuCauLapDat)
         {
-            if (id != model.MaYeuCauLapDat)
+            if (id != yeuCauLapDat.MaYeuCauLapDat)
             {
                 return NotFound();
             }
 
-            try
+            if (ModelState.IsValid)
             {
-                // 1. Kéo dữ liệu CŨ từ CSDL lên
-                var existingRecord = await _context.YeuCauLapDats.FindAsync(id);
-                if (existingRecord == null)
+                try
                 {
-                    return NotFound();
+                    // 1. Cập nhật bảng Yêu Cầu Lắp Đặt trước
+                    _context.Update(yeuCauLapDat);
+
+                    // 2. TÌM VÀ CẬP NHẬT ĐƠN HÀNG LIÊN QUAN (LOGIC TỰ ĐỘNG)
+                    var donHang = await _context.DonHangs.FindAsync(yeuCauLapDat.MaDonHang);
+                    if (donHang != null)
+                    {
+                        // TRƯỜNG HỢP 1: Admin báo giá và phân công NV
+                        // Nếu có nhân viên, có phí lắp đặt và trạng thái không phải là hoàn thành/hủy
+                        if (yeuCauLapDat.MaNhanVien != null && yeuCauLapDat.PhiLapDat > 0 && yeuCauLapDat.TrangThaiLapDat == "Đã phân công")
+                        {
+                            donHang.TrangThaiDonHang = "Đang giao";
+                        }
+
+                        // TRƯỜNG HỢP 2: Kỹ thuật viên báo đang thi công
+                        else if (yeuCauLapDat.TrangThaiLapDat == "Đang thi công")
+                        {
+                            donHang.TrangThaiDonHang = "Đang lắp đặt";
+                        }
+
+                        // TRƯỜNG HỢP 3: Hoàn tất
+                        else if (yeuCauLapDat.TrangThaiLapDat == "Đã hoàn thành")
+                        {
+                            donHang.TrangThaiDonHang = "Đã hoàn tất";
+                            // Tùy chọn: Tự động đánh dấu đơn hàng đã thanh toán luôn
+                            // donHang.TrangThaiThanhToan = "Đã thanh toán"; 
+                        }
+
+                        // Cập nhật Đơn hàng vào Database
+                        _context.Update(donHang);
+                    }
+
+                    // Lưu tất cả thay đổi cùng lúc
+                    await _context.SaveChangesAsync();
                 }
-
-                // 2. Bỏ qua kiểm tra ModelState. Chỉ chép đè những trường MỚI từ form lên đối tượng CŨ
-                existingRecord.NgayLap = model.NgayLap;                 // Ngày giờ hẹn CẬP NHẬT TẠI ĐÂY
-                existingRecord.PhiLapDat = model.PhiLapDat;             // Phí lắp đặt
-                existingRecord.GhiChuBaoGia = model.GhiChuBaoGia;       // Ghi chú thi công
-                existingRecord.TrangThaiLapDat = model.TrangThaiLapDat; // Trạng thái
-                existingRecord.MaNhanVien = model.MaNhanVien;           // Nhân viên phụ trách
-
-                // (Lưu ý: Không đụng chạm gì đến MaDonHang hay DiaChiLapDat, giữ nguyên như cũ)
-
-                // 3. Lưu lại
-                _context.Update(existingRecord);
-                await _context.SaveChangesAsync();
-
-                TempData["SuccessMessage"] = "Đã cập nhật thông tin chốt với khách thành công!";
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!YeuCauLapDatExists(yeuCauLapDat.MaYeuCauLapDat))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
                 return RedirectToAction(nameof(Index));
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!YeuCauLapDatExists(model.MaYeuCauLapDat))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+
+            // Nếu Form lỗi thì load lại Dropdown
+            ViewData["MaDonHang"] = new SelectList(_context.DonHangs, "MaDonHang", "MaDonHang", yeuCauLapDat.MaDonHang);
+            ViewData["MaNhanVien"] = new SelectList(_context.NhanViens, "MaNhanVien", "TenNhanVien", yeuCauLapDat.MaNhanVien);
+            return View(yeuCauLapDat);
         }
 
         // GET: YeuCauLapDats/Delete/5

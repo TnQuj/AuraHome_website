@@ -1,0 +1,80 @@
+﻿@model List<AISmartHome.ViewComponents.NotificationItem>
+
+<div class="relative group flex items-center h-full">
+
+    <a href="javascript:void(0)" onclick="goToOrderHistory()" class="text-brand-navy hover:text-brand-cyan transition-colors relative flex items-center justify-center py-2">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+        </svg>
+
+        @if (Model != null && Model.Count > 0)
+        {
+                <span class="absolute -top-1 -right-1.5 bg-brand-cyan text-white text-[10px] font-bold h-4 w-4 flex items-center justify-center rounded-full border-[1.5px] border-white shadow-sm">
+                @Model.Count
+                </span>
+        }
+    </a>
+
+    <div class="absolute right-0 md:left-1/2 md:-translate-x-1/2 top-[120%] w-[360px] bg-white/95 backdrop-blur-2xl rounded-2xl border border-gray-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] invisible opacity-0 translate-y-3 scale-95 group-hover:!visible group-hover:!opacity-100 group-hover:!translate-y-0 group-hover:!scale-100 transition-all duration-300 ease-out z-[10000] overflow-hidden before:content-[''] before:absolute before:top-[-20px] before:left-0 before:w-full before:h-[20px] before:bg-transparent">
+
+        <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+            <h4 class="font-bold text-brand-navy text-sm uppercase tracking-wider">Thông báo của bạn</h4>
+            <a href="javascript:void(0)" onclick="goToOrderHistory()" class="text-[11px] text-brand-cyan hover:underline font-bold uppercase">Xem tất cả</a>
+        </div>
+
+        <div class="max-h-[350px] overflow-y-auto cart-scroll">
+            @if (Model != null && Model.Any())
+            {
+                    <ul class="divide-y divide-slate-100">
+                    @foreach (var item in Model)
+                    {
+                        // Đổi màu sắc Icon tùy theo trạng thái đơn hàng (Được truyền từ C# qua biến item.Type)
+                        string iconColor = item.Type == "Hoàn thành" ? "text-emerald-500 bg-emerald-50" :
+                                           item.Type == "Đang giao" ? "text-blue-500 bg-blue-50" :
+                                           item.Type == "Đã hủy" ? "text-rose-500 bg-rose-50" : "text-amber-500 bg-amber-50";
+
+                        string iconClass = item.Type == "Hoàn thành" ? "fa-check-circle" :
+                                           item.Type == "Đang giao" ? "fa-truck-fast" :
+                                           item.Type == "Đã hủy" ? "fa-xmark-circle" : "fa-box-open";
+
+                                <li>
+                                    <a href="@item.Link" class="flex items-start gap-4 p-4 hover:bg-slate-50 transition-colors group/item">
+                                        <div class="w-10 h-10 rounded-full shrink-0 flex items-center justify-center @iconColor group-hover/item:scale-110 transition-transform">
+                                            <i class="fa-solid @iconClass text-base"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-sm font-bold text-brand-navy mb-1 leading-none">@item.Title</p>
+                                            <p class="text-xs text-slate-500 leading-snug">@item.Description</p>
+                                            <span class="text-[10px] text-slate-400 mt-1.5 block font-medium">
+                                                <i class="fa-regular fa-clock mr-1"></i> @item.GetTimeAgo()
+                                            </span>
+                                        </div>
+                                    </a>
+                                </li>
+                    }
+                    </ul>
+            }
+            else
+            {
+                    <div class="p-8 text-center flex flex-col items-center">
+                        <div class="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center text-slate-300 mb-3">
+                            <i class="fa-regular fa-bell-slash text-xl"></i>
+                        </div>
+                        <p class="text-slate-500 text-sm font-medium">Bạn chưa có đơn hàng nào.</p>
+                    </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    // Hàm dẫn khách vào thẳng phòng VIP xem Lịch sử đơn hàng
+    function goToOrderHistory() {
+        const phone = localStorage.getItem('savedGuestPhone');
+        if (phone) {
+            window.location.href = '/Customers/OrderHistory?phone=' + encodeURIComponent(phone);
+        } else {
+            window.location.href = '/Customers/OrderHistory';
+        }
+    }
+</script>

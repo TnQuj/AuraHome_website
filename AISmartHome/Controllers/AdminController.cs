@@ -89,21 +89,77 @@ namespace AISmartHome.Controllers
         // =========================================================
         public async Task<IActionResult> Index()
         {
-            // BƯỚC CHẶN: Không phải Admin thì đuổi ra trang Đăng nhập ngay lập tức!
+            // BƯỚC CHẶN: Bảo mật
             var role = HttpContext.Session.GetString("Role");
             if (role != "Admin")
             {
                 return RedirectToAction("Login", "Admin");
             }
 
-            // === LẤY DỮ LIỆU THỐNG KÊ (Giữ nguyên của bạn) ===
-            ViewBag.TotalRevenue = await _context.DonHangs.SumAsync(d => d.TongTien);
-            ViewBag.OrderCount = await _context.DonHangs.CountAsync();
+            // --- 1. THỐNG KÊ TỔNG QUAN (KPIs) ---
+            // Doanh thu (Chỉ tính đơn đã giao hoặc hoàn thành tùy bạn, ở đây tính tổng)
+            ViewBag.TotalRevenue = await _context.DonHangs.SumAsync(d => (decimal?)d.TongTien) ?? 0m;
+            // Tổng đơn hàng
+            ViewBag.TotalOrderCount = await _context.DonHangs.CountAsync();
+            // Cách viết "bất tử" để tránh sai sót ký tự
+            ViewBag.NewOrdersCount = await _context.DonHangs
+                .CountAsync(d => d.TrangThaiDonHang.ToLower().Contains("chờ")
+                              || d.TrangThaiDonHang.ToLower().Contains("mới")
+                              || d.TrangThaiDonHang == "0"); // Đôi khi trạng thái lưu bằng ID số
+
+            // Tổng số khách hàng
+            ViewBag.TotalCustomers = await _context.KhachHangs.CountAsync();
+
+            // Số sản phẩm đang kinh doanh
             ViewBag.ProductCount = await _context.SanPhams.CountAsync();
 
+            // --- 2. SẢN PHẨM SẮP HẾT HÀNG (Cảnh báo tồn kho <= 5) ---
+            ViewBag.LowStockProducts = await _context.SanPhams
+                .Where(p => p.SoLuong <= 5)
+                .OrderBy(p => p.SoLuong)
+                .Take(5)
+                .ToListAsync();
+
+            // --- 3. DỮ LIỆU YÊU CẦU LẮP ĐẶT (Model chính) ---
+            // Cần .Include để lấy được thông tin từ bảng DonHang và NhanVien (nếu cần hiển thị tên)
             var pendingInstalls = await _context.YeuCauLapDats
-                                        .Where(y => y.TrangThaiLapDat == "Chưa lắp đặt")
-                                        .Take(5).ToListAsync();
+                .Include(y => y.MaDonHangNavigation)
+                .Include(y => y.MaNhanVienNavigation)
+                .Where(y => y.TrangThaiLapDat == "Chưa lắp đặt")
+                .OrderByDescending(y => y.NgayLap)
+                .Take(5)
+                .ToListAsync();
+
+            // --- 4. TRUYỀN THÊM SỐ LƯỢNG YÊU CẦU ĐANG CHỜ (Cho thẻ KPI) ---
+            ViewBag.PendingInstallations = await _context.YeuCauLapDats
+                .CountAsync(y => y.TrangThaiLapDat == "Chưa lắp đặt");
+            var last6Months = Enumerable.Range(0, 6)
+                .Select(i => DateTime.Now.AddMonths(-i))
+                .OrderBy(date => date)
+                .ToList();
+
+            var chartData = new List<decimal>();
+            var chartLabels = new List<string>();
+
+            foreach (var month in last6Months)
+            {
+                var total = await _context.DonHangs
+                    .Where(d => d.NgayDatHang.Value.Month == month.Month && d.NgayDatHang.Value.Year == month.Year)
+                    .SumAsync(d => d.TongTien) ?? 0;
+
+                chartData.Add(total);
+                chartLabels.Add($"Tháng {month.Month}");
+            }
+
+            ViewBag.ChartData = chartData;
+            ViewBag.ChartLabels = chartLabels;
+
+            // Lấy 5 đơn hàng thành công gần nhất cho bảng doanh thu
+            ViewBag.RecentRevenue = await _context.DonHangs
+                .OrderByDescending(d => d.NgayDatHang)
+                .Take(5)
+                .ToListAsync();
+
             return View(pendingInstalls);
         }
 

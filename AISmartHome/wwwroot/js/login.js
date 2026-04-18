@@ -32,35 +32,48 @@
 });
 
 // Hàm Đăng xuất (Xóa thông tin để đổi SĐT khác)
-// Hàm Đăng xuất (Xóa thông tin và tạo giỏ hàng mới)
 function logoutGuest() {
-    localStorage.removeItem('favorite_products');
     Swal.fire({
-        title: 'Bạn muốn đăng xuất?',
-        text: "Hệ thống sẽ làm mới giỏ hàng. Lần sau bạn chỉ cần nhập lại Số điện thoại là lấy lại được giỏ hàng cũ.",
-        icon: 'question',
+        title: 'Xác nhận đăng xuất?',
+        text: "Mọi thông tin phiên làm việc và giỏ hàng tạm thời sẽ được làm mới.",
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#06b6d4',
         cancelButtonColor: '#cbd5e1',
-        confirmButtonText: 'Đăng xuất',
-        cancelButtonText: 'Hủy'
+        confirmButtonText: 'Đăng xuất ngay',
+        cancelButtonText: 'Ở lại'
     }).then((result) => {
         if (result.isConfirmed) {
-            // 1. Xóa dữ liệu hiển thị ở Trình duyệt
-            localStorage.removeItem('savedGuestName');
-            localStorage.removeItem('savedGuestPhone');
-            localStorage.removeItem('guestInfoSubmitted');
+            // --- BƯỚC 1: QUÉT SẠCH LOCALSTORAGE ---
+            localStorage.clear(); // Xóa sạch sành sanh tất cả (nhanh và an toàn nhất)
 
-            // 2. GỌI API XÓA COOKIE TRÊN MÁY CHỦ ĐỂ CẮT ĐỨT GIỎ HÀNG CŨ
-            fetch('/Customers/LogoutAjax', { method: 'POST' })
-                .then(() => {
-                    // Tải lại trang web (Lúc này web sẽ tự tạo 1 mã Cookie mới tinh, giỏ hàng trống trơn)
-                    window.location.href = '/Customers/Index';
+            // Hoặc nếu bạn muốn giữ lại một vài cài đặt khác, hãy xóa thủ công các key sau:
+            // localStorage.removeItem('savedGuestName');
+            // localStorage.removeItem('savedGuestPhone');
+            // localStorage.removeItem('guestName');
+            // localStorage.removeItem('guestPhone');
+            // localStorage.removeItem('favorite_products');
+
+            // --- BƯỚC 2: GỌI SERVER XÓA COOKIE ---
+            fetch('/Customers/LogoutAjax', {
+                method: 'POST',
+                headers: {
+                    // Thêm Header để tránh lỗi Request Verification nếu cần
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                }
+            })
+                .then(response => {
+                    // --- BƯỚC 3: RESET WEBSITE VỀ TRANG CHỦ ---
+                    // Dùng location.replace để khách không "Back" lại trang cũ có dữ liệu được
+                    window.location.replace('/');
+                })
+                .catch(err => {
+                    console.error("Lỗi đăng xuất:", err);
+                    window.location.reload();
                 });
         }
     });
 }
-
 let lookupStep = 1; // Bước 1: Nhập SĐT, Bước 2: Nhập OTP
 let lookupTimerInterval;
 
@@ -94,109 +107,162 @@ function closeLookupModal() {
         modal.classList.remove('flex');
     }, 300);
 }
-
+//Mã opt dành cho đăng nhập trước
 // Hàm xử lý khi bấm nút Xanh đen
 function handleLookupSubmit() {
-    const phone = document.getElementById('lookupPhoneInput').value.trim();
-    const name = document.getElementById('lookupNameInput').value.trim(); // Lấy tên
-    const btn = document.getElementById('btnLookupSubmit');
+    // 👇👇👇 KHAI BÁO THÊM emailInput Ở ĐÂY 👇👇👇
+    const phoneInput = document.getElementById('lookupPhoneInput').value;
+    const nameInput = document.getElementById('lookupNameInput').value;
+    const emailInput = document.getElementById('lookupEmailInput') ? document.getElementById('lookupEmailInput').value : '';
+    const otpInput = document.getElementById('lookupOtpInput') ? document.getElementById('lookupOtpInput').value : '';
+    const otpContainer = document.getElementById('lookupOtpContainer');
+    const btnSubmit = document.getElementById('btnLookupSubmit');
 
-    if (!name) {
-        Swal.fire('Chú ý', 'Vui lòng nhập tên của bạn để chúng tôi tiện xưng hô nhé.', 'warning');
-        return;
-    }
-    if (!phone || phone.length < 9) {
-        Swal.fire('Chú ý', 'Vui lòng nhập số điện thoại hợp lệ.', 'warning');
-        return;
-    }
+    // =================================================================
+    // BƯỚC 1: NẾU ĐANG ẨN OTP -> GỌI API GỬI MÃ
+    // =================================================================
+    if (otpContainer.classList.contains('hidden')) {
+        if (!phoneInput || !nameInput || !emailInput) {
+            Swal.fire('Lỗi', 'Vui lòng nhập đầy đủ thông tin (Tên, SĐT, Email)', 'error');
+            return;
+        }
 
-    if (lookupStep === 1) {
-        btn.disabled = true;
-        btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Đang gửi...';
+        if (!emailInput.includes('@') || !emailInput.includes('.')) {
+            Swal.fire('Lỗi', 'Vui lòng nhập Email hợp lệ để nhận Voucher', 'warning');
+            return;
+        }
+
+        btnSubmit.innerHTML = 'Đang gửi... <i class="fa-solid fa-spinner fa-spin"></i>';
 
         fetch('/api/Otp/send', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phone: phone })
+            body: JSON.stringify({ phone: phoneInput })
         })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    lookupStep = 2;
-                    document.getElementById('lookupOtpContainer').classList.remove('hidden');
+                    // Hiện khung nhập OTP và đổi nút
+                    otpContainer.classList.remove('hidden');
+                    btnSubmit.innerHTML = 'Xác nhận OTP <i class="fa-solid fa-check"></i>';
 
-                    // 🔔 HIỆN HỘP THOẠI THÔNG BÁO MÃ OTP (Mô phỏng tin nhắn SMS)
-                    if (data.otp) {
-                        Swal.fire({
-                            title: '🔔 TIN NHẮN TỪ AURAHOME',
-                            html: `Mã xác nhận OTP của bạn là: <b class="text-2xl text-cyan-600 tracking-widest">${data.otp}</b><br><br><i class="text-sm text-slate-500">(Hãy nhập mã này vào ô xác nhận)</i>`,
-                            icon: 'info',
-                            confirmButtonText: 'Đã hiểu'
-                        });
-                        // Chú ý: Ta không tự điền nữa để khách trải nghiệm việc tự gõ mã từ hộp thoại vào
-                    }
-
-                    btn.innerHTML = 'Xác nhận Khôi phục <span class="material-symbols-outlined text-[18px]">check_circle</span>';
-                    btn.disabled = false;
-
-                    // ... (Đoạn code đếm ngược 60s giữ nguyên) ...
-                    let timeLeft = 60;
-                    clearInterval(lookupTimerInterval);
-                    lookupTimerInterval = setInterval(() => {
-                        if (timeLeft <= 0) {
-                            clearInterval(lookupTimerInterval);
-                            document.getElementById('lookupOtpTimer').innerText = '';
-                            lookupStep = 1;
-                            btn.innerHTML = 'Gửi lại mã OTP';
-                        } else {
-                            document.getElementById('lookupOtpTimer').innerText = `${timeLeft}s`;
-                            timeLeft--;
+                    // 🌟 NÂNG CẤP UI: Hiển thị OTP dạng Toast (Giả lập tin nhắn SMS tới)
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end', // Trượt từ góc phải trên xuống
+                        icon: 'info',
+                        title: 'Tin nhắn hệ thống',
+                        text: `Mã OTP của bạn là: ${data.otp}`,
+                        showConfirmButton: false,
+                        timer: 6000,
+                        timerProgressBar: true,
+                        customClass: {
+                            popup: 'rounded-xl shadow-lg border border-slate-100 bg-white'
                         }
-                    }, 1000);
+                    });
 
+                    // 🌟 NÂNG CẤP UI: Kích hoạt đếm ngược 60s cho nút gửi lại (nếu bạn có dùng HTML nút Gửi lại)
+                    if (typeof startOtpTimer === 'function') {
+                        startOtpTimer(60);
+                    }
                 } else {
-                    Swal.fire('Lỗi', data.message, 'error');
-                    btn.disabled = false;
-                    btn.innerHTML = 'Nhận mã OTP';
+                    // Xử lý trường hợp API trả về lỗi (vd: sđt không hợp lệ)
+                    Swal.fire('Lỗi', data.message || 'Không thể gửi mã', 'error');
+                    btnSubmit.innerHTML = 'Tra cứu ngay <i class="fa-solid fa-magnifying-glass"></i>';
                 }
+            })
+            .catch(err => {
+                console.error('Lỗi kết nối:', err);
+                Swal.fire('Lỗi', 'Lỗi kết nối mạng', 'error');
+                btnSubmit.innerHTML = 'Tra cứu ngay <i class="fa-solid fa-magnifying-glass"></i>';
             });
     }
-    else if (lookupStep === 2) {
-        const otp = document.getElementById('lookupOtpInput').value.trim();
-        if (!otp || otp.length !== 6) {
-            Swal.fire('Chú ý', 'Vui lòng nhập đủ 6 số OTP.', 'warning');
+    // =================================================================
+    // BƯỚC 2: NẾU ĐANG HIỆN OTP -> GỌI API XÁC THỰC & LƯU DB
+    // =================================================================
+    else {
+        if (!otpInput) {
+            Swal.fire('Lỗi', 'Vui lòng nhập mã OTP', 'warning');
             return;
         }
 
-        btn.disabled = true;
-        btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Đang xử lý...';
+        btnSubmit.innerHTML = 'Đang xác thực... <i class="fa-solid fa-spinner fa-spin"></i>';
 
-        // Gọi API khôi phục giỏ hàng và gửi kèm TÊN lên C#
-        fetch(`/Customers/RestoreCartAjax?phone=${encodeURIComponent(phone)}&otp=${encodeURIComponent(otp)}&name=${encodeURIComponent(name)}`, { method: 'POST' })
+        // Dùng URLSearchParams để C# dễ đọc [FromForm]
+        const params = new URLSearchParams();
+        params.append('phone', phoneInput);
+        params.append('otpCode', otpInput);
+        params.append('fullName', nameInput);
+        params.append('email', emailInput);
+
+        fetch('/api/Otp/VerifyOtpLogin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params
+        })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    // LƯU TÊN VÀ SĐT VÀO TRÌNH DUYỆT ĐỂ ĐỔI LỜI CHÀO TRÊN HEADER
-                    localStorage.setItem('savedGuestName', name);
-                    localStorage.setItem('savedGuestPhone', phone);
+                    // ĐỒNG BỘ TÊN BIẾN LOCALSTORAGE (Quan trọng!)
+                    localStorage.setItem('savedGuestName', nameInput);
+                    localStorage.setItem('savedGuestPhone', phoneInput);
+                    localStorage.setItem('savedGuestEmail', emailInput);
 
-                    closeLookupModal();
-
-                    // LỜI CHÀO KHI ĐĂNG NHẬP THÀNH CÔNG
-                    Swal.fire({
-                        icon: 'success',
-                        title: `Xin chào, ${name}!`,
-                        text: 'Xác thực thành công. Đang chuyển đến giỏ hàng...',
-                        timer: 2000,
-                        showConfirmButton: false
-                    }).then(() => {
-                        window.location.href = '/Customers/Cart';
-                    });
+                    Swal.fire('Thành công', 'Hệ thống đã xác thực thành công!', 'success')
+                        .then(() => {
+                            if (typeof closeLookupModal === 'function') closeLookupModal();
+                            window.location.reload();
+                        });
                 } else {
                     Swal.fire('Lỗi', data.message, 'error');
-                    btn.disabled = false;
-                    btn.innerHTML = 'Xác nhận Khôi phục';
+                    btnSubmit.innerHTML = 'Xác nhận OTP <i class="fa-solid fa-check"></i>';
                 }
+            })
+            .catch(err => {
+                console.error('Lỗi kết nối:', err);
+                Swal.fire('Lỗi', 'Không thể kết nối máy chủ', 'error');
+                btnSubmit.innerHTML = 'Xác nhận OTP <i class="fa-solid fa-check"></i>';
             });
     }
+}
+let lookupOtpInterval;
+
+function startLookupOtpTimer(duration = 30) {
+    const timerDisplay = document.getElementById('lookupOtpTimer');
+    const btnResend = document.getElementById('btnResendLookupOtp');
+    let timer = duration;
+
+    // Khóa nút gửi lại và hiển thị số đếm ngược trong ô input
+    btnResend.disabled = true;
+    timerDisplay.innerText = timer + 's';
+    btnResend.innerText = `Gửi lại mã (${timer}s)`;
+
+    clearInterval(lookupOtpInterval);
+
+    lookupOtpInterval = setInterval(function () {
+        timer--;
+        timerDisplay.innerText = timer + 's';
+        btnResend.innerText = `Gửi lại mã (${timer}s)`;
+
+        if (timer <= 0) {
+            // Khi hết giờ: Dừng đếm, ẩn số đếm ngược trong ô input, bật sáng nút gửi lại
+            clearInterval(lookupOtpInterval);
+            timerDisplay.innerText = '';
+            btnResend.disabled = false;
+            btnResend.innerText = 'Chưa nhận được mã? Gửi lại ngay';
+        }
+    }, 1000);
+}
+
+// Hàm giả lập gửi lại mã (Bạn gắn API gửi thật vào đây)
+function resendLookupOtp() {
+    const phoneInput = document.getElementById('lookupPhoneInput').value;
+
+    // 1. Gọi hàm gửi SMS giả lập (hoặc fetch API)
+    if (typeof sendSmsToPhone === 'function') {
+        sendSmsToPhone(phoneInput);
+    }
+
+    // 2. Bắt đầu đếm ngược lại từ đầu (30s)
+    startLookupOtpTimer(30);
 }

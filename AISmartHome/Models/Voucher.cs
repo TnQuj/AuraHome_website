@@ -33,6 +33,7 @@ namespace AISmartHome.Models
         public DateTime NgayHetHan { get; set; }
 
         public int SoLuongToiDa { get; set; } = 100;
+
         public int SoLuongDaDung { get; set; } = 0;
 
         public bool TrangThai { get; set; } = true;

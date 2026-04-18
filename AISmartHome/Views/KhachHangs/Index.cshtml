@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<AISmartHome.Models.KhachHang>
-@using Microsoft.EntityFrameworkCore; 
+@using Microsoft.EntityFrameworkCore;
 @inject AISmartHome.Data.AISmartHomeDbContext _context
 
 @{
@@ -7,25 +7,30 @@
     ViewData["Title"] = "Danh sách Khách hàng";
     ViewData["HeaderIcon"] = @"<svg class=""w-8 h-8 text-[#00E5FF]"" fill=""none"" stroke=""currentColor"" viewBox=""0 0 24 24""><path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z""></path></svg>";
 }
-<div class="px-6 pb-6 pt-2 bg-slate-50 min-h-screen">
-            @section HeaderActions {
-        <a asp-action="Create" class="flex items-center gap-2 px-6 py-3 bg-brand-cyan text-white hover:bg-cyan-600 rounded-xl font-bold transition-all duration-300 shadow-lg shadow-brand-cyan/20 hover:-translate-y-0.5">
-        <svg class="w-5 h-5 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+
+@section HeaderActions {
+    <a asp-action="Create" class="flex items-center gap-2 px-6 py-3 bg-brand-cyan text-white hover:bg-cyan-600 rounded-xl font-bold transition-all duration-300 shadow-lg shadow-brand-cyan/20 hover:-translate-y-0.5">
+        <svg class="w-5 h-5 text-[#00E5FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
+        </svg>
         Thêm khách hàng
     </a>
-            }
+}
+
+<div class="px-6 pb-6 pt-2 bg-slate-50 min-h-screen">
     <div class="max-w-7xl mx-auto">
-       
+
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
+                <table class="w-full text-left border-collapse min-w-[1000px]">
                     <thead>
                         <tr class="bg-[#001F3F] text-white">
-                            <th class="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Họ và Tên</th>
-                            <th class="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Liên lạc</th>
-                            <th class="px-6 py-4 text-sm font-semibold uppercase tracking-wider">Địa chỉ</th>
-                            <th class="px-6 py-4 text-sm font-semibold uppercase tracking-wider text-center">Tình trạng Voucher</th>
-                            <th class="px-6 py-4 text-sm font-semibold uppercase tracking-wider text-right">Thao tác</th>
+                            <th class="w-[22%] px-6 py-4 text-sm font-semibold uppercase tracking-wider">Họ và Tên</th>
+                            <th class="w-[20%] px-6 py-4 text-sm font-semibold uppercase tracking-wider">Liên lạc</th>
+                            <th class="w-[20%] px-6 py-4 text-sm font-semibold uppercase tracking-wider">Địa chỉ</th>
+                            <th class="w-[15%] px-6 py-4 text-sm font-semibold uppercase tracking-wider text-center">Truy cập</th>
+                            <th class="w-[13%] px-6 py-4 text-sm font-semibold uppercase tracking-wider text-center">Tình trạng Voucher</th>
+                            <th class="w-[10%] px-6 py-4 text-sm font-semibold uppercase tracking-wider text-right">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
@@ -38,28 +43,36 @@
                             }
 
                             <tr class="hover:bg-slate-50 transition-colors group">
-                                <td class="px-6 py-4">
+
+                                <td class="px-6 py-4 align-middle">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-full bg-[#00E5FF]/10 flex items-center justify-center text-[#001F3F] font-bold">
+                                        <div class="w-10 h-10 rounded-full bg-[#00E5FF]/10 flex items-center justify-center text-[#001F3F] font-bold shrink-0">
                                             @(string.IsNullOrEmpty(item.TenKhachHang) ? "?" : item.TenKhachHang.Substring(0, 1).ToUpper())
                                         </div>
-                                        <div>
-                                            <div class="font-bold text-[#001F3F]">@item.TenKhachHang</div>
-                                            <div class="text-xs font-medium text-emerald-600">Hạng: @item.HangThanhVien</div>
+                                        <div class="min-w-0">
+                                            <div class="font-bold text-[#001F3F] truncate">@item.TenKhachHang</div>
+                                            <div class="text-xs font-medium text-emerald-600 truncate">Hạng: @item.HangThanhVien</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4">
-                                    <div class="text-sm text-slate-700 font-medium">@item.SoDienThoai</div>
-                                    <div class="text-xs text-gray-400">@item.Email</div>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate" title="@item.DiaChi">
-                                    @item.DiaChi
+
+                                <td class="px-6 py-4 align-middle">
+                                    <div class="text-sm text-slate-700 font-medium truncate">@item.SoDienThoai</div>
+                                    <div class="text-xs text-gray-400 truncate" title="@item.Email">@item.Email</div>
                                 </td>
 
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 align-middle text-sm text-gray-600">
+                                    <div class="max-w-[200px] truncate" title="@item.DiaChi">
+                                        @(string.IsNullOrEmpty(item.DiaChi) ? "---" : item.DiaChi)
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 align-middle text-sm text-gray-600 text-center">
+                                    @(item.ThoiGianTruyCap.HasValue ? item.ThoiGianTruyCap.Value.ToString("dd/MM/yyyy HH:mm") : "Chưa có")
+                                </td>
+
+                                <td class="px-6 py-4 align-middle">
                                     @{
-                                        // Lấy toàn bộ lịch sử voucher của Email này, join với bảng Voucher để lấy tên mã
                                         var dsVoucherCuaKhach = new List<AISmartHome.Models.VoucherHistory>();
                                         if (!string.IsNullOrEmpty(item.Email))
                                         {
@@ -70,51 +83,52 @@
                                         }
                                     }
 
-                                    @if (dsVoucherCuaKhach.Any())
-                                    {
-                                        <div class="space-y-1.5">
-                                            @foreach (var v in dsVoucherCuaKhach)
-                                            {
-                                                // Kiểm tra xem mã đã dùng chưa (dựa vào cột MaDonHang mà bạn chụp)
-                                                bool daDung = v.MaDonHang != null;
-
-                                                <div class="text-[11px] font-medium border rounded border-slate-200 flex items-center justify-between p-1 bg-white">
-                                                    <span class="font-mono font-bold text-brand-cyan pl-1" title="@v.VoucherNavigation?.MoTa">
-                                                        @v.VoucherNavigation?.Code
-                                                    </span>
-                                                    @if (daDung)
-                                                    {
-                                                        <span class="bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded text-[10px] uppercase">Đã xài</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="bg-emerald-100 text-emerald-600 px-1.5 py-0.5 rounded text-[10px] uppercase font-bold">Còn hạn</span>
-                                                    }
-                                                </div>
-                                            }
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-medium bg-slate-50 text-slate-400 border border-slate-200">
-                                            Chưa tham gia vòng quay
-                                        </span>
-                                    }
+                                    <div class="flex flex-col items-center justify-center">
+                                        @if (dsVoucherCuaKhach.Any())
+                                        {
+                                            <div class="space-y-1.5 w-full max-w-[140px]">
+                                                @foreach (var v in dsVoucherCuaKhach)
+                                                {
+                                                    bool daDung = v.MaDonHang != null;
+                                                    <div class="text-[11px] font-medium border rounded border-slate-200 flex items-center justify-between p-1.5 bg-white w-full">
+                                                        <span class="font-mono font-bold text-brand-cyan truncate max-w-[70px]" title="@v.VoucherNavigation?.MoTa">
+                                                            @v.VoucherNavigation?.Code
+                                                        </span>
+                                                        @if (daDung)
+                                                        {
+                                                            <span class="bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded text-[10px] uppercase shrink-0">Đã xài</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="bg-emerald-100 text-emerald-600 px-1.5 py-0.5 rounded text-[10px] uppercase font-bold shrink-0">Còn hạn</span>
+                                                        }
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <span class="inline-flex items-center justify-center px-3 py-1 rounded-lg text-[11px] font-medium bg-slate-50 text-slate-400 border border-slate-200 text-center">
+                                                Chưa tham gia
+                                            </span>
+                                        }
+                                    </div>
                                 </td>
 
-                                <td class="px-6 py-4">
-                                    <div class="flex justify-end gap-2">
-                                        <a asp-action="Edit" asp-route-id="@item.MaKhachHang" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Sửa">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                <td class="px-6 py-4 align-middle">
+                                    <div class="flex justify-end gap-1.5">
+                                        <a asp-action="Edit" asp-route-id="@item.MaKhachHang" class="p-2 text-blue-600 hover:bg-blue-50 hover:shadow-sm rounded-lg transition-all" title="Sửa">
+                                            <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                         </a>
-                                        <a asp-action="Details" asp-route-id="@item.MaKhachHang" class="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" title="Chi tiết">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                        <a asp-action="Details" asp-route-id="@item.MaKhachHang" class="p-2 text-emerald-600 hover:bg-emerald-50 hover:shadow-sm rounded-lg transition-all" title="Chi tiết">
+                                            <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                         </a>
-                                        <a asp-action="Delete" asp-route-id="@item.MaKhachHang" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Xóa">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        <a asp-action="Delete" asp-route-id="@item.MaKhachHang" class="p-2 text-red-600 hover:bg-red-50 hover:shadow-sm rounded-lg transition-all" title="Xóa">
+                                            <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                         </a>
                                     </div>
                                 </td>
+
                             </tr>
                         }
                     </tbody>
@@ -124,15 +138,18 @@
             @if (!Model.Any())
             {
                 <div class="py-20 text-center">
-                    <svg class="w-16 h-16 text-gray-200 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+                    <svg class="w-16 h-16 text-gray-200 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                    </svg>
                     <p class="text-gray-400">Không tìm thấy khách hàng nào trong hệ thống.</p>
                 </div>
             }
         </div>
 
-        <div class="mt-4 flex justify-between items-center text-xs text-gray-400">
+        <div class="mt-4 flex justify-between items-center text-xs text-gray-400 font-medium">
             <p>Tổng số khách hàng: @Model.Count()</p>
-            <p>© 2026 AI Smart Home Admin Panel</p>
+            <p>© 2026 Aura Smart Home Admin Panel</p>
         </div>
+
     </div>
 </div>

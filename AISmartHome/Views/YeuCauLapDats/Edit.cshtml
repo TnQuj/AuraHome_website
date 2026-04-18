@@ -9,20 +9,17 @@
     string initTime = Model?.NgayLap?.ToString("HH:mm") ?? "";
 }
 
-<main class="w-full min-h-[75vh] py-12 bg-slate-50">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+<main class="w-full min-h-[75vh] py-2 bg-slate-50">
+    <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <div class="mb-6 flex items-center justify-between">
-            <div>
-                <h1 class="text-2xl font-black text-brand-navy uppercase tracking-wide">Cập Nhật Yêu Cầu</h1>
-                <p class="text-slate-500 text-sm mt-1">Mã YC: <strong class="text-brand-cyan">#@Model.MaYeuCauLapDat</strong></p>
-            </div>
-            <a asp-action="Index" class="text-slate-500 hover:text-brand-cyan transition-colors font-medium flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-200">
-                <i class="fa-solid fa-arrow-left"></i> Quay lại
+        <div class="mb-1 flex items-center justify-between">
+            <a asp-action="Index" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-rose-500 border border-rose-500 rounded-full hover:bg-rose-600 hover:border-rose-600 hover:shadow-[0_0_10px_rgba(244,63,94,0.4)] transition-all">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Exit
             </a>
         </div>
 
-        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+        <div class="bg-white sm:px-6 p-1 rounded-1xl shadow-sm border border-slate-100">
             <form asp-action="Edit" id="editForm" class="space-y-6">
                 <div asp-validation-summary="ModelOnly" class="text-rose-500 text-sm font-medium p-3 bg-rose-50 rounded-xl"></div>
 
@@ -35,20 +32,23 @@
                         </select>
                         <span asp-validation-for="MaDonHang" class="text-rose-500 text-xs"></span>
                     </div>
-
+                    <!--mới-->
                     <div class="space-y-2">
                         <label asp-for="MaNhanVien" class="block text-sm font-bold text-slate-700">Nhân Viên Phụ Trách</label>
-                        <select asp-for="MaNhanVien" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-cyan/20 focus:border-brand-cyan transition-all text-slate-700 bg-slate-50" asp-items="ViewBag.MaNhanVien">
+
+                        <select asp-for="MaNhanVien" id="MaNhanVienSelect" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-cyan/20 focus:border-brand-cyan transition-all text-slate-700 bg-slate-50 cursor-pointer" asp-items="ViewBag.MaNhanVien">
                             <option value="">-- Chưa phân công --</option>
                         </select>
+
                         <span asp-validation-for="MaNhanVien" class="text-rose-500 text-xs"></span>
                     </div>
 
                     <div class="space-y-2">
                         <label asp-for="TrangThaiLapDat" class="block text-sm font-bold text-slate-700">Trạng Thái</label>
                         <select asp-for="TrangThaiLapDat" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-cyan/20 focus:border-brand-cyan transition-all text-slate-700 bg-slate-50">
-                            <option value="Chưa lắp đặt">Chưa lắp đặt</option>
-                            <option value="Đang xử lý">Đang xử lý</option>
+                            <option value="Chờ xử lý">Chờ xử lý (Chưa phân công)</option>
+                            <option value="Đã phân công">Đã phân công / Đang giao</option>
+                            <option value="Đang thi công">Đang thi công lắp đặt</option>
                             <option value="Đã hoàn thành">Đã hoàn thành</option>
                             <option value="Bị hủy">Bị hủy</option>
                         </select>
@@ -113,49 +113,131 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+
+            // ==========================================
+            // 1. CHUẨN BỊ CÁC BIẾN CẦN THIẾT
+            // ==========================================
             const fakeTimeSelect = document.getElementById('fakeTime');
             const fakeDateInput = document.getElementById('fakeDate');
             const realNgayLapInput = document.getElementById('RealNgayLap');
             const editForm = document.getElementById('editForm');
+            const selectNhanVien = document.getElementById('MaNhanVienSelect');
+            const warningBox = document.getElementById('WarningChuaPhanCong');
 
-            // 1. Tạo danh sách các khung giờ cách nhau 15 phút (Từ 07:00 đến 19:45)
-            const startHour = 7;
-            const endHour = 19;
-            const minutes = ['00', '15', '30', '45'];
+            // ==========================================
+            // 2. TẠO DANH SÁCH GIỜ (15 PHÚT/LẦN)
+            // ==========================================
+            if (fakeTimeSelect && fakeDateInput && realNgayLapInput && editForm) {
+                const startHour = 7;
+                const endHour = 19;
+                const minutes = ['00', '15', '30', '45'];
 
-            for (let h = startHour; h <= endHour; h++) {
-                let hourStr = h.toString().padStart(2, '0');
-                minutes.forEach(m => {
-                    let timeStr = `${hourStr}:${m}`;
-                    fakeTimeSelect.add(new Option(timeStr, timeStr));
+                for (let h = startHour; h <= endHour; h++) {
+                    let hourStr = h.toString().padStart(2, '0');
+                    minutes.forEach(m => {
+                        let timeStr = `${hourStr}:${m}`;
+                        fakeTimeSelect.add(new Option(timeStr, timeStr));
+                    });
+                }
+
+                const initTime = '@initTime';
+                if (initTime) {
+                    let optionExists = Array.from(fakeTimeSelect.options).some(opt => opt.value === initTime);
+                    if (!optionExists) {
+                        fakeTimeSelect.add(new Option(initTime, initTime));
+                    }
+                    fakeTimeSelect.value = initTime;
+                }
+
+                // ==========================================
+                // 3. XỬ LÝ SỰ KIỆN KHI BẤM "LƯU THAY ĐỔI"
+                // ==========================================
+                editForm.addEventListener('submit', function (e) {
+                    // BƯỚC A: Ghép ngày giờ trước để sẵn sàng dữ liệu
+                    const selectedDate = fakeDateInput.value;
+                    const selectedTime = fakeTimeSelect.value;
+
+                    if (selectedDate && selectedTime) {
+                        realNgayLapInput.value = `${selectedDate}T${selectedTime}`;
+                    } else if (selectedDate) {
+                        realNgayLapInput.value = `${selectedDate}T00:00`;
+                    } else {
+                        realNgayLapInput.value = '';
+                    }
+
+                    // BƯỚC B: Kiểm tra Nhân viên phụ trách
+                    if (selectNhanVien && selectNhanVien.value === "") {
+                        e.preventDefault(); // Khoan hãy gửi Form lên Server
+
+                        // Hiện Popup hỏi xác nhận (Dùng SweetAlert2 nếu có, không thì dùng mặc định)
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                title: 'Chưa phân công nhân viên!',
+                                text: 'Bạn có chắc chắn muốn lưu yêu cầu này mà chưa có người phụ trách không?',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#06b6d4', // Màu Cyan
+                                cancelButtonColor: '#f43f5e',  // Màu Rose
+                                confirmButtonText: '<i class="fa-solid fa-floppy-disk"></i> Vẫn lưu tạm',
+                                cancelButtonText: 'Để tôi chọn lại'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Bỏ qua cảnh báo và ép hệ thống gửi Form đi
+                                    editForm.submit();
+                                } else {
+                                    // Quay lại và trỏ chuột vào ô Nhân viên
+                                    selectNhanVien.focus();
+                                }
+                            });
+                        } else {
+                            // Popup mặc định của trình duyệt (nếu chưa cài thư viện Swal)
+                            let xacNhan = confirm("Bạn chưa phân công nhân viên! Vẫn tiếp tục lưu?");
+                            if (xacNhan) {
+                                editForm.submit();
+                            } else {
+                                selectNhanVien.focus();
+                            }
+                        }
+                    }
+                    // Nếu đã chọn nhân viên rồi thì mọi thứ êm ru, form tự gửi bình thường!
                 });
             }
 
-            // 2. Set lại giá trị Giờ ban đầu từ Database (nếu có)
-            const initTime = '@initTime';
-            if (initTime) {
-                // Kiểm tra xem giờ lẻ (ví dụ 08:12) có nằm trong list 15p không, không có thì thêm nó vào
-                let optionExists = Array.from(fakeTimeSelect.options).some(opt => opt.value === initTime);
-                if (!optionExists) {
-                    fakeTimeSelect.add(new Option(initTime, initTime));
+            // ==========================================
+            // 4. HIỆU ỨNG CẢNH BÁO BÊN DƯỚI Ô DROPDOWN
+            // ==========================================
+            if (selectNhanVien && warningBox) {
+                function kiemTraPhanCong() {
+                    if (selectNhanVien.value === "") {
+                        warningBox.classList.remove('hidden');
+                    } else {
+                        warningBox.classList.add('hidden');
+                    }
                 }
-                fakeTimeSelect.value = initTime;
+                kiemTraPhanCong();
+                selectNhanVien.addEventListener('change', kiemTraPhanCong);
             }
+                    // ==========================================
+        // 5. TỰ ĐỘNG CHUYỂN TRẠNG THÁI TỪ NÚT BẤM
+        // ==========================================
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('autostatus') === 'true') {
+            const trangThaiSelect = document.getElementById('TrangThaiLapDat');
 
-            // 3. Ghép Ngày + Giờ lại thành định dạng chuẩn ISO trước khi nộp Form
-            editForm.addEventListener('submit', function (e) {
-                const selectedDate = fakeDateInput.value;
-                const selectedTime = fakeTimeSelect.value;
+            // Nếu trạng thái hiện tại đang là "Chờ xử lý" thì mới tự động đổi
+            // (Tránh trường hợp lỡ bấm nhầm vào đơn đã hoàn thành mà nó tự lùi lại)
+            if (trangThaiSelect && trangThaiSelect.value === 'Chờ xử lý') {
+                trangThaiSelect.value = 'Đã phân công';
 
-                if (selectedDate && selectedTime) {
-                    // C# đọc được định dạng chuẩn: YYYY-MM-DDTHH:mm
-                    realNgayLapInput.value = `${selectedDate}T${selectedTime}`;
-                } else if (selectedDate) {
-                    realNgayLapInput.value = `${selectedDate}T00:00`; // Nếu quên chọn giờ thì mặc định 0h
-                } else {
-                    realNgayLapInput.value = '';
-                }
-            });
+                // Tùy chọn: Thêm hiệu ứng chớp sáng nhẹ để Admin biết hệ thống vừa tự đổi giúp họ
+                trangThaiSelect.classList.add('ring-2', 'ring-rose-400', 'bg-rose-50');
+                setTimeout(() => {
+                    trangThaiSelect.classList.remove('ring-2', 'ring-rose-400', 'bg-rose-50');
+                }, 1000);
+            }
+        }
+
         });
+
     </script>
 }

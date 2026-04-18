@@ -54,6 +54,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\favicon.ico'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\03030358-dea4-402a-8e5f-ceb4ff430c4d.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/03030358-dea4-402a-8e5f-ceb4ff430c4d.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>mpibb2cy2s</Fingerprint>
+      <Integrity>eqZyAmJPA5FPqfIU/0SXoOOM2w4l/UdMuILY24knjCQ=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\03030358-dea4-402a-8e5f-ceb4ff430c4d.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\03c09a5c-311d-4c2b-8a41-b74f95afdecd.jpg'))">
       <SourceType>Package</SourceType>
       <SourceId>AISmartHome</SourceId>
@@ -89,6 +107,78 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\044069d4fdd37c511dc3ae826f3dc46d.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\06ef5b45-ea79-488f-a790-63b5a31ee70b.webp'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/06ef5b45-ea79-488f-a790-63b5a31ee70b.webp</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>kvc3b68gu4</Fingerprint>
+      <Integrity>EFnZxekTbAveeLoGJxTrmdSmmZdwP9Jai8d/cXGiIsg=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\06ef5b45-ea79-488f-a790-63b5a31ee70b.webp'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\07b45c16-792a-4121-b5a4-a67d7d2a0004.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/07b45c16-792a-4121-b5a4-a67d7d2a0004.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>31rsfdba3s</Fingerprint>
+      <Integrity>12qWG6cgo0sfFEtthbz8zUb7jIsT3spsLbPfyRjqVkg=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\07b45c16-792a-4121-b5a4-a67d7d2a0004.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\0808e852-c4b7-44ce-8497-b4a3b1877dd7.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/0808e852-c4b7-44ce-8497-b4a3b1877dd7.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>nc27px1wpk</Fingerprint>
+      <Integrity>p/SEHaCs9qJhQauCIWc+MnV4VNfsEt0aGZq4d7l3FwQ=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\0808e852-c4b7-44ce-8497-b4a3b1877dd7.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\086701fc-ebaa-48bd-bfea-07bd94f04a40.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/086701fc-ebaa-48bd-bfea-07bd94f04a40.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>hgkecg2f6v</Fingerprint>
+      <Integrity>7/Sxbw8tshqz9CvaBwu9yeSxV4lVv24YZM3CT29uqLQ=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\086701fc-ebaa-48bd-bfea-07bd94f04a40.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\09f19f95-c488-4fb2-8375-9c9da0805dbc.png'))">
       <SourceType>Package</SourceType>
@@ -143,6 +233,24 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\0f7eae76-6005-4f96-84a1-3ab83dd84616.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\0ff1cd7b-12d6-420a-b7ee-e5dd07ae06e1.webp'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/0ff1cd7b-12d6-420a-b7ee-e5dd07ae06e1.webp</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>vuvlivqv1p</Fingerprint>
+      <Integrity>ed3yWLp+EsXQyAPInUmWXHK5A5uzGwekYabzBGq3qkc=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\0ff1cd7b-12d6-420a-b7ee-e5dd07ae06e1.webp'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\1.webp'))">
       <SourceType>Package</SourceType>
@@ -216,6 +324,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\1019fccf-6b7d-447d-baab-44a9aef7d3b4.png'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\125032c6-4105-495b-969e-e710f3cce4ea.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/125032c6-4105-495b-969e-e710f3cce4ea.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>yr7szttmpf</Fingerprint>
+      <Integrity>Xv3crKVnRvFv4ddfOs6pXUTtJ17nYPMHpmuMlpeMwbc=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\125032c6-4105-495b-969e-e710f3cce4ea.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\1448be362eb2e4d36ec4941ac1dc0086.jpg'))">
       <SourceType>Package</SourceType>
       <SourceId>AISmartHome</SourceId>
@@ -288,6 +414,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\174f310b96bd118fc58682e9eb728b6f.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\19559ec5-9ef9-4178-a3d7-ac9e6c725524.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/19559ec5-9ef9-4178-a3d7-ac9e6c725524.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>30oug8nzkj</Fingerprint>
+      <Integrity>/cqNm0dcBk7jA/9mLQtJW2NcXG4lj/MU+8wPSUWRKPs=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\19559ec5-9ef9-4178-a3d7-ac9e6c725524.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\1dda30227d711b81bde28aee70dd0f21.jpg'))">
       <SourceType>Package</SourceType>
       <SourceId>AISmartHome</SourceId>
@@ -305,6 +449,96 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\1dda30227d711b81bde28aee70dd0f21.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\1e9436cf-2a2a-462e-8ffc-4794dbf8b4bc.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/1e9436cf-2a2a-462e-8ffc-4794dbf8b4bc.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>hgaisgv6d2</Fingerprint>
+      <Integrity>j649gUo3eM/F93CfC0HEnfvMN5y64Y4qSfK7iW98CTg=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\1e9436cf-2a2a-462e-8ffc-4794dbf8b4bc.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\1fee6517-824a-447d-a726-1455ad47179a.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/1fee6517-824a-447d-a726-1455ad47179a.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>pkhw7i5vx7</Fingerprint>
+      <Integrity>+R9MGm/qxr8WMWwkeEf9DbdoqvQg8DT8YOgzf+8jIFk=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\1fee6517-824a-447d-a726-1455ad47179a.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\2101b710-8521-4767-9b24-a339d3fa7ac5.webp'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/2101b710-8521-4767-9b24-a339d3fa7ac5.webp</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>empr8jz1gk</Fingerprint>
+      <Integrity>dl64YP5wV/VdsKnMZSPqCEzj8RVFEnU5jclLLiThXJY=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\2101b710-8521-4767-9b24-a339d3fa7ac5.webp'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\21f213f3-0765-4f98-a667-d91457e8cace.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/21f213f3-0765-4f98-a667-d91457e8cace.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>b7qamsgy1y</Fingerprint>
+      <Integrity>J+nDa4q3CWYurdvhbwUXnd0CPkYa0fA2CPH8HmIRa4I=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\21f213f3-0765-4f98-a667-d91457e8cace.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\25afde62-5088-4fc3-87a1-779716b4c08f.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/25afde62-5088-4fc3-87a1-779716b4c08f.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>m6mb9i9x5g</Fingerprint>
+      <Integrity>DkYht8+fVwU+qwqSJDsHPN5Mf8AYGN6l2hBUUyO/m7Q=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\25afde62-5088-4fc3-87a1-779716b4c08f.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\2813ebed-b926-45a1-925e-96af2f20b5ff.jpg'))">
       <SourceType>Package</SourceType>
@@ -359,6 +593,24 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\2839f8ee-ccb2-4b3d-85ba-17451fb5fc8f.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\2970aa13-6718-430b-b02f-b4a205e3ccb4.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/2970aa13-6718-430b-b02f-b4a205e3ccb4.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>1h5b9pm1ft</Fingerprint>
+      <Integrity>dT11/JQS8d1HjGuuMT6fcrEBrsw28AB2s5SNV4IIzuM=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\2970aa13-6718-430b-b02f-b4a205e3ccb4.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\2b167e9a-2314-4860-a317-55cb802bac0c.png'))">
       <SourceType>Package</SourceType>
@@ -431,6 +683,42 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\304ce247-8ea6-4ef3-bfc2-65d8905ac1d0.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\30b37a6b-a0bc-4cdd-9240-1be48ee224c4.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/30b37a6b-a0bc-4cdd-9240-1be48ee224c4.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>ez6lgbo8e2</Fingerprint>
+      <Integrity>Zk1QpaX+iMSBVkxLWbQGuDS3dYL7lL1XzFfOogEpZzM=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\30b37a6b-a0bc-4cdd-9240-1be48ee224c4.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\3129554e-a2da-4012-b90a-53f6d89d2d23.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/3129554e-a2da-4012-b90a-53f6d89d2d23.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>icymis4s6r</Fingerprint>
+      <Integrity>YtkUXK0iwRNy4FppgPknVdAqQWQ7anLSSY+llKepuJM=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\3129554e-a2da-4012-b90a-53f6d89d2d23.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\3471d19418f51bafd24d1dacf2e9144f.jpg'))">
       <SourceType>Package</SourceType>
@@ -522,6 +810,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\3c0efa72df9a0a612b3a2c7788cd1454.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\3ca0d099-4561-4d17-bff6-ea395d1d152e.webp'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/3ca0d099-4561-4d17-bff6-ea395d1d152e.webp</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>qfbsjsnbol</Fingerprint>
+      <Integrity>GsTno0EvrVrQjZqy8zoP7E8NIPtvLhPZqssVoCc4t6c=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\3ca0d099-4561-4d17-bff6-ea395d1d152e.webp'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\3fa977b26440353676f35d3bb2e67b54.jpg'))">
       <SourceType>Package</SourceType>
       <SourceId>AISmartHome</SourceId>
@@ -576,6 +882,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\44b6f681666ab402ca49644ded22c688.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\454001b9-7000-4f08-9265-c8b06080fd80.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/454001b9-7000-4f08-9265-c8b06080fd80.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>tliunx8o5o</Fingerprint>
+      <Integrity>sdQ1mGUZGhw40EzP4JS6YckvG/MXVj34/BA/NHFetL4=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\454001b9-7000-4f08-9265-c8b06080fd80.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\48714ab9ca0b4e4bed22a90989c183a9.jpg'))">
       <SourceType>Package</SourceType>
       <SourceId>AISmartHome</SourceId>
@@ -612,6 +936,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\4c46adde0b8add716f5b20b4d315d0ac.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\4c52953b-22cd-4361-ad36-996f6a59fc07.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/4c52953b-22cd-4361-ad36-996f6a59fc07.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>iaucdqkl6u</Fingerprint>
+      <Integrity>WnmBmaZF3QwduMbAe3Vh25mZxqvtYj0b780szcaZkbA=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\4c52953b-22cd-4361-ad36-996f6a59fc07.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\4c58671f-083a-42ec-b296-8e97139cf9bf.webp'))">
       <SourceType>Package</SourceType>
       <SourceId>AISmartHome</SourceId>
@@ -629,6 +971,24 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\4c58671f-083a-42ec-b296-8e97139cf9bf.webp'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\4c870030-b2c8-4f0e-adcf-df8ef616e134.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/4c870030-b2c8-4f0e-adcf-df8ef616e134.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>zb2d3ikwhc</Fingerprint>
+      <Integrity>8Qe0yiUhTIPc2FxWUfdJKHYhWcYacEKFkGpsFIS0WsE=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\4c870030-b2c8-4f0e-adcf-df8ef616e134.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\4d36ae35-1ea1-4dba-9126-406607364960.jpg'))">
       <SourceType>Package</SourceType>
@@ -702,6 +1062,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\5721e2fc-d799-4d79-a5cd-7519d6bb0aed.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\58e398fe-9d78-418f-9fba-76affaebbb9a.webp'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/58e398fe-9d78-418f-9fba-76affaebbb9a.webp</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>4ywq4obz8j</Fingerprint>
+      <Integrity>TH3FO6Z59jIapgluU3PleGcf4vab19rzic8xv+MglOQ=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\58e398fe-9d78-418f-9fba-76affaebbb9a.webp'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\5967c39f-b509-4053-9bac-d7fcf9e6156b.png'))">
       <SourceType>Package</SourceType>
       <SourceId>AISmartHome</SourceId>
@@ -738,6 +1116,42 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\5f438ee5c7a0341bb203dcd255b828e4.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\6049576a-c985-4415-91cd-ba7ba7b93f30.webp'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/6049576a-c985-4415-91cd-ba7ba7b93f30.webp</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>xkln99zgrq</Fingerprint>
+      <Integrity>/5WipEu5+TSNnQ7oP3U51VymJIpABz+7Zx9f90qVJ/0=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\6049576a-c985-4415-91cd-ba7ba7b93f30.webp'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\68005656-2c8a-4f30-a262-1d483488eb85.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/68005656-2c8a-4f30-a262-1d483488eb85.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>x8ep5pu0uo</Fingerprint>
+      <Integrity>YR1eFRScX5o5xwWz5sA4QZWtpuH+suIS+RL/dmpqvQ8=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\68005656-2c8a-4f30-a262-1d483488eb85.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\69ce91561d43cc98c65b7ef4c36febf0.jpg'))">
       <SourceType>Package</SourceType>
       <SourceId>AISmartHome</SourceId>
@@ -755,6 +1169,96 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\69ce91561d43cc98c65b7ef4c36febf0.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\6b6c22af-ae6a-425b-8fa9-d1d243723faf.webp'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/6b6c22af-ae6a-425b-8fa9-d1d243723faf.webp</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>05ejxd1guj</Fingerprint>
+      <Integrity>VPOyaymvFY8EG4syGxQaF8Zfrq31gYt6nJ2FK3XffcM=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\6b6c22af-ae6a-425b-8fa9-d1d243723faf.webp'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\6dc10726-caeb-49d9-8628-2619a0abb922.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/6dc10726-caeb-49d9-8628-2619a0abb922.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>cgqs8rs6kf</Fingerprint>
+      <Integrity>FPcDGcr3zA7mZlRxQ4n30h6TKp7oJpfZrTlNfihs7bU=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\6dc10726-caeb-49d9-8628-2619a0abb922.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\6edf5ff6-5365-46b2-a324-28caba3e3599.webp'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/6edf5ff6-5365-46b2-a324-28caba3e3599.webp</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>rtxhx1s4dn</Fingerprint>
+      <Integrity>gRVDakuWGmacTzxoMk9Q2WKQWLAA+7Ys2+jq+K0nnzY=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\6edf5ff6-5365-46b2-a324-28caba3e3599.webp'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\714de33d-5cf7-4e1b-b703-f0637e582913.webp'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/714de33d-5cf7-4e1b-b703-f0637e582913.webp</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>qlzkqdigkf</Fingerprint>
+      <Integrity>wkAZ+4JEbF/hncXSjwfh2J2BPS7wh3ruDlctHlk4Tk0=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\714de33d-5cf7-4e1b-b703-f0637e582913.webp'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\738bd235-b2ba-4c82-ba95-37ba47b9aa96.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/738bd235-b2ba-4c82-ba95-37ba47b9aa96.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>5usm92zfa0</Fingerprint>
+      <Integrity>fRzLOe6ZIGl+GeBv0kwYnhIvLCS8vVPo9ZLxIJkDvn4=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\738bd235-b2ba-4c82-ba95-37ba47b9aa96.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\74ae764e865cf785b4feed2c24355a61.jpg'))">
       <SourceType>Package</SourceType>
@@ -792,6 +1296,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\786e62c7-8e02-4312-96a9-d7fbaceb123b.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\7d646f13-6ecb-4457-97a9-928c4eea5fb5.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/7d646f13-6ecb-4457-97a9-928c4eea5fb5.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>kqosinug8s</Fingerprint>
+      <Integrity>xKVZyYqPnBucRl6ksANHDFS7kfqJBC+4BpSlcivgx3M=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\7d646f13-6ecb-4457-97a9-928c4eea5fb5.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\7e207f4b-2f7c-4746-bedd-4d23564eaded.jpg'))">
       <SourceType>Package</SourceType>
       <SourceId>AISmartHome</SourceId>
@@ -828,6 +1350,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\7fae3669-3e8c-4d1e-82eb-8bfac383021d.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\8208ccfc-74c8-46d9-8b76-80521ea7d3f6.webp'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/8208ccfc-74c8-46d9-8b76-80521ea7d3f6.webp</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>syo6qvj5p7</Fingerprint>
+      <Integrity>5Gnz/D3E82ZQbEhgl/BAR8SYChYNNVO1GVnUTBxmD80=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\8208ccfc-74c8-46d9-8b76-80521ea7d3f6.webp'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\82dd7ecaede56283041c9d2f30de86e4.jpg'))">
       <SourceType>Package</SourceType>
       <SourceId>AISmartHome</SourceId>
@@ -845,6 +1385,24 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\82dd7ecaede56283041c9d2f30de86e4.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\8506d034-5faa-45d0-ab2d-06ab657faed0.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/8506d034-5faa-45d0-ab2d-06ab657faed0.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>ebjhnl855g</Fingerprint>
+      <Integrity>9tjh+DYoNmDdppsNxB0VTf1eC5Fkp99dqCqcawWLevs=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\8506d034-5faa-45d0-ab2d-06ab657faed0.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\893058f4-26e0-4f18-afbf-9ddc0e72f438.jpg'))">
       <SourceType>Package</SourceType>
@@ -864,6 +1422,42 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\893058f4-26e0-4f18-afbf-9ddc0e72f438.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\895b6d77-da85-4ef5-a85c-3fc6a32854f6.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/895b6d77-da85-4ef5-a85c-3fc6a32854f6.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>ttzrzje039</Fingerprint>
+      <Integrity>3wJ3wOYLuK/b0haON6VRBj9CNApDkuGd9khAyxe3psY=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\895b6d77-da85-4ef5-a85c-3fc6a32854f6.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\8bbaec89-e3de-4925-985e-6f76a790e918.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/8bbaec89-e3de-4925-985e-6f76a790e918.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>7u2qbff2xd</Fingerprint>
+      <Integrity>IXiQwYe+QhSVf9mLhZb5wmBcyInoWZkgUtCRGujQGVc=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\8bbaec89-e3de-4925-985e-6f76a790e918.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\97f4e58ee8e715bf0d1d4bf1ff602262.jpg'))">
       <SourceType>Package</SourceType>
       <SourceId>AISmartHome</SourceId>
@@ -882,6 +1476,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\97f4e58ee8e715bf0d1d4bf1ff602262.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\9a6241cd-724e-4b3e-8dc8-e9a4efd5b7f2.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/9a6241cd-724e-4b3e-8dc8-e9a4efd5b7f2.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>blujomu7ks</Fingerprint>
+      <Integrity>n/FKyiJrfLpyyJJfrXQoPJJi9u+sYq0UNbhUTlxy9CM=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\9a6241cd-724e-4b3e-8dc8-e9a4efd5b7f2.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\9bf19ca7-2d49-4149-9f3e-4f45ef968f30.jpg'))">
       <SourceType>Package</SourceType>
       <SourceId>AISmartHome</SourceId>
@@ -899,6 +1511,42 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\9bf19ca7-2d49-4149-9f3e-4f45ef968f30.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\9d5a1652-d34b-4b2a-b554-d33dea0b55dd.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/9d5a1652-d34b-4b2a-b554-d33dea0b55dd.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>uhn1688f2j</Fingerprint>
+      <Integrity>MlPcVVn1bbgebFrALqqJC+VeWudGbAtnXO42RfR0co8=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\9d5a1652-d34b-4b2a-b554-d33dea0b55dd.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\a1bd86d9-e1e9-4047-aeb0-a8efea789a83.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/a1bd86d9-e1e9-4047-aeb0-a8efea789a83.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>x31p16rmk6</Fingerprint>
+      <Integrity>3Xq3SC11IWU2yJomUv9EtYLzFR6n3+sVmSTPgLNSYN8=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\a1bd86d9-e1e9-4047-aeb0-a8efea789a83.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\a338e1ed-149b-4f26-9773-b1e5fd8a7150.jpg'))">
       <SourceType>Package</SourceType>
@@ -954,6 +1602,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\a34e7b5699b068f3f87bd34792678465.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\aa17c135-18da-4002-973c-bca5dbcc2e72.webp'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/aa17c135-18da-4002-973c-bca5dbcc2e72.webp</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>hiovzhzrbd</Fingerprint>
+      <Integrity>2WRbZpC4Gz0SAwkCe1EKRcq0PhEXJisQzKBT0+1R9tk=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\aa17c135-18da-4002-973c-bca5dbcc2e72.webp'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\af060527aaab4687f57a07f135cff4c1.jpg'))">
       <SourceType>Package</SourceType>
       <SourceId>AISmartHome</SourceId>
@@ -972,6 +1638,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\af060527aaab4687f57a07f135cff4c1.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\afd1c363-d13a-412d-bc57-e42e4df0df05.webp'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/afd1c363-d13a-412d-bc57-e42e4df0df05.webp</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>ktwgc56g53</Fingerprint>
+      <Integrity>KCrUk6x99qsFBpPOqN7UJ23ew+KdatZbRQpwTto19zM=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\afd1c363-d13a-412d-bc57-e42e4df0df05.webp'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\b8336f1a-b793-46e2-95d1-307aba51b0e1.jpg'))">
       <SourceType>Package</SourceType>
       <SourceId>AISmartHome</SourceId>
@@ -989,6 +1673,42 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\b8336f1a-b793-46e2-95d1-307aba51b0e1.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\b9c1e0c6-165b-4aaa-9db8-bbc415100d6c.webp'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/b9c1e0c6-165b-4aaa-9db8-bbc415100d6c.webp</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>0e86fg98sj</Fingerprint>
+      <Integrity>CFG/gsy+X4ug/ILoy530dE6z6qFalKRYiybKYGf8hT4=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\b9c1e0c6-165b-4aaa-9db8-bbc415100d6c.webp'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\bacc1bd0-3501-4b57-a592-92ef412babad.webp'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/bacc1bd0-3501-4b57-a592-92ef412babad.webp</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>1y3kn7ze50</Fingerprint>
+      <Integrity>+fOhtCM3l6dxzUXgMyXhxGY1T5gCZfYx73dO/7hmvPo=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\bacc1bd0-3501-4b57-a592-92ef412babad.webp'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\bee08fe0c885d48a1e5061e083d9fe18.jpg'))">
       <SourceType>Package</SourceType>
@@ -1044,6 +1764,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\c0eb96c1-d1ea-4699-a135-8c212200814c.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\c4989054-2eb2-4d4f-8027-b514df69e8b5.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/c4989054-2eb2-4d4f-8027-b514df69e8b5.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>08gqn2bj8l</Fingerprint>
+      <Integrity>YPypzhwU8jSm86YYRnEHRdBInyXr+YJk/fzhTqAGY7w=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\c4989054-2eb2-4d4f-8027-b514df69e8b5.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\c8d064ad-5a37-438e-98be-4abd573d9af8.webp'))">
       <SourceType>Package</SourceType>
       <SourceId>AISmartHome</SourceId>
@@ -1098,6 +1836,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\camera2.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\cdb4c075-ae4a-4427-a91f-3de101f5f02d.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/cdb4c075-ae4a-4427-a91f-3de101f5f02d.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>z76184vhx9</Fingerprint>
+      <Integrity>QWKNWW8KUTmpUZ2tFLMRsDmU5daoQOmN3eDJg3J8ygQ=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\cdb4c075-ae4a-4427-a91f-3de101f5f02d.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\ce087c4556ccf37b7e0d054f43d169a5.jpg'))">
       <SourceType>Package</SourceType>
       <SourceId>AISmartHome</SourceId>
@@ -1133,6 +1889,42 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\d056ae94-7169-4119-843a-de1ae50453e8.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\d0720315-2634-4314-8897-3a625ae95148.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/d0720315-2634-4314-8897-3a625ae95148.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>dhmadw0hrj</Fingerprint>
+      <Integrity>UX0SUmnJAW94aZ5unpBEtvAB/3iApDyUgg1avXdA1Es=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\d0720315-2634-4314-8897-3a625ae95148.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\d437d15a-51c4-4f7e-abad-aeae8d7b11a9.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/d437d15a-51c4-4f7e-abad-aeae8d7b11a9.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>p79u34to3k</Fingerprint>
+      <Integrity>Jc3qhe1/RRccHxvcdfnvRoxv6B5cNJGeG1WwChr1mpc=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\d437d15a-51c4-4f7e-abad-aeae8d7b11a9.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\dd8ab2f6059a06a6a626409cd177253f.jpg'))">
       <SourceType>Package</SourceType>
@@ -1278,6 +2070,42 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\e6acdc84-e43c-48e3-bf40-22844fc4403b.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\ec491510-dfdd-493e-aae8-0194fa5252b7.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/ec491510-dfdd-493e-aae8-0194fa5252b7.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>qaem6oe02f</Fingerprint>
+      <Integrity>HgiGfynCFoCSZoNA1bmbXqWdDFFXjK4HhreX9aOUJ1w=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\ec491510-dfdd-493e-aae8-0194fa5252b7.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\edaa5f98-3066-4f8a-8a61-ba026ca7e68a.avif'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/edaa5f98-3066-4f8a-8a61-ba026ca7e68a.avif</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>i604zmqaaj</Fingerprint>
+      <Integrity>6hTKfmeA2k5JjNH4ZhzJHZDOpsSwMOOVobK4ta1hHvs=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\edaa5f98-3066-4f8a-8a61-ba026ca7e68a.avif'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\ee06eb9f-07d5-4230-a839-2e71dcfd4cb6.jpg'))">
       <SourceType>Package</SourceType>
       <SourceId>AISmartHome</SourceId>
@@ -1314,6 +2142,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\ee371b88-f575-4c4b-a37a-6c90bf4e7a90.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\ee56e1fe-3c37-46fc-a4fa-2af993878411.webp'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/ee56e1fe-3c37-46fc-a4fa-2af993878411.webp</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>5syrce4uzs</Fingerprint>
+      <Integrity>1Sx3RWYJe4NWtsxT9/co45XUQO5Z8CoUAu9o8jipK0E=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\ee56e1fe-3c37-46fc-a4fa-2af993878411.webp'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\export.png'))">
       <SourceType>Package</SourceType>
       <SourceId>AISmartHome</SourceId>
@@ -1331,6 +2177,24 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\export.png'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\f011c5f1-e50d-4d91-9705-76c25a0fad49.webp'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/f011c5f1-e50d-4d91-9705-76c25a0fad49.webp</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>yha0dh1jay</Fingerprint>
+      <Integrity>2uk9mO8XcxmYV+/slXALeIlTlPEj27wIsHYf7sm+t4M=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\f011c5f1-e50d-4d91-9705-76c25a0fad49.webp'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\f5afa9ec-0c90-420d-85d8-bac1a330207b.jpg'))">
       <SourceType>Package</SourceType>
@@ -1367,6 +2231,42 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\f6ffdcf1-b334-4ec6-a777-4df553e37372.png'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\f90d4ab2-4d42-43ad-938c-a4737db82eb5.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/f90d4ab2-4d42-43ad-938c-a4737db82eb5.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>zb7llvt9oi</Fingerprint>
+      <Integrity>XzlIHAhCb49eZwF9H+bFGxr+SR3bJZXP23zIiDlMHjE=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\f90d4ab2-4d42-43ad-938c-a4737db82eb5.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\fb1eefe8-a1ca-4ef0-8a5b-cb7fa06030b5.webp'))">
+      <SourceType>Package</SourceType>
+      <SourceId>AISmartHome</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/AISmartHome</BasePath>
+      <RelativePath>img/fb1eefe8-a1ca-4ef0-8a5b-cb7fa06030b5.webp</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>o96xu47ptp</Fingerprint>
+      <Integrity>BESOqecSYVKoY4JjE0a8lnKgJsoJ/u6DQ2jWKyjCnAs=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\fb1eefe8-a1ca-4ef0-8a5b-cb7fa06030b5.webp'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\img\ff5bd6fa-5715-4666-8c59-63bb98de7fed.png'))">
       <SourceType>Package</SourceType>
@@ -1650,8 +2550,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>v4rceedh6e</Fingerprint>
-      <Integrity>X+pIRS4MKIBMZRIyMmUh4nAK1aYRZ+NzRYECpyGMdT0=</Integrity>
+      <Fingerprint>y8vr5bylma</Fingerprint>
+      <Integrity>8meiaUcsqDM5h4nU+3mpxUofIb/z/+YivswjI9UoGxg=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\app.js'))</OriginalItemSpec>
@@ -1668,8 +2568,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>5266qx031y</Fingerprint>
-      <Integrity>LaJBrMfWE3d+d9UxXFdx68nitQ5A6q1y4BcFnXiLZJI=</Integrity>
+      <Fingerprint>8thkodtbcq</Fingerprint>
+      <Integrity>1Gyq1ABUYUijiqUvVVkZ/jJ+pwxsbuPVl828oeF5k5w=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\login.js'))</OriginalItemSpec>
@@ -1686,8 +2586,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>12p73bhuuh</Fingerprint>
-      <Integrity>mfkUvpprZ9R8iGOgV/mY5XHw6RQEXXZsUfJCtPgPgO4=</Integrity>
+      <Fingerprint>wkt1ge7tu8</Fingerprint>
+      <Integrity>AAR1uG0NR1caBZv/S3vQo1G64QBCXBNtbmaazbX9/B0=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\site.js'))</OriginalItemSpec>

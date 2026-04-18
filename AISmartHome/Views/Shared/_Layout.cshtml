@@ -230,12 +230,19 @@
             </nav>
             <div class="flex-1 flex items-center justify-end gap-6">
 
+                <!--Tra cứu đơn hàng-->
                 <a asp-controller="Customers" asp-action="OrderHistory" class="flex items-center gap-2 hover:text-brand-cyan transition-colors text-brand-navy font-bold tracking-wide outline-none whitespace-nowrap ml-6">
+
                     <svg ml-1 class="h-5 w-5 text-brand-navy shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>
+
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1h2m4-1v-4a1 1 0 00-1-1h-3m-1 0v6m4-1h1a1 1 0 001-1v-2l-2-3h-3"></path>
+
                     </svg>
+
                     <span>Tra cứu đơn hàng</span>
+
                 </a>
 
                 <form action="/Customers/Search" method="GET" class="hidden xl:flex items-center relative ml-4 group">
@@ -251,73 +258,9 @@
 
                 <div class="flex items-center gap-5 pl-4 ml-2">
 
-                    <div class="relative group flex items-center h-full">
-
-                        <a asp-controller="Customers" asp-action="OrderHistory" class="text-brand-navy hover:text-brand-cyan transition-colors relative flex items-center justify-center py-2" title="Thông báo đơn hàng">
-                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                            </svg>
-
-                            @if (notifCount > 0)
-                            {
-                                <span class="absolute 0 -right-1.5 bg-brand-cyan text-white text-[10px] font-bold h-4 w-4 flex items-center justify-center rounded-full shadow-md border-[1.5px] border-white">
-                                    @notifCount
-                                </span>
-                            }
-                        </a>
-
-                        <div class="absolute left-1/2 -translate-x-1/2 top-[120%] w-[360px] bg-white/95 backdrop-blur-2xl rounded-2xl border border-gray-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] invisible opacity-0 translate-y-3 scale-95 group-hover:!visible group-hover:!opacity-100 group-hover:!translate-y-0 group-hover:!scale-100 transition-all duration-300 ease-out z-[10000] overflow-hidden before:content-[''] before:absolute before:top-[-20px] before:left-0 before:w-full before:h-[20px] before:bg-transparent">
-
-                            <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
-                                <h4 class="font-bold text-brand-navy text-sm uppercase tracking-wider">Thông báo mới</h4>
-                                <a asp-controller="Customers" asp-action="OrderHistory" class="text-[11px] text-brand-cyan hover:underline font-bold uppercase">Xem tất cả</a>
-                            </div>
-
-                            <div class="max-h-[350px] overflow-y-auto cart-scroll">
-                                @if (recentOrders != null && recentOrders.Any())
-                                {
-                                    <ul class="divide-y divide-slate-100">
-                                        @foreach (var order in recentOrders)
-                                        {
-                                            // Set màu icon theo trạng thái đơn
-                                            string iconColor = order.TrangThaiDonHang == "Hoàn thành" ? "text-emerald-500 bg-emerald-50" :
-                                            order.TrangThaiDonHang == "Đang giao" ? "text-blue-500 bg-blue-50" :
-                                            order.TrangThaiDonHang == "Đã hủy" ? "text-rose-500 bg-rose-50" : "text-amber-500 bg-amber-50";
-
-                                            string iconClass = order.TrangThaiDonHang == "Hoàn thành" ? "fa-check-circle" :
-                                            order.TrangThaiDonHang == "Đang giao" ? "fa-truck-fast" :
-                                            order.TrangThaiDonHang == "Đã hủy" ? "fa-xmark-circle" : "fa-box-open";
-
-                                            <li>
-                                                <a href="/Customers/OrderHistory?phone=@(order.SoDienThoai ?? order.MaKhachHangNavigation?.SoDienThoai)" class="flex items-start gap-4 p-4 hover:bg-slate-50 transition-colors group/item">
-                                                    <div class="w-10 h-10 rounded-full shrink-0 flex items-center justify-center @iconColor group-hover/item:scale-110 transition-transform">
-                                                        <i class="fa-solid @iconClass text-base"></i>
-                                                    </div>
-                                                    <div class="flex-1">
-                                                        <p class="text-sm font-bold text-brand-navy mb-1 leading-none">Đơn hàng #@order.MaDonHang</p>
-                                                        <p class="text-xs text-slate-500 leading-snug">
-                                                            Trạng thái: <strong class="text-slate-700">@order.TrangThaiDonHang</strong>.
-                                                            @(order.TrangThaiDonHang == "Chờ xử lý" ? "Hệ thống đã ghi nhận và đang chuẩn bị hàng." : "Nhấn vào để xem tiến độ giao hàng/lắp đặt.")
-                                                        </p>
-                                                        <span class="text-[10px] text-slate-400 mt-1.5 block font-medium">
-                                                            <i class="fa-regular fa-clock mr-1"></i> @(order.NgayDatHang?.ToString("dd/MM/yyyy HH:mm"))
-                                                        </span>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                        }
-                                    </ul>
-                                }
-                                else
-                                {
-                                    <div class="p-8 text-center flex flex-col items-center">
-                                        <div class="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center text-slate-300 mb-3"><i class="fa-regular fa-bell-slash text-xl"></i></div>
-                                        <p class="text-slate-500 text-sm font-medium">Bạn chưa có thông báo nào.</p>
-                                    </div>
-                                }
-                            </div>
+                        <div class="flex items-center h-full">
+                        @await Component.InvokeAsync("Notification", new { isForAdmin = false })
                         </div>
-                    </div>
 
                     <div class="relative group" id="accountDropdownContainer">
 
@@ -337,8 +280,7 @@
                             </div>
 
                             <div class="p-2">
-                              
-                                <a asp-controller="Customers" asp-action="OrderHistory" class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-cyan-50 hover:text-cyan-600 rounded-xl transition-colors">
+                                <a href="javascript:void(0)" onclick="goToOrderHistory()" class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-cyan-50 hover:text-cyan-600 rounded-xl transition-colors">
                                     <span class="material-symbols-outlined text-[20px]">receipt_long</span>
                                     Đơn hàng đã đặt
                                 </a>
@@ -401,7 +343,7 @@
         </div>
     </section>
     <!--Hộp quà tặng tri ân-->
-    <button id="floatingGiftBox" onclick="openLuckyWheel()" class="fixed bottom-6 right-6 z-[90] hidden bg-gradient-to-tr from-rose-500 to-pink-500 text-white p-4 rounded-full shadow-[0_10px_30px_rgba(244,63,94,0.5)] hover:scale-110 transition-transform duration-300 animate-bounce border-2 border-white group">
+    <button id="floatingGiftBox" onclick="openLuckyWheel()" class="fixed bottom-20 right-6 z-[90] hidden bg-gradient-to-tr from-rose-500 to-pink-500 text-white p-4 rounded-full shadow-[0_10px_30px_rgba(244,63,94,0.5)] hover:scale-110 transition-transform duration-300 animate-bounce border-2 border-white group">
         <i class="fa-solid fa-gift text-2xl group-hover:animate-pulse"></i>
         <span class="absolute -top-1 -right-1 flex h-4 w-4">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
@@ -562,22 +504,36 @@
 
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Tên của bạn</label>
-                    <input type="text" id="lookupNameInput" placeholder="Ví dụ: Anh Quân"
+                    <input type="text" id="lookupNameInput" autocomplete="off" placeholder="Ví dụ: Tên bạn là gì?"
                            class="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 outline-none transition-all text-base font-bold text-center tracking-widest">
                 </div>
 
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Số điện thoại</label>
-                    <input type="tel" id="lookupPhoneInput" placeholder="Ví dụ: 0912345678"
+                    <input type="tel" id="lookupPhoneInput" autocomplete="off" placeholder="Ví dụ: 0912345678"
+                           class="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 outline-none transition-all text-base font-bold text-center tracking-widest">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Email (Để nhận Voucher) <span class="text-rose-500">*</span></label>
+                    <input type="email" id="lookupEmailInput" autocomplete="off" placeholder="Ví dụ: khachhang@gmail.com"
                            class="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 outline-none transition-all text-base font-bold text-center tracking-widest">
                 </div>
 
                 <div id="lookupOtpContainer" class="hidden animate-fade-in pt-2">
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Mã xác nhận OTP <span class="text-rose-500">*</span></label>
                     <div class="relative">
-                        <input type="text" id="lookupOtpInput" placeholder="Nhập 6 số..." maxlength="6"
+                        <input type="text" id="lookupOtpInput" placeholder="Nhập 6 số..." maxlength="6" autocomplete="one-time-code"
                                class="w-full px-4 py-3.5 rounded-xl border border-cyan-300 bg-cyan-50 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 outline-none transition-all text-xl tracking-[0.5em] font-black text-center">
+
                         <span id="lookupOtpTimer" class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400"></span>
+                    </div>
+
+                    <div class="mt-2 text-right">
+                        <button type="button" id="btnResendLookupOtp" onclick="resendLookupOtp()" disabled
+                                class="text-[11px] font-bold text-cyan-600 hover:text-cyan-700 disabled:text-slate-400 disabled:cursor-not-allowed transition-colors">
+                            Gửi lại mã (30s)
+                        </button>
                     </div>
                 </div>
 
@@ -722,35 +678,86 @@
             </form>
         </div>
     </div>
+    
     <script>
-        // ==========================================
-        // 1. LOGIC ẨN/HIỆN POPUP & HỘP QUÀ
-        // ==========================================
-        document.addEventListener("DOMContentLoaded", function() {
-            // Kiểm tra bộ nhớ trình duyệt (Hoạt động cho cả khách vãng lai và khách đã đăng nhập)
-            const isClaimed = localStorage.getItem('wheelClaimed'); // Đã nhận quà chưa?
-            const hasSeen = localStorage.getItem('hasSeenWheel');   // Đã từng thấy popup tự bật chưa?
+                document.addEventListener("DOMContentLoaded", function() {
+            // 1. KIỂM TRA TRẠNG THÁI KHÁCH HÀNG
+            const isServerLoggedIn = @((User.Identity != null && User.Identity.IsAuthenticated).ToString().ToLower());
+            const savedGuestEmail = localStorage.getItem('savedGuestEmail');
+            const savedGuestPhone = localStorage.getItem('savedGuestPhone');
+
+            // Đã đăng nhập khi: C# cấp quyền HOẶC trình duyệt có lưu tạm sau khi mua hàng
+            const isUserLoggedIn = isServerLoggedIn || (savedGuestEmail && savedGuestPhone);
+
             const giftBox = document.getElementById('floatingGiftBox');
 
-            // BƯỚC 1: Nếu đã nhận quà (hoặc email đã dùng) -> Không làm gì cả, giấu sạch!
+            // 👇 CHỈ TRẢ VỀ RETURN NẾU KHÔNG TÌM THẤY HỘP QUÀ
+            if (!giftBox) return;
+
+            // =========================================================
+            // KỊCH BẢN 1: KHÁCH VÃNG LAI (CHƯA CÓ TÀI KHOẢN)
+            // =========================================================
+            if (!isUserLoggedIn) {
+                giftBox.classList.remove('hidden');
+                giftBox.classList.add('animate-bounce'); // Bật hiệu ứng nhảy nhót!
+
+                giftBox.onclick = function() {
+                    Swal.fire({
+                        title: '🎁 Bí kíp săn Voucher!',
+                        html: `Chỉ cần <b>Đăng ký</b> hoặc <b>Đăng nhập</b> tài khoản, bạn sẽ được cấp quyền mở khóa <b>Vòng Quay May Mắn</b> với cơ hội 100% trúng mã giảm giá cực khủng!<br><br>
+                               <span class="text-sm text-slate-500">Chỉ mất 30 giây để xác thực Số điện thoại. Bạn đã sẵn sàng chưa?</span>`,
+                        showCancelButton: true,
+                        confirmButtonColor: '#0891b2',
+                        cancelButtonColor: '#94a3b8',
+                        confirmButtonText: 'Tạo tài khoản ngay',
+                        cancelButtonText: 'Để sau',
+                        customClass: { popup: 'rounded-3xl shadow-xl' }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            if (typeof openCustomerLookupModal === 'function') openCustomerLookupModal();
+                        }
+                    });
+                };
+                return; // Khách vãng lai thì kết thúc tại đây, không đọc tiếp kịch bản 2!
+            }
+
+            // =========================================================
+            // KỊCH BẢN 2: KHÁCH ĐÃ CÓ TÀI KHOẢN (ĐƯỢC QUAY)
+            // =========================================================
+            const currentUserEmail = savedGuestEmail || '@(User.Identity != null ? User.Identity.Name : "unknown")';
+            const storageClaimKey = `wheelClaimed_${currentUserEmail}`;
+            const storageSeenKey = `hasSeenWheel_${currentUserEmail}`;
+
+            const isClaimed = localStorage.getItem(storageClaimKey);
+            const hasSeen = localStorage.getItem(storageSeenKey);
+
+            // Nếu ĐÃ NHẬN QUÀ -> Giấu hộp quà luôn, cấm quay thêm, thoát hàm
             if (isClaimed === 'true') {
-                if (giftBox) giftBox.classList.add('hidden');
+                giftBox.classList.add('hidden');
                 return;
             }
 
-            // BƯỚC 2: Nếu khách mới toanh -> Đợi 3s tự bật Popup (Chỉ bật 1 lần duy nhất)
+            // NẾU CHƯA NHẬN QUÀ -> Mở hộp quà, cho nó nhảy nhót, thiết lập sự kiện bấm mở vòng quay
+            giftBox.classList.remove('hidden');
+            giftBox.classList.add('animate-bounce'); // Bắt nó nhảy!
+
+            giftBox.onclick = function() {
+                openLuckyWheel();
+                giftBox.classList.remove('animate-bounce'); // Bấm vào rồi thì tắt nhảy cho đỡ rối
+            };
+
+            // Đợi 3s tự bung Vòng quay nếu là lần đầu tiên đăng nhập
             if (!hasSeen) {
                 setTimeout(() => {
                     openLuckyWheel();
-                    localStorage.setItem('hasSeenWheel', 'true'); // Đánh dấu là đã thấy
+                    localStorage.setItem(storageSeenKey, 'true');
                 }, 3000);
-            }
-            // BƯỚC 3: Nếu đã thấy rồi mà chưa quay -> Hiện cái hộp quà nhảy nhảy góc phải
-            else {
-                if (giftBox) giftBox.classList.remove('hidden');
             }
         });
 
+// ==========================================
+// HÀM MỞ VÒNG QUAY
+// ==========================================
         function openLuckyWheel() {
             const modal = document.getElementById('luckySpinModal') || document.getElementById('luckyWheelModal');
             const content = document.getElementById('luckySpinContent') || document.getElementById('luckyWheelContent');
@@ -768,13 +775,49 @@
                 modal.classList.remove('opacity-0');
                 content.classList.remove('scale-95');
             }, 10);
+    
+            // Tự động điền và khóa Email
+            const emailInput = document.getElementById('spinEmail');
+            const finalSavedEmail = localStorage.getItem('savedGuestEmail') || '@(User.Identity != null ? User.Identity.Name : "")';
+                    localStorage.setItem(`wheelClaimed_${finalSavedEmail}`, 'true');
+            if (emailInput) {
+                if (finalSavedEmail && finalSavedEmail.includes('@@')) {
+                    emailInput.value = finalSavedEmail;
+                    emailInput.setAttribute('readonly', 'readonly');
+                    emailInput.classList.add('bg-slate-200', 'cursor-not-allowed', 'text-slate-500');
+                } else {
+                    emailInput.value = ''; 
+                    emailInput.removeAttribute('readonly');
+                    emailInput.classList.remove('bg-slate-200', 'cursor-not-allowed', 'text-slate-500');
+                }
+            }
         }
 
-        function executeCloseModal() {
+     
+
+// Các hàm đóng Modal (executeCloseModal, closeSpinModal...) bạn giữ nguyên như cũ nhé.
+
+        function openCustomerLookupModal() {
+            const modal = document.getElementById('customerLookupModal');
+            const content = document.getElementById('customerLookupContent');
+
+            if (modal && content) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+
+                // Tạo độ trễ nhỏ để CSS Transition chạy mượt mà (Fade in & Scale up)
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    content.classList.remove('scale-95');
+                }, 10);
+            }
+        }
+
+
+               function executeCloseModal() {
             const modal = document.getElementById('luckySpinModal') || document.getElementById('luckyWheelModal');
             const content = document.getElementById('luckySpinContent') || document.getElementById('luckyWheelContent');
             const giftBox = document.getElementById('floatingGiftBox');
-            const isClaimed = localStorage.getItem('wheelClaimed');
 
             if (!modal || !content) return;
 
@@ -785,7 +828,11 @@
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
 
-                // CHỈ HIỆN HỘP QUÀ KHI KHÁCH CHƯA TRÚNG QUÀ
+                // 👇 Lấy lại đúng Email giống như lúc khởi tạo
+                const finalSavedEmail = localStorage.getItem('savedGuestEmail') || '@(User.Identity != null ? User.Identity.Name : "unknown")';
+                const isClaimed = localStorage.getItem(`wheelClaimed_${finalSavedEmail}`);
+
+                // 👇 Bật lại hộp quà nếu khách tắt đi mà chưa quay/chưa nhận giải
                 if (isClaimed !== 'true' && giftBox) {
                     giftBox.classList.remove('hidden');
                 }
@@ -795,6 +842,9 @@
         function closeSpinModal() { executeCloseModal(); }
         function closeLuckyWheel() { executeCloseModal(); }
 
+        // 💡 LƯU Ý: Ở hàm xử lý kết quả Vòng Quay (lúc quay xong trúng thưởng),
+        // Bạn nhớ thêm lệnh: localStorage.setItem(`wheelClaimed_@(User.Identity.Name)`, 'true');
+        // để ghi nhớ là tài khoản này đã nhận quà rồi nhé!
         // ==========================================
         // 2. LOGIC QUAY BÁNH XE
         // ==========================================
@@ -882,7 +932,9 @@
                 btn.innerHTML = '<i class="fa-solid fa-dharmachakra"></i> QUAY NGAY';
             });
         }
-            function toggleChat() {
+
+
+         function toggleChat() {
             const chatWidget = document.getElementById('chatWidget');
 
             if (chatWidget.classList.contains('hidden')) {
@@ -892,15 +944,15 @@
                     chatWidget.classList.remove('scale-0', 'opacity-0');
                     chatWidget.classList.add('scale-100', 'opacity-100');
                 }, 10); // Chờ xíu để CSS kịp render hiệu ứng phóng to
-            } else {
+                } else {
                 // Đóng Chat
                 chatWidget.classList.remove('scale-100', 'opacity-100');
                 chatWidget.classList.add('scale-0', 'opacity-0');
                 setTimeout(() => {
                     chatWidget.classList.add('hidden');
                 }, 300); // Chờ 0.3s cho hiệu ứng thu nhỏ xong mới ẩn hẳn
+                }
             }
-        }
 
             function handleSendMessage(e) {
             e.preventDefault(); // Ngăn form tải lại trang
@@ -958,8 +1010,152 @@
                 }, 1500);
 
             }, 500);
+
+        function startSpin() {
+            // 1. Lấy giá trị email khách nhập và cắt bỏ khoảng trắng thừa
+            const emailInput = document.getElementById('spinEmail');
+            const emailValue = emailInput.value.trim();
+
+            // 2. Kiểm tra rỗng
+            if (!emailValue) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Khoan đã nào!',
+                    text: 'Bạn cần nhập Email để hệ thống gửi mã trúng thưởng nhé.',
+                    confirmButtonColor: '#06b6d4',
+                    customClass: { backdrop: 'swal-glass-backdrop' }
+                });
+                emailInput.focus();
+                return; // Dừng lại, không cho quay
+            }
+
+            // 3. KIỂM TRA ĐỊNH DẠNG EMAIL CHẶT CHẼ
+            // Nếu bạn muốn kiểm tra mọi loại email hợp lệ (gmail, yahoo, outlook...):
+            const strictEmailRegex = /^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    
+            const strictGmailRegex = /^[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*@@gmail\.com$/;
+
+            if (!strictGmailRegex.test(emailValue)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Email không hợp lệ!',
+                    text: 'Vui lòng nhập đúng định dạng Gmail (ví dụ: khachhang@gmail.com). Không chứa ký tự đặc biệt ở đầu hoặc cuối.',
+                    confirmButtonColor: '#e11d48',
+                    customClass: { backdrop: 'swal-glass-backdrop' }
+                });
+        
+                // Bôi đỏ viền ô input để nhắc nhở khách
+                emailInput.classList.add('border-rose-500', 'ring-rose-500/20');
+                setTimeout(() => {
+                    emailInput.classList.remove('border-rose-500', 'ring-rose-500/20');
+                }, 3000);
+        
+                emailInput.focus();
+                return; // Dừng lại, không cho quay
+            }
+
+            // =========================================================
+            // 4. QUA CỬA THÀNH CÔNG -> GỌI LOGIC VÒNG QUAY CỦA BẠN VÀO ĐÂY
+            // =========================================================
+    
+            // Vô hiệu hóa ô nhập và nút bấm để tránh spam click
+            emailInput.disabled = true;
+            const btnSpin = document.getElementById('btnSpin');
+            btnSpin.disabled = true;
+            btnSpin.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ĐANG QUAY...';
+
+            console.log("Email hoàn toàn hợp lệ:", emailValue);
+    
+            // Gọi hàm quay AJAX của bạn ở đây...
+            // fetch('/Spin/Start?email=' + emailValue) ...
+                }
+          }
+    </script>
+    <script>
+        function goToOrderHistory() {
+            // Ưu tiên lấy SĐT đã lưu trong máy nếu là khách vãng lai
+            const savedPhone = localStorage.getItem('savedGuestPhone');
+
+            if (savedPhone) {
+                window.location.href = '/Customers/OrderHistory?phone=' + encodeURIComponent(savedPhone);
+            } else {
+                window.location.href = '/Customers/OrderHistory';
+            }
         }
     </script>
+    <script>
+    // Lấy trạng thái đăng nhập và Email từ C# (Razor)
+    const isLoggedIn = @((User.Identity != null && User.Identity.IsAuthenticated).ToString().ToLower());
+    const currentUserEmail = '@(User.Identity != null ? User.Identity.Name : "")'; 
+
+    // Hàm gọi khi khách bấm vào nút "Mở vòng quay" (hoặc hộp quà trên web)
+    function tryOpenLuckySpin() {
+        if (!isLoggedIn) {
+            // 🛑 CHẶN LẠI NẾU CHƯA CÓ TÀI KHOẢN
+            Swal.fire({
+                title: 'Dành riêng cho Thành viên!',
+                text: 'Vui lòng đăng ký hoặc đăng nhập tài khoản để tham gia Vòng quay may mắn nhận Voucher nhé!',
+                icon: 'lock',
+                showCancelButton: true,
+                confirmButtonColor: '#0891b2',
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: 'Đăng ký ngay',
+                cancelButtonText: 'Để sau'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/Customers/Login'; // Dẫn tới trang đăng ký
+                }
+            });
+        } else {
+            // ✅ ĐÃ CÓ TÀI KHOẢN -> MỞ VÒNG QUAY
+            openSpinModal();
+        }
+    }
+
+    // Hàm mở Modal Vòng Quay (Có sẵn animation của Tailwind)
+    function openSpinModal(autoEmail = '') {
+        const modal = document.getElementById('luckySpinModal');
+        const content = document.getElementById('luckySpinContent');
+        const emailInput = document.getElementById('spinEmail');
+
+        // Hiển thị modal
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        // Tạo hiệu ứng mờ dần và phóng to
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            modal.classList.add('opacity-100');
+            content.classList.remove('scale-95');
+            content.classList.add('scale-100');
+        }, 10);
+
+        // Tự động điền Email và KHÓA ô nhập lại (Tránh khách gian lận nhập email khác)
+        let emailToFill = autoEmail || currentUserEmail;
+        if (emailToFill && emailToFill.includes('@@')) {
+            emailInput.value = emailToFill;
+            emailInput.setAttribute('readonly', 'readonly');
+            emailInput.classList.add('bg-slate-200', 'cursor-not-allowed', 'text-slate-500');
+        }
+    }
+
+    // Hàm đóng Modal
+    function closeSpinModal() {
+        const modal = document.getElementById('luckySpinModal');
+        const content = document.getElementById('luckySpinContent');
+
+        modal.classList.remove('opacity-100');
+        modal.classList.add('opacity-0');
+        content.classList.remove('scale-100');
+        content.classList.add('scale-95');
+
+        setTimeout(() => {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }, 500); // Đợi animation CSS chạy xong mới ẩn hoàn toàn
+    }
+</script>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -976,7 +1172,7 @@
                     const accountBtn = document.getElementById('headerAccountBtn'); // NHỚ ĐẶT ID NÀY CHO NÚT ACCOUNT
                 if (savedName && accountBtn) {
                     // Nếu đã có Tên, đổi nút "Tra cứu" thành "Xin chào, Tên"
-                    accountBtn.innerHTML = `<i class="fa-solid fa-user-check text-cyan-500"></i> Xin chào, <span class="font-bold text-slate-900">${savedName}</span>`;
+                    accountBtn.innerHTML = `<i class="fa-solid fa-user-check text-cyan-500"></i>Hi, <span class="font-bold text-slate-900">${savedName}</span>`;
                 }
                 // Gọi hàm mở Modal đăng nhập
                 if (typeof openLoginModal === 'function') {

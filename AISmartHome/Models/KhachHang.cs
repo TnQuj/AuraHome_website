@@ -30,6 +30,8 @@ public partial class KhachHang
 
     public string? HangThanhVien { get; set; } = "Đồng";
 
+    public DateTime? ThoiGianTruyCap { get; set; }
+
     // Liên kết 1 Khách hàng - Nhiều Lịch sử dùng Voucher
     public virtual ICollection<VoucherHistory> VoucherHistories { get; set; } = new List<VoucherHistory>();
 

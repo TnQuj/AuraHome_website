@@ -14,7 +14,7 @@
     if (provinceSelect) {
         fetch('https://provinces.open-api.vn/api/p/')
             .then(response => response.json())
-            .then(data => {
+            .then(data => { 
                 data.forEach(province => {
                     let option = document.createElement("option");
                     option.value = province.name;
@@ -156,23 +156,50 @@
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
+                    // 🌟 HIỆU ỨNG SMS THỰC TẾ TRÊN ĐIỆN THOẠI
                     Swal.fire({
-                        title: 'Tin nhắn giả lập (Test)',
-                        html: `Mã OTP của bạn là: <br><br><b class="text-4xl text-brand-cyan tracking-widest">${data.otp}</b>`,
-                        icon: 'info',
-                        confirmButtonText: 'Đã hiểu',
-                        confirmButtonColor: '#06b6d4',
-                        customClass: { backdrop: 'swal-glass-backdrop' }
+                        toast: true,
+                        position: 'top',
+                        showConfirmButton: false,
+                        timer: 6000,
+                        timerProgressBar: false, // Tắt thanh chạy cho giống thông báo hệ thống
+                        // Icon giả lập App Tin nhắn của điện thoại
+                        iconHtml: '<div class="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center shadow-sm"><i class="fa-solid fa-message text-white"></i></div>',
+                        title: 'Tin nhắn mới',
+                        html: `<div class="text-[13px] text-slate-600 mt-0.5 text-left leading-relaxed">
+                                Mã xác nhận của bạn là <strong class="text-slate-900 text-lg tracking-widest">${data.otp}</strong>. Vui lòng không chia sẻ mã này.
+                           </div>`,
+                        customClass: {
+                            // Nền trắng hơi trong suốt (kính mờ) y hệt iOS
+                            popup: 'rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-100/50 bg-white/95 backdrop-blur-md px-4 py-3 min-w-[320px]',
+                            title: 'text-sm font-bold text-slate-900 text-left',
+                            icon: 'border-none w-auto h-auto m-0 mr-3 mt-1',
+                            htmlContainer: 'm-0' // Căn lề lại cho chuẩn
+                        }
                     });
                 } else {
-                    Swal.fire('Lỗi gửi SMS!', data.message, 'error');
+                    // Cảnh báo lỗi cũng làm theo format thông báo hệ thống
+                    Swal.fire({
+                        toast: true,
+                        position: 'top',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        iconHtml: '<div class="w-10 h-10 bg-rose-500 rounded-full flex items-center justify-center shadow-sm"><i class="fa-solid fa-triangle-exclamation text-white"></i></div>',
+                        title: 'Không thể gửi tin nhắn',
+                        html: `<div class="text-[13px] text-slate-600 mt-0.5 text-left">${data.message}</div>`,
+                        customClass: {
+                            popup: 'rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-100/50 bg-white/95 backdrop-blur-md px-4 py-3 min-w-[320px]',
+                            title: 'text-sm font-bold text-slate-900 text-left',
+                            icon: 'border-none w-auto h-auto m-0 mr-3 mt-1',
+                            htmlContainer: 'm-0'
+                        }
+                    });
                 }
             })
             .catch(err => console.log("Lưu ý: API OTP chưa được bật."));
 
         startCountdown();
     }
-
     // ==================================================
     // BƯỚC A: LOGIC THÔNG MINH KHI BẤM NÚT ĐẶT HÀNG
     // ==================================================

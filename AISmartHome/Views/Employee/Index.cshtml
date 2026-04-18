@@ -178,8 +178,8 @@
                                                 var statusClass = isCancelled ? "bg-rose-100 text-rose-700" :
                                                 item.TrangThaiLapDat switch
                                                 {
-                                                    "Chưa lắp đặt" => "bg-amber-100 text-amber-700",
-                                                    "Đang xử lý" => "bg-blue-100 text-blue-700",
+                                                    "Đã phân công" => "bg-amber-100 text-amber-700", // Thay vì "Chưa lắp đặt"
+                                                    "Đang thi công" => "bg-blue-100 text-blue-700",  // Thay vì "Đang xử lý"
                                                     "Đã hoàn thành" => "bg-emerald-100 text-emerald-700",
                                                     _ => "bg-slate-100 text-slate-700"
                                                 };
@@ -262,11 +262,14 @@
             </div>
         </div>
     </main>
-    <script>
-        // Bật popup thông báo thành công
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <text>
+   
+</body>
+</html>
+<script>
+    // Bật popup thông báo thành công
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <text>
                     document.addEventListener("DOMContentLoaded", function() {
                         Swal.fire({
                             icon: 'success',
@@ -275,67 +278,62 @@
                             confirmButtonColor: '#06b6d4'
                         });
                     });
-            </text>
-        }
+        </text>
+    }
 
-        function showDetails(maYeuCau) {
-            const htmlContent = document.getElementById('detail-html-' + maYeuCau).innerHTML;
-            Swal.fire({
-                title: `<span class="text-slate-800">Chi tiết mã YC #${maYeuCau}</span>`,
-                html: htmlContent,
-                confirmButtonText: 'Đã hiểu',
-                confirmButtonColor: '#06b6d4',
-                width: '500px',
-                customClass: { backdrop: 'swal-glass-backdrop', htmlContainer: 'mt-2 text-left' }
-            });
-        }
+    function showDetails(maYeuCau) {
+        const htmlContent = document.getElementById('detail-html-' + maYeuCau).innerHTML;
+        Swal.fire({
+            title: `<span class="text-slate-800">Chi tiết mã YC #${maYeuCau}</span>`,
+            html: htmlContent,
+            confirmButtonText: 'Đã hiểu',
+            confirmButtonColor: '#06b6d4',
+            width: '500px',
+            customClass: { backdrop: 'swal-glass-backdrop', htmlContainer: 'mt-2 text-left' }
+        });
+    }
 
-        function changeStatus(maYeuCau, currentStatus) {
-            Swal.fire({
-                title: `<span class="text-slate-800 text-xl">Báo cáo tiến độ mã #${maYeuCau}</span>`,
-                text: "Xác nhận tình trạng thi công thực tế:",
-                input: 'select',
-                inputOptions: {
-                    'Chưa lắp đặt': 'Chưa lắp đặt (Chuẩn bị đi)',
-                    'Đang xử lý': 'Đang tiến hành thi công',
-                    'Đã hoàn thành': 'Đã hoàn thành (Đã thu tiền)'
-                },
-                inputValue: currentStatus,
-                showCancelButton: true,
-                confirmButtonText: 'Lưu báo cáo',
-                cancelButtonText: 'Đóng',
-                confirmButtonColor: '#06b6d4',
-                cancelButtonColor: '#0f172a',
-                customClass: { backdrop: 'swal-glass-backdrop' }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = '/Employee/UpdateStatus';
+    function changeStatus(maYeuCau, currentStatus) {
+     Swal.fire({
+         title: `<span class="text-slate-800 text-xl">Báo cáo tiến độ mã #${maYeuCau}</span>`,
+         text: "Xác nhận tình trạng thi công thực tế:",
+         input: 'select',
+         inputOptions: {
+             // 👉 Đã đổi chữ cho khớp với hệ thống mới
+             'Đã phân công': 'Chưa xuất phát (Đang chuẩn bị)',
+             'Đang thi công': 'Đang tiến hành thi công',
+             'Đã hoàn thành': 'Đã hoàn thành (Đã thu tiền)'
+         },
+         inputValue: currentStatus,
+         showCancelButton: true,
+            confirmButtonText: 'Lưu báo cáo',
+            cancelButtonText: 'Đóng',
+            confirmButtonColor: '#06b6d4',
+            cancelButtonColor: '#0f172a',
+            customClass: { backdrop: 'swal-glass-backdrop' }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/Employee/UpdateStatus';
 
-                    const inputId = document.createElement('input');
-                    inputId.type = 'hidden';
-                    inputId.name = 'id';
-                    inputId.value = maYeuCau;
+                const inputId = document.createElement('input');
+                inputId.type = 'hidden';
+                inputId.name = 'id';
+                inputId.value = maYeuCau;
 
-                    let rawStatus = result.value;
-                    if(rawStatus.includes('(')) {
-                        rawStatus = rawStatus.split(' (')[0].trim();
-                    }
+                // 👇 ĐÃ SỬA TẠI ĐÂY: Trực tiếp lấy result.value truyền về C#
+                const inputStatus = document.createElement('input');
+                inputStatus.type = 'hidden';
+                inputStatus.name = 'newStatus';
+                inputStatus.value = result.value;
 
-                    const inputStatus = document.createElement('input');
-                    inputStatus.type = 'hidden';
-                    inputStatus.name = 'newStatus';
-                    inputStatus.value = rawStatus;
+                form.appendChild(inputId);
+                form.appendChild(inputStatus);
+                document.body.appendChild(form);
 
-                    form.appendChild(inputId);
-                    form.appendChild(inputStatus);
-                    document.body.appendChild(form);
-
-                    form.submit();
-                }
-            });
-        }
-    </script>
-</body>
-</html>
+                form.submit();
+            }
+        });
+    }
+</script>

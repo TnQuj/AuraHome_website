@@ -29,58 +29,105 @@
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
+<style>
+    /* Trạng thái khi sidebar thu nhỏ */
+    .sidebar-collapsed {
+        width: 88px !important;
+    }
+
+        /* Ẩn chữ và badge khi thu nhỏ */
+        .sidebar-collapsed .sidebar-text {
+            opacity: 0;
+            visibility: hidden;
+            width: 0;
+        }
+
+        /* Căn giữa các icon khi thu nhỏ */
+        .sidebar-collapsed a {
+            justify-content: center;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .sidebar-collapsed p {
+            opacity: 0;
+        }
+</style>
 <body class="bg-slate-100 font-sans text-slate-800 overflow-hidden selection:bg-brand-cyan selection:text-white">
 
     <div class="flex h-screen w-full relative">
 
-        <aside class="w-72 bg-brand-navy text-white flex-shrink-0 flex flex-col relative z-20 shadow-[4px_0_24px_rgba(0,0,0,0.15)]">
+        <aside id="adminSidebar" class="w-72 bg-brand-navy text-white flex-shrink-0 flex flex-col relative z-20 shadow-[4px_0_24px_rgba(0,0,0,0.15)] transition-all duration-300 ease-in-out">
             <div class="absolute top-0 left-0 w-full h-64 bg-gradient-to-br from-brand-cyan/20 to-transparent blur-[50px] pointer-events-none"></div>
 
-            <div class="p-6 h-20 flex items-center justify-between border-b border-white/10 relative z-10">
+            <div class="p-6 h-20 flex items-center justify-between border-b border-white/10 relative z-10 overflow-hidden">
                 <div class="text-2xl font-black tracking-widest uppercase flex items-center gap-2">
-                    <i class="fa-brands fa-hubspot text-brand-cyan"></i>
-                    Aura<span class="text-brand-cyan">Admin</span>
+                    <i class="fa-brands fa-hubspot text-brand-cyan flex-shrink-0"></i>
+                    <span class="sidebar-text transition-all duration-300">Aura<span class="text-brand-cyan">Admin</span></span>
                 </div>
+                <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/5">
+                    <i id="toggleIcon" class="fa-solid fa-bars-staggered"></i>
+                </button>
             </div>
 
-            <div class="flex-1 overflow-y-auto py-6 px-4 space-y-1 relative z-10 custom-scrollbar">
-                <p class="px-4 text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2 mt-4">Quản lý cốt lõi</p>
-                <a asp-controller="Admin" asp-action="Index" class="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-white/10 hover:text-brand-cyan hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all group">
-                    <i class="fa-solid fa-chart-pie w-5 text-slate-400 group-hover:text-brand-cyan"></i> Bảng điều khiển
-                </a>
-                <a asp-controller="DonHangs" asp-action="Index" class="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-white/10 hover:text-brand-cyan hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all group">
-                    <i class="fa-solid fa-cart-shopping w-5 text-slate-400 group-hover:text-brand-cyan"></i> Đơn hàng
-                    <span class="ml-auto bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">Mới</span>
-                </a>
-                <a asp-controller="YeuCauLapDats" asp-action="Index" class="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-white/10 hover:text-brand-cyan hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all group">
-                    <i class="fa-solid fa-screwdriver-wrench w-5 text-slate-400 group-hover:text-brand-cyan"></i> Yêu cầu lắp đặt
+            <div class="flex-1 overflow-y-auto py-6 px-4 space-y-1 relative z-10 custom-scrollbar overflow-x-hidden">
+
+                <p class="sidebar-text px-4 text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2 mt-4 whitespace-nowrap">Quản lý cốt lõi</p>
+
+                <a asp-controller="Admin" asp-action="Index" class="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-white/10 hover:text-brand-cyan hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all group overflow-hidden">
+                    <i class="fa-solid fa-chart-pie w-5 flex-shrink-0 text-slate-400 group-hover:text-brand-cyan text-center"></i>
+                    <span class="sidebar-text whitespace-nowrap">Bảng điều khiển</span>
                 </a>
 
-                <p class="px-4 text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2 mt-8">Sản phẩm & Nội dung</p>
-                <a asp-controller="SanPhams" asp-action="Index" class="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-white/10 hover:text-brand-cyan transition-all group">
-                    <i class="fa-solid fa-box-open w-5 text-slate-400 group-hover:text-brand-cyan"></i> Sản phẩm
-                </a>
-                <a asp-controller="DanhMucSanPhams" asp-action="Index" class="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-white/10 hover:text-brand-cyan transition-all group">
-                    <i class="fa-solid fa-tags w-5 text-slate-400 group-hover:text-brand-cyan"></i> Danh mục
-                </a>
-                <a asp-controller="BaiViets" asp-action="Index" class="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-white/10 hover:text-brand-cyan transition-all group">
-                    <i class="fa-regular fa-newspaper w-5 text-slate-400 group-hover:text-brand-cyan"></i> Bài viết / Blog
-                </a>
-                <a asp-controller="HuongDanSuDungs" asp-action="Index" class="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-white/10 hover:text-brand-cyan transition-all group">
-                    <i class="fa-solid fa-book w-5 text-slate-400 group-hover:text-brand-cyan"></i> Hướng dẫn SD
+                <a asp-controller="DonHangs" asp-action="Index" class="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-white/10 hover:text-brand-cyan hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all group overflow-hidden">
+                    <i class="fa-solid fa-cart-shopping w-5 flex-shrink-0 text-slate-400 group-hover:text-brand-cyan text-center"></i>
+                    <span class="sidebar-text whitespace-nowrap">Đơn hàng</span>
                 </a>
 
-                <p class="px-4 text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2 mt-8">Tài khoản</p>
-                <a asp-controller="KhachHangs" asp-action="Index" class="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-white/10 hover:text-brand-cyan transition-all group">
-                    <i class="fa-solid fa-users w-5 text-slate-400 group-hover:text-brand-cyan"></i> Khách hàng
+                <a asp-controller="YeuCauLapDats" asp-action="Index" class="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-white/10 hover:text-brand-cyan hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all group overflow-hidden">
+                    <i class="fa-solid fa-screwdriver-wrench w-5 flex-shrink-0 text-slate-400 group-hover:text-brand-cyan text-center"></i>
+                    <span class="sidebar-text whitespace-nowrap">Yêu cầu lắp đặt</span>
                 </a>
-                <a asp-controller="NhanViens" asp-action="Index" class="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-white/10 hover:text-brand-cyan transition-all group">
-                    <i class="fa-solid fa-user-tie w-5 text-slate-400 group-hover:text-brand-cyan"></i> Nhân viên
+
+                <p class="sidebar-text px-4 text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2 mt-8 whitespace-nowrap">Sản phẩm & Nội dung</p>
+
+                <a asp-controller="SanPhams" asp-action="Index" class="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-white/10 hover:text-brand-cyan transition-all group overflow-hidden">
+                    <i class="fa-solid fa-box-open w-5 flex-shrink-0 text-slate-400 group-hover:text-brand-cyan text-center"></i>
+                    <span class="sidebar-text whitespace-nowrap">Sản phẩm</span>
+                </a>
+
+                <a asp-controller="DanhMucSanPhams" asp-action="Index" class="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-white/10 hover:text-brand-cyan transition-all group overflow-hidden">
+                    <i class="fa-solid fa-tags w-5 flex-shrink-0 text-slate-400 group-hover:text-brand-cyan text-center"></i>
+                    <span class="sidebar-text whitespace-nowrap">Danh mục</span>
+                </a>
+
+                <a asp-controller="BaiViets" asp-action="Index" class="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-white/10 hover:text-brand-cyan transition-all group overflow-hidden">
+                    <i class="fa-regular fa-newspaper w-5 flex-shrink-0 text-slate-400 group-hover:text-brand-cyan text-center"></i>
+                    <span class="sidebar-text whitespace-nowrap">Bài viết / Blog</span>
+                </a>
+
+                <a asp-controller="HuongDanSuDungs" asp-action="Index" class="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-white/10 hover:text-brand-cyan transition-all group overflow-hidden">
+                    <i class="fa-solid fa-book w-5 flex-shrink-0 text-slate-400 group-hover:text-brand-cyan text-center"></i>
+                    <span class="sidebar-text whitespace-nowrap">Hướng dẫn SD</span>
+                </a>
+
+                <p class="sidebar-text px-4 text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2 mt-8 whitespace-nowrap">Tài khoản</p>
+
+                <a asp-controller="KhachHangs" asp-action="Index" class="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-white/10 hover:text-brand-cyan transition-all group overflow-hidden">
+                    <i class="fa-solid fa-users w-5 flex-shrink-0 text-slate-400 group-hover:text-brand-cyan text-center"></i>
+                    <span class="sidebar-text whitespace-nowrap">Khách hàng</span>
+                </a>
+
+                <a asp-controller="NhanViens" asp-action="Index" class="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-white/10 hover:text-brand-cyan transition-all group overflow-hidden">
+                    <i class="fa-solid fa-user-tie w-5 flex-shrink-0 text-slate-400 group-hover:text-brand-cyan text-center"></i>
+                    <span class="sidebar-text whitespace-nowrap">Nhân viên</span>
                 </a>
             </div>
+
             <div class="p-4 border-t border-white/10 relative z-10">
-                <a asp-controller="Admin" asp-action="ExitToWebsite" class="flex items-center justify-center gap-2 w-full py-3 bg-white/5 hover:bg-brand-cyan hover:text-white rounded-xl transition-all font-bold text-sm border border-white/10">
-                    <i class="fa-solid fa-globe"></i> Về trang Website
+                <a asp-controller="Admin" asp-action="ExitToWebsite" class="flex items-center justify-center gap-2 w-full py-3 bg-white/5 hover:bg-brand-cyan hover:text-white rounded-xl transition-all font-bold text-sm border border-white/10 overflow-hidden">
+                    <i class="fa-solid fa-globe flex-shrink-0"></i>
+                    <span class="sidebar-text whitespace-nowrap">Về Website</span>
                 </a>
             </div>
         </aside>
@@ -126,7 +173,7 @@
                                 <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-500 border-2 border-white"></span>
                             </span>
                         </button>
-                        @await Component.InvokeAsync("Notification")
+                        @await Component.InvokeAsync("Notification", new { isForAdmin = true })
                     </div>
 
                     <div class="h-8 w-px bg-slate-200"></div>
@@ -171,21 +218,23 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const btnNotification = document.getElementById('btnNotification');
-            const panelNotification = document.getElementById('panelNotification');
+            // ID nút chuông ngoài layout của bạn (hãy kiểm tra xem nút chuông có class/id gì)
+            const btnNoti = document.querySelector('.fa-bell').closest('button, a'); // Hoặc id nút chuông của bạn
+            const panelNoti = document.getElementById('panelNotification');
 
-            // Bật/tắt hộp thông báo khi bấm vào chuông
-            btnNotification.addEventListener('click', function (e) {
-                e.stopPropagation(); // Ngăn sự kiện click lan ra ngoài
-                panelNotification.classList.toggle('hidden');
-            });
+            if (btnNoti && panelNoti) {
+                btnNoti.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    panelNoti.classList.toggle('hidden');
+                });
 
-            // Tắt hộp thông báo khi click ra chỗ khác trên màn hình
-            document.addEventListener('click', function (e) {
-                if (!panelNotification.contains(e.target) && !btnNotification.contains(e.target)) {
-                    panelNotification.classList.add('hidden');
-                }
-            });
+                document.addEventListener('click', function (e) {
+                    if (!panelNoti.contains(e.target) && !btnNoti.contains(e.target)) {
+                        panelNoti.classList.add('hidden');
+                    }
+                });
+            }
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -209,7 +258,55 @@
             });
         }
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        // Bật chế độ ghi log chi tiết (Information) để dễ tìm lỗi
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/orderHub")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
 
+        // Lắng nghe tín hiệu
+        connection.on("NhanDonHangMoi", function (maDon, tenKhach, tongTien) {
+            console.log("🔥 ĐÃ NHẬN ĐƯỢC TÍN HIỆU TỪ C#! Mã đơn:", maDon); // Báo ra F12
+
+            let audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+            audio.play().catch(e => console.log("Trình duyệt chặn tự động phát âm thanh:", e));
+
+            Swal.fire({
+                title: '🎉 CÓ ĐƠN HÀNG MỚI!',
+                html: `Khách hàng <b>${tenKhach}</b> vừa đặt đơn hàng #${maDon}<br>Trị giá: <b class="text-rose-600">${tongTien.toLocaleString('vi-VN')} đ</b>`,
+                icon: 'info',
+                position: 'top-end',
+                toast: true,
+                showConfirmButton: false,
+                timer: 5000
+            });
+        });
+
+        // Bắt đầu kết nối
+        connection.start().then(function () {
+            console.log("🟢 SignalR ĐÃ KẾT NỐI THÀNH CÔNG TỚI TRẠM PHÁT!");
+        }).catch(function (err) {
+            console.error("🔴 LỖI KẾT NỐI SIGNALR: ", err.toString());
+        });
+    </script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('adminSidebar');
+            const icon = document.getElementById('toggleIcon');
+
+            sidebar.classList.toggle('sidebar-collapsed');
+
+            // Đổi icon khi đóng mở
+            if (sidebar.classList.contains('sidebar-collapsed')) {
+                icon.classList.replace('fa-bars-staggered', 'fa-align-left');
+            } else {
+                icon.classList.replace('fa-align-left', 'fa-bars-staggered');
+            }
+        }
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

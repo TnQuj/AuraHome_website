@@ -4,6 +4,7 @@ using AISmartHome.Data;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace AISmartHome.ViewComponents
 {
@@ -16,52 +17,93 @@ namespace AISmartHome.ViewComponents
             _context = context;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(bool isForAdmin = false)
         {
-            // 1. Lấy 5 Đơn hàng MỚI NHẤT (Đang chờ xử lý)
-            var newOrders = await _context.DonHangs
-                .Include(d => d.MaKhachHangNavigation)
-                .Where(d => d.TrangThaiDonHang == "Chờ xử lý")
-                .OrderByDescending(d => d.NgayDatHang)
-                .Take(5)
-                .Select(d => new NotificationItem
+            {
+                if (isForAdmin)
                 {
-                    Id = d.MaDonHang,
-                    Type = "Order",
-                    Title = $"Đơn hàng mới! #{d.MaDonHang}",
-                    Description = $"Khách hàng {d.TenKhachHang ?? "ẩn danh"} vừa đặt mua.",
-                    Time = d.NgayDatHang ?? DateTime.Now,
-                    Link = $"/DonHangs/Details/{d.MaDonHang}"
-                })
-                .ToListAsync();
+                    // =======================================================
+                    // LOGIC ADMIN CỦA BẠN (GIỮ NGUYÊN)
+                    // =======================================================
+                    var newOrders = await _context.DonHangs
+                        .Include(d => d.MaKhachHangNavigation)
+                        .Where(d => d.TrangThaiDonHang == "Chờ xử lý")
+                        .OrderByDescending(d => d.NgayDatHang)
+                        .Take(5)
+                        .Select(d => new NotificationItem
+                        {
+                            Id = d.MaDonHang,
+                            Type = "Order",
+                            Title = $"Đơn hàng mới! #{d.MaDonHang}",
+                            Description = $"Khách hàng {d.TenKhachHang ?? "ẩn danh"} vừa đặt mua.",
+                            Time = d.NgayDatHang ?? DateTime.Now,
+                            Link = $"/DonHangs/Details/{d.MaDonHang}"
+                        })
+                        .ToListAsync();
 
-            // 2. Lấy 5 Yêu cầu lắp đặt MỚI NHẤT (Chờ báo giá)
-            var newRequests = await _context.YeuCauLapDats
-                .Where(y => y.TrangThaiLapDat == "Chờ báo giá")
-                .OrderByDescending(y => y.NgayLap)
-                .Take(5)
-                .Select(y => new NotificationItem
+                    var newRequests = await _context.YeuCauLapDats
+                        .Where(y => y.TrangThaiLapDat == "Chờ báo giá")
+                        .OrderByDescending(y => y.NgayLap)
+                        .Take(5)
+                        .Select(y => new NotificationItem
+                        {
+                            Id = y.MaYeuCauLapDat,
+                            Type = "Request",
+                            Title = $"Yêu cầu lắp đặt #{y.MaYeuCauLapDat}",
+                            Description = "Cần khảo sát và báo giá thi công.",
+                            Time = y.NgayLap ?? DateTime.Now,
+                            Link = $"/YeuCauLapDats/Edit/{y.MaYeuCauLapDat}"
+                        })
+                        .ToListAsync();
+
+                    var allNotifications = newOrders.Concat(newRequests)
+                        .OrderByDescending(n => n.Time)
+                        .Take(10)
+                        .ToList();
+
+                    // TRẢ VỀ FILE DEFAULT.CSHTML CHO ADMIN
+                    return View("Default", allNotifications);
+                }
+                else
                 {
-                    Id = y.MaYeuCauLapDat,
-                    Type = "Request",
-                    Title = $"Yêu cầu lắp đặt #{y.MaYeuCauLapDat}",
-                    Description = "Cần khảo sát và báo giá thi công.",
-                    Time = y.NgayLap ?? DateTime.Now,
-                    Link = $"/YeuCauLapDats/Edit/{y.MaYeuCauLapDat}"
-                })
-                .ToListAsync();
+                    // =======================================================
+                    // LOGIC KHÁCH HÀNG 
+                    // =======================================================
+                    string customerPhone = Request.Cookies["VerifiedPhone"] ?? "";
 
-            // 3. Gộp lại và sắp xếp theo thời gian mới nhất
-            var allNotifications = newOrders.Concat(newRequests)
-                .OrderByDescending(n => n.Time)
-                .Take(10) // Lấy tối đa 10 thông báo trên chuông
-                .ToList();
+                    if (string.IsNullOrEmpty(customerPhone) && User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        var user = await _context.KhachHangs.FirstOrDefaultAsync(k => k.Email == User.Identity.Name || k.SoDienThoai == User.Identity.Name);
+                        customerPhone = user?.SoDienThoai ?? "";
+                    }
 
-            return View(allNotifications);
+                    if (string.IsNullOrEmpty(customerPhone))
+                    {
+                        return View("Customer", new List<NotificationItem>());
+                    }
+
+                    var customerOrders = await _context.DonHangs
+                        .Where(d => d.SoDienThoai == customerPhone)
+                        .OrderByDescending(d => d.NgayDatHang)
+                        .Take(5)
+                        .Select(d => new NotificationItem
+                        {
+                            Id = d.MaDonHang,
+                            Type = d.TrangThaiDonHang,
+                            Title = $"Đơn hàng #{d.MaDonHang}",
+                            Description = $"Trạng thái: {d.TrangThaiDonHang}. Nhấn để xem chi tiết.",
+                            Time = d.NgayDatHang ?? DateTime.Now,
+                            Link = $"/Customers/OrderHistory?phone={customerPhone}#order-{d.MaDonHang}"
+                        })
+                        .ToListAsync();
+
+                    // TRẢ VỀ FILE CUSTOMER.CSHTML CHO KHÁCH HÀNG
+                    return View("Customer", customerOrders);
+                }
+            }
         }
     }
 
-    // Class phụ để chứa dữ liệu
     public class NotificationItem
     {
         public int Id { get; set; }
@@ -71,7 +113,6 @@ namespace AISmartHome.ViewComponents
         public DateTime Time { get; set; }
         public string Link { get; set; }
 
-        // Hàm tính toán "Vài giây trước", "5 phút trước"
         public string GetTimeAgo()
         {
             TimeSpan timeSince = DateTime.Now.Subtract(Time);

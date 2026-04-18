@@ -45,28 +45,60 @@
 
             @if (Model == null)
             {
-                <div class="max-w-md mx-auto bg-white rounded-3xl p-8 md:p-10 shadow-xl shadow-brand-navy/5 border border-slate-100 transform transition-all mt-10">
-                    <div class="w-20 h-20 bg-cyan-50 text-brand-cyan rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
-                        <i class="fa-solid fa-magnifying-glass-location text-4xl"></i>
+                <div class="max-w-md mx-auto bg-white rounded-3xl p-8 md:p-10 shadow-xl shadow-brand-navy/5 border border-slate-100 transform transition-all mt-10 relative overflow-hidden">
+
+                    <div id="demo-otp-toast" class="absolute top-4 right-4 bg-rose-50 border border-rose-200 text-rose-600 px-3 py-1.5 rounded-lg text-[11px] font-black tracking-widest shadow-sm translate-x-full opacity-0 transition-all duration-500 z-50 flex items-center gap-2">
+                        <i class="fa-solid fa-bell animate-wiggle"></i> MÃ OTP: <span id="demo-otp-text" class="text-rose-600 text-sm"></span>
                     </div>
 
-                    <h1 class="text-2xl font-black text-brand-navy uppercase tracking-wide text-center mb-2">Tra cứu đơn hàng</h1>
-                    <p class="text-slate-500 text-sm text-center mb-8 leading-relaxed">
+                    <div class="w-20 h-20 bg-cyan-50 text-brand-cyan rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner transition-transform duration-500" id="icon-container">
+                        <i class="fa-solid fa-magnifying-glass-location text-4xl" id="main-icon"></i>
+                    </div>
+
+                    <h1 class="text-2xl font-black text-brand-navy uppercase tracking-wide text-center mb-2" id="form-title">Tra cứu đơn hàng</h1>
+                    <p class="text-slate-500 text-sm text-center mb-8 leading-relaxed" id="form-desc">
                         Vui lòng nhập số điện thoại mua hàng để kiểm tra tình trạng giao hàng và tiến độ thi công.
                     </p>
 
-                    <form asp-controller="Customers" asp-action="OrderHistory" method="GET" class="space-y-5">
+                    <form id="step-1-form" onsubmit="handleSendOTP(event)" class="space-y-5 transition-all duration-500 block">
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                 <i class="fa-solid fa-phone text-slate-400"></i>
                             </div>
-                            <input type="tel" name="phone" required pattern="[0-9]{9,11}" title="Vui lòng nhập số điện thoại hợp lệ (9-11 số)"
-                                   class="block w-full pl-11 pr-4 py-4 border-2 border-slate-100 rounded-2xl text-base focus:outline-none focus:ring-0 focus:border-brand-cyan transition-colors bg-slate-50 focus:bg-white font-medium text-brand-navy"
-                                   placeholder="Nhập số điện thoại của bạn...">
+                            <input type="tel" id="tracking-phone" required pattern="(84|0[3|5|7|8|9])+([0-9]{8})\b" title="Vui lòng nhập số điện thoại hợp lệ"
+                                   class="block w-full pl-11 pr-4 py-4 border-2 border-slate-100 rounded-2xl text-base focus:outline-none focus:ring-0 focus:border-brand-cyan transition-colors bg-slate-50 focus:bg-white font-bold text-brand-navy tracking-wider"
+                                   placeholder="09xx xxx xxx">
                         </div>
 
-                        <button type="submit" class="w-full py-4 bg-brand-cyan text-white text-base font-bold uppercase tracking-widest rounded-2xl hover:bg-cyan-600 transition-all shadow-lg shadow-cyan-500/30 flex justify-center items-center gap-2">
-                            Tra cứu ngay <i class="fa-solid fa-arrow-right"></i>
+                        <button type="submit" id="btn-send-otp" class="w-full py-4 bg-brand-cyan text-white text-base font-bold uppercase tracking-widest rounded-2xl hover:bg-cyan-600 transition-all shadow-lg shadow-cyan-500/30 flex justify-center items-center gap-2">
+                            Nhận mã xác thực <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </form>
+
+                    <form id="step-2-form" onsubmit="handleVerifyOTP(event)" class="space-y-5 transition-all duration-500 hidden opacity-0 translate-y-4">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+                            </div>
+                            <input type="text" id="tracking-otp" required maxlength="6"
+                                   class="block w-full pl-11 pr-4 py-4 border-2 border-slate-100 rounded-2xl text-lg focus:outline-none focus:ring-0 focus:border-emerald-500 transition-colors bg-slate-50 focus:bg-white font-black text-brand-navy tracking-[0.5em] text-center"
+                                   placeholder="------" autocomplete="off">
+                        </div>
+
+                        <div class="flex justify-between items-center px-1">
+                            <button type="button" onclick="goBackToStep1()" class="text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors">
+                                <i class="fa-solid fa-arrow-left mr-1"></i> Quay lại
+                            </button>
+                            <div class="text-xs text-slate-500 font-medium">
+                                Chưa nhận được?
+                                <button type="button" id="btn-resend-inline" class="text-slate-400 font-bold pointer-events-none transition-colors" onclick="handleSendOTP(event)">
+                                    Gửi lại (<span id="inline-timer">30</span>s)
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="btn-verify-otp" class="w-full py-4 bg-emerald-500 text-white text-base font-bold uppercase tracking-widest rounded-2xl hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/30 flex justify-center items-center gap-2 mt-2">
+                            Xác nhận tra cứu <i class="fa-solid fa-check"></i>
                         </button>
                     </form>
                 </div>
@@ -98,9 +130,15 @@
                                 <button onclick="filterOrders('Đang giao', this)" class="menu-tab w-full flex items-center justify-start gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-left whitespace-nowrap text-slate-600 hover:bg-slate-50 border-l-4 border-transparent">
                                     <i class="fa-solid fa-truck-fast w-5 text-center"></i> Đang giao
                                 </button>
-                                <button onclick="filterOrders('Hoàn thành', this)" class="menu-tab w-full flex items-center justify-start gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-left whitespace-nowrap text-slate-600 hover:bg-slate-50 border-l-4 border-transparent">
-                                    <i class="fa-regular fa-circle-check w-5 text-center"></i> Đã hoàn thành
+
+                                <button onclick="filterOrders('Đang lắp đặt', this)" class="menu-tab w-full flex items-center justify-start gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-left whitespace-nowrap text-slate-600 hover:bg-slate-50 border-l-4 border-transparent">
+                                    <i class="fa-solid fa-screwdriver-wrench w-5 text-center"></i> Đang lắp đặt
                                 </button>
+
+                                <button onclick="filterOrders('Hoàn tất', this)" class="menu-tab w-full flex items-center justify-start gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-left whitespace-nowrap text-slate-600 hover:bg-slate-50 border-l-4 border-transparent">
+                                    <i class="fa-regular fa-circle-check w-5 text-center"></i> Đã hoàn tất
+                                </button>
+
                                 <button onclick="filterOrders('Đã hủy', this)" class="menu-tab w-full flex items-center justify-start gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-left whitespace-nowrap text-slate-600 hover:bg-slate-50 border-l-4 border-transparent">
                                     <i class="fa-regular fa-circle-xmark w-5 text-center"></i> Đã hủy
                                 </button>
@@ -124,13 +162,16 @@
                                 {
                                     "Chờ xử lý" => "bg-amber-100 text-amber-700",
                                     "Đang giao" => "bg-blue-100 text-blue-700",
-                                    "Hoàn thành" => "bg-emerald-100 text-emerald-700",
+                                    "Đang lắp đặt" => "bg-indigo-100 text-indigo-700", // Thêm màu cho trạng thái mới
+                                    "Hoàn tất" => "bg-emerald-100 text-emerald-700",   // Trạng thái mới
+                                    "Hoàn thành" => "bg-emerald-100 text-emerald-700", // Trạng thái cũ (giữ lại phòng lỗi data cũ)
                                     "Đã hủy" => "bg-rose-100 text-rose-700",
                                     _ => "bg-slate-100 text-slate-700"
                                 };
-
                                 bool isCancelled = order.TrangThaiDonHang == "Đã hủy";
-                                bool isCompleted = order.TrangThaiDonHang == "Hoàn thành";
+                                // 👇 LỖI TIỀN NẰM Ở ĐÂY: Phải check cả chữ "Hoàn tất"
+                                bool isCompleted = order.TrangThaiDonHang == "Hoàn tất" || order.TrangThaiDonHang == "Hoàn thành";
+
                                 decimal tongTienHang = order.TongTien ?? 0;
                                 string trangThaiTT = order.TrangThaiThanhToan ?? "";
 
@@ -148,204 +189,284 @@
                                 if (isCancelled || isCompleted) tongCanThuThucTe = 0;
                                 // -----------------------------------
 
-                                <div class="order-card bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-all duration-300" data-status="@order.TrangThaiDonHang">
+                                <div id="order-@order.MaDonHang" class="order-card bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-all duration-300" data-status="@order.TrangThaiDonHang">
 
-                                    <div class="bg-slate-800 p-4 sm:p-6 border-b border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                                        <div>
-                                            <div class="flex items-center gap-3 mb-1">
-                                                <h3 class="font-black text-white text-lg tracking-wider">ĐƠN #@order.MaDonHang</h3>
-                                                <span class="px-3 py-1 text-[11px] font-bold rounded-full uppercase tracking-wider @statusClass">
-                                                    @order.TrangThaiDonHang
-                                                </span>
+                                    <div class="bg-slate-800 p-4 sm:p-6 border-b border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-5">
+
+                                        <div class="flex items-center gap-4 w-full md:w-auto">
+                                            <div class="w-12 h-12 bg-slate-700/50 rounded-xl border border-slate-600 flex items-center justify-center text-cyan-400 shrink-0">
+                                                <i class="fa-solid fa-box-open text-xl"></i>
                                             </div>
-                                            <p class="text-slate-400 text-sm"><i class="fa-regular fa-clock mr-1"></i> Đặt lúc: @(order.NgayDatHang?.ToString("dd/MM/yyyy HH:mm"))</p>
+                                            <div>
+                                                <div class="flex items-center gap-3 mb-1">
+                                                    <h3 class="font-black text-white text-lg tracking-wider">ĐƠN #@order.MaDonHang</h3>
+                                                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded-md uppercase tracking-wider @statusClass border border-current/20">
+                                                        @order.TrangThaiDonHang
+                                                    </span>
+                                                </div>
+                                                <p class="text-slate-400 text-xs font-medium flex items-center gap-1.5">
+                                                    <i class="fa-regular fa-clock"></i> Ngày đặt: @(order.NgayDatHang?.ToString("dd/MM/yyyy - HH:mm"))
+                                                </p>
+                                            </div>
                                         </div>
 
-                                        <div class="text-left sm:text-right w-full sm:w-auto bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-inner">
+                                        <div class="w-full md:w-auto flex flex-col items-start md:items-end bg-slate-900/30 md:bg-transparent p-4 md:p-0 rounded-xl border border-slate-700/50 md:border-none mt-2 md:mt-0">
+
                                             @if (isCancelled)
                                             {
-                                                <p class="text-sm text-slate-400 mb-0.5 uppercase tracking-wider font-bold">Đơn đã hủy</p>
-                                                <p class="text-xl font-black text-rose-500">Không thu tiền</p>
+                                                <div class="text-left md:text-right">
+                                                    <p class="text-rose-500 font-black text-xl">Đã hủy đơn - 0 đ</p>
+                                                    <p class="text-slate-500 text-[11px] mt-0.5 uppercase tracking-wider font-bold">Không phát sinh chi phí</p>
+                                                </div>
                                             }
                                             else if (isCompleted)
                                             {
-                                                <p class="text-sm text-emerald-600 mb-0.5 uppercase tracking-wider font-bold">
-                                                    <i class="fa-solid fa-check-circle"></i> Đã thanh toán xong
-                                                </p>
-                                                <p class="text-2xl font-black text-emerald-600">0 đ</p>
-                                                <p class="text-[11px] text-slate-400 mt-1 sm:justify-end">Cảm ơn bạn đã mua sắm!</p>
+                                                <div class="text-left md:text-right">
+                                                    <div class="flex items-center md:justify-end gap-2 mb-1">
+                                                        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                                                        <p class="text-emerald-400 font-bold text-[11px] uppercase tracking-wider">Đã thanh toán đủ</p>
+                                                    </div>
+                                                    <p class="text-white font-black text-2xl leading-none">0 đ</p>
+                                                </div>
                                             }
                                             else
                                             {
-                                                <p class="text-xs text-slate-500 mb-1 uppercase tracking-wider font-bold">Cần thanh toán thêm</p>
+                                                <div class="w-full md:w-60 space-y-1.5 text-xs">
+                                                    <div class="flex justify-between items-center text-slate-300">
+                                                        <span>Tiền hàng còn lại:</span>
+                                                        <strong class="text-slate-100">@tienHangConLai.ToString("N0") đ</strong>
+                                                    </div>
 
-                                                @if (coLapDat && !daBaoGiaLapDat)
-                                                {
-                                                    <p class="text-xl font-black text-brand-navy">@tienHangConLai.ToString("N0") đ <span class="text-sm font-normal text-slate-500">+ Phí lắp đặt</span></p>
-                                                    <p class="text-[11px] text-amber-600 mt-1 flex items-center gap-1 sm:justify-end">
-                                                        <i class="fa-solid fa-phone-volume animate-pulse"></i> Đang chờ liên hệ báo giá
-                                                    </p>
-                                                }
-                                                else
-                                                {
-                                                    <p class="text-2xl font-black text-rose-600">@tongCanThuThucTe.ToString("N0") đ</p>
-                                                    @if (phiLapDat > 0)
+                                                    @if (coLapDat)
                                                     {
-                                                        <p class="text-[11px] text-brand-cyan mt-1 flex items-center gap-1 sm:justify-end">
-                                                            <i class="fa-solid fa-wrench"></i> Đã bao gồm @phiLapDat.ToString("N0")đ phí lắp đặt
-                                                        </p>
+                                                        <div class="flex justify-between items-center text-cyan-400">
+                                                            <span>Phí lắp đặt:</span>
+                                                            @if (!daBaoGiaLapDat)
+                                                            {
+                                                                <span class="italic text-[10px] uppercase font-bold bg-cyan-500/10 text-cyan-400 px-1.5 py-0.5 rounded border border-cyan-500/20 animate-pulse">Chờ báo giá</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <strong>@phiLapDat.ToString("N0") đ</strong>
+                                                            }
+                                                        </div>
                                                     }
-                                                    @if (tienHangConLai == 0 && phiLapDat > 0)
-                                                    {
-                                                        <p class="text-[10px] text-slate-400 mt-0.5 sm:text-right italic">(Thanh toán trực tiếp cho thợ)</p>
-                                                    }
-                                                }
-                                            }
-                                        </div>
-                                    </div>
 
-                                    <div class="p-4 sm:p-6 border-b border-slate-100 bg-slate-50/50">
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-                                            <div>
-                                                <h4 class="font-bold text-brand-navy mb-3 uppercase text-xs tracking-wider"><i class="fa-solid fa-location-dot mr-1 text-rose-500"></i> Thông tin nhận hàng</h4>
-                                                <div class="space-y-1.5">
-                                                    <p><span class="text-slate-500 w-24 inline-block">Người nhận:</span> <strong class="text-slate-800">@(order.TenKhachHang ?? order.MaKhachHangNavigation?.TenKhachHang ?? "Khách hàng")</strong></p>
-                                                    <p><span class="text-slate-500 w-24 inline-block">Điện thoại:</span> <strong class="text-slate-800">@order.SoDienThoai</strong></p>
-                                                    <p class="flex"><span class="text-slate-500 w-24 shrink-0 inline-block">Địa chỉ:</span> <span class="text-slate-800 font-medium leading-relaxed">@order.DiaChiGiaoHang</span></p>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <h4 class="font-bold text-brand-navy mb-3 uppercase text-xs tracking-wider"><i class="fa-solid fa-wallet mr-1 text-emerald-500"></i> Chi tiết thanh toán</h4>
-                                                <div class="space-y-1.5">
-                                                    <p>
-                                                        <span class="text-slate-500 w-28 inline-block">Phương thức:</span>
-                                                        <strong class="text-brand-navy uppercase">
-                                                            <i class="fa-solid fa-credit-card text-brand-cyan mr-1"></i> @(order.PhuongThucThanhToan ?? "Thanh toán")
-                                                        </strong>
-                                                    </p>
-                                                    <p>
-                                                        <span class="text-slate-500 w-28 inline-block">Trạng thái:</span>
-                                                        @if (trangThaiTT == "Đã thanh toán" || trangThaiTT == "Đã cọc")
+                                                    <div class="flex justify-between items-end pt-2.5 mt-2.5 border-t border-slate-700">
+                                                        <span class="text-slate-400 text-[10px] uppercase tracking-widest font-bold pb-0.5">Cần trả thêm:</span>
+
+                                                        @if (coLapDat && !daBaoGiaLapDat)
                                                         {
-                                                            <strong class="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100"><i class="fa-solid fa-check-circle mr-1"></i> @trangThaiTT</strong>
+                                                            <strong class="text-amber-400 text-sm">Chờ cập nhật</strong>
                                                         }
                                                         else
                                                         {
-                                                            <strong class="text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-100"><i class="fa-solid fa-clock mr-1"></i> @(trangThaiTT == "" ? "Chưa thanh toán" : trangThaiTT)</strong>
+                                                            <strong class="text-white text-2xl font-black leading-none tracking-tight">
+                                                                @tongCanThuThucTe.ToString("N0") <span class="text-xs font-normal text-slate-400">đ</span>
+                                                            </strong>
                                                         }
-                                                    </p>
+                                                    </div>
+
+                                                    @if (tienHangConLai == 0 && phiLapDat > 0)
+                                                    {
+                                                        <p class="text-[9px] text-slate-500 text-left md:text-right italic uppercase tracking-wider mt-1">(Thanh toán trực tiếp cho thợ)</p>
+                                                    }
                                                 </div>
-                                            </div>
+                                            }
                                         </div>
                                     </div>
 
-                                    <div class="grid grid-cols-1 lg:grid-cols-5 divide-y lg:divide-y-0 lg:divide-x divide-slate-100">
-                                        <div class="p-4 sm:p-6 lg:col-span-2">
-                                            <h4 class="font-bold text-brand-navy mb-5 uppercase text-xs tracking-wider"><i class="fa-solid fa-truck-fast mr-1 text-brand-cyan"></i> Lịch sử giao hàng</h4>
+                                    <div class="p-5 sm:p-8 space-y-4">
+
+                                        <div class="bg-white p-6 sm:p-2 rounded-3xl border border-slate-100 shadow-sm w-full">
+                                            <h4 class="font-bold text-brand-navy mb-1 uppercase text-xs tracking-widest flex items-center gap-2">
+                                                <div class="w-7 h-7 rounded-full bg-cyan-50 flex items-center justify-center text-brand-cyan shrink-0">
+                                                    <i class="fa-solid fa-route text-[11px]"></i>
+                                                </div>
+                                                Hành trình đơn hàng
+                                            </h4>
 
                                             @if (isCancelled)
                                             {
-                                                <div class="bg-rose-50 border border-rose-100 rounded-xl p-4 text-center">
-                                                    <div class="w-12 h-12 bg-rose-100 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-2"><i class="fa-solid fa-xmark text-xl"></i></div>
-                                                    <h5 class="font-bold text-rose-600">Đơn hàng đã bị hủy</h5>
-                                                    <p class="text-xs text-rose-500 mt-1">Giao dịch này đã được hủy bỏ và đóng lại.</p>
+                                                <div class="bg-rose-50 border border-rose-100 rounded-2xl p-6 text-center">
+                                                    <div class="w-12 h-12 bg-white shadow-sm text-rose-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                                                        <i class="fa-solid fa-xmark text-xl"></i>
+                                                    </div>
+                                                    <h5 class="font-black text-rose-600 text-lg">Đơn hàng đã bị hủy</h5>
+                                                    <p class="text-xs text-rose-500/80 mt-1">Giao dịch này đã được đóng lại.</p>
                                                 </div>
                                             }
                                             else
                                             {
-                                                <div class="relative border-l-2 border-slate-200 ml-3 space-y-6">
-                                                    <div class="relative pl-6">
-                                                        <span class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-brand-cyan ring-4 ring-white"></span>
-                                                        <h5 class="font-bold text-brand-navy text-sm">Đã tiếp nhận đơn hàng</h5>
-                                                        <p class="text-xs text-slate-500 mt-0.5">Đơn hàng đang chờ bộ phận kho xử lý.</p>
-                                                    </div>
+                                                <div class="relative w-full px-2 sm:px-6">
+                                                    <div class="absolute top-[18px] left-[10%] right-[10%] h-1 bg-slate-100 z-0 rounded-full"></div>
 
-                                                    @{
-                                                        var isShipping = order.TrangThaiDonHang == "Đang giao" || isCompleted;
-                                                    }
-                                                    <div class="relative pl-6">
-                                                        <span class="absolute -left-[9px] top-0 w-4 h-4 rounded-full @(isShipping ? "bg-brand-cyan" : "bg-slate-200") ring-4 ring-white"></span>
-                                                        <h5 class="font-bold @(isShipping ? "text-brand-navy" : "text-slate-400") text-sm">Đang vận chuyển</h5>
-                                                        <p class="text-xs @(isShipping ? "text-slate-500" : "text-slate-400") mt-0.5">Kiện hàng đã được xuất kho và đang giao đến bạn.</p>
-                                                    </div>
+                                                    <div class="relative z-10 flex flex-row justify-between items-start w-full">
 
-                                                    <div class="relative pl-6">
-                                                        <span class="absolute -left-[9px] top-0 w-4 h-4 rounded-full @(isCompleted ? "bg-emerald-500" : "bg-slate-200") ring-4 ring-white"></span>
-                                                        <h5 class="font-bold @(isCompleted ? "text-emerald-600" : "text-slate-400") text-sm">Giao hàng thành công</h5>
-                                                        <p class="text-xs @(isCompleted ? "text-slate-500" : "text-slate-400") mt-0.5">Đơn hàng đã được giao đến tay người nhận.</p>
+                                                        <div class="flex flex-col items-center flex-1 group">
+                                                            <div class="w-10 h-10 rounded-full bg-brand-cyan ring-4 ring-white shadow-sm flex items-center justify-center transition-transform group-hover:scale-110">
+                                                                <i class="fa-solid fa-check text-white text-[10px]"></i>
+                                                            </div>
+                                                            <h5 class="font-bold text-brand-navy text-[11px] sm:text-xs mt-3 text-center">Tiếp nhận</h5>
+                                                            <p class="text-[9px] text-slate-400 mt-0.5 text-center hidden sm:block">Đã nhận đơn</p>
+                                                        </div>
+
+                                                        @{
+                                                            // SỬA Ở ĐÂY: Thêm điều kiện nếu đang lắp đặt thì vận chuyển vẫn phải sáng
+                                                            var isShipping = order.TrangThaiDonHang == "Đang giao" || order.TrangThaiDonHang == "Đang lắp đặt" || isCompleted;
+                                                        }
+                                                        <div class="flex flex-col items-center flex-1 group">
+                                                            <div class="w-10 h-10 rounded-full @(isShipping ? "bg-brand-cyan" : "bg-slate-100 text-slate-400") ring-4 ring-white shadow-sm flex items-center justify-center transition-transform group-hover:scale-110">
+                                                                <i class="fa-solid fa-truck-fast text-[10px] @(isShipping ? "text-white" : "")"></i>
+                                                            </div>
+                                                            <h5 class="font-bold @(isShipping ? "text-brand-navy" : "text-slate-400") text-[11px] sm:text-xs mt-3 text-center">Vận chuyển</h5>
+                                                            <p class="text-[9px] text-slate-400 mt-0.5 text-center hidden sm:block">Đang giao hàng</p>
+                                                        </div>
+
+                                                        @if (coLapDat)
+                                                        {
+                                                            bool isInstalling = order.TrangThaiDonHang == "Đang lắp đặt" || isCompleted;
+                                                            <div class="flex flex-col items-center flex-1 group">
+                                                                <div class="w-10 h-10 rounded-full @(isInstalling ? "bg-brand-cyan" : "bg-slate-100 text-slate-400") ring-4 ring-white shadow-sm flex items-center justify-center transition-transform group-hover:scale-110">
+                                                                    <i class="fa-solid fa-screwdriver-wrench text-[10px] @(isInstalling ? "text-white" : "")"></i>
+                                                                </div>
+                                                                <h5 class="font-bold @(isInstalling ? "text-brand-navy" : "text-slate-400") text-[11px] sm:text-xs mt-3 text-center">Lắp đặt</h5>
+                                                                @if (yeuCau?.TrangThaiLapDat == "Đang thi công")
+                                                                {
+                                                                    <p class="text-[9px] text-amber-600 font-bold animate-pulse mt-0.5 text-center hidden sm:block">Đang thi công...</p>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <p class="text-[9px] text-slate-400 mt-0.5 text-center hidden sm:block">Thi công tại nhà</p>
+                                                                }
+                                                            </div>
+                                                        }
+
+                                                        <div class="flex flex-col items-center flex-1 group">
+                                                            <div class="w-10 h-10 rounded-full @(isCompleted ? "bg-emerald-500" : "bg-slate-100 text-slate-400") ring-4 ring-white shadow-sm flex items-center justify-center transition-transform group-hover:scale-110">
+                                                                <i class="fa-solid fa-flag-checkered text-[10px] @(isCompleted ? "text-white" : "")"></i>
+                                                            </div>
+                                                            <h5 class="font-bold @(isCompleted ? "text-emerald-600" : "text-slate-400") text-[11px] sm:text-xs mt-3 text-center">Hoàn tất</h5>
+                                                            <p class="text-[9px] text-slate-400 mt-0.5 text-center hidden sm:block">Giao dịch xong</p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             }
                                         </div>
 
-                                        <div class="p-4 sm:p-6 lg:col-span-3 bg-slate-50/30 flex flex-col">
-                                            <h4 class="font-bold text-brand-navy mb-4 uppercase text-xs tracking-wider"><i class="fa-solid fa-box-open mr-1 text-brand-cyan"></i> Sản phẩm đã đặt</h4>
-                                            <div class="space-y-4 flex-1">
-                                                @foreach (var item in order.ChiTietDonHangs)
+                                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-[10px] items-start">
+
+                                            <div class="bg-slate-50/70 p-6 rounded-3xl border border-slate-100 h-full">
+                                                <h4 class="font-bold text-brand-navy mb-6 text-xs uppercase tracking-widest flex items-center gap-2 border-b border-slate-200/50 pb-4">
+                                                    <div class="w-7 h-7 rounded-full bg-rose-50 flex items-center justify-center text-rose-500 shrink-0">
+                                                        <i class="fa-solid fa-location-dot text-[11px]"></i>
+                                                    </div>
+                                                    Người nhận hàng
+                                                </h4>
+
+                                                <div class="text-sm space-y-5">
+                                                    <div class="flex items-start border-b border-slate-200/50 pb-3">
+                                                        <span class="text-slate-500 w-[120px] shrink-0 font-medium flex items-center gap-2"><i class="fa-regular fa-user text-slate-400"></i> Khách hàng:</span>
+                                                        <strong class="text-brand-navy text-left flex-1">@(order.TenKhachHang ?? order.MaKhachHangNavigation?.TenKhachHang ?? "Khách ẩn danh")</strong>
+                                                    </div>
+
+                                                    <div class="flex items-start border-b border-slate-200/50 pb-3">
+                                                        <span class="text-slate-500 w-[120px] shrink-0 font-medium flex items-center gap-2"><i class="fa-solid fa-mobile-screen text-slate-400"></i> Điện thoại:</span>
+                                                        <strong class="text-brand-navy text-left flex-1">@order.SoDienThoai</strong>
+                                                    </div>
+
+                                                    <div class="flex flex-col pt-2">
+                                                        <span class="text-slate-400 text-[11px] uppercase font-bold tracking-wider flex items-center gap-1.5">
+                                                            <i class="fa-regular fa-map"></i> Địa chỉ giao hàng:
+                                                        </span>
+                                                        <div class="text-brand-navy text-sm font-medium leading-relaxed break-words whitespace-pre-line">
+                                                            @order.DiaChiGiaoHang
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm h-full flex flex-col">
+                                                <h4 class="font-bold text-brand-navy mb-5 uppercase text-xs tracking-widest flex items-center justify-between border-b border-slate-50 pb-4">
+                                                    <div class="flex items-center gap-2">
+                                                        <div class="w-7 h-7 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-500 shrink-0">
+                                                            <i class="fa-solid fa-cart-shopping text-[11px]"></i>
+                                                        </div>
+                                                        Sản phẩm đã đặt
+                                                    </div>
+                                                    <span class="bg-slate-100 text-slate-500 text-[10px] font-black px-2.5 py-1 rounded-md">@order.ChiTietDonHangs.Count() MÓN</span>
+                                                </h4>
+
+                                                <div class="space-y-3 overflow-y-auto pr-2 custom-scrollbar max-h-[300px]">
+                                                    @foreach (var item in order.ChiTietDonHangs)
+                                                    {
+                                                        <div class="flex items-center gap-4 p-3 bg-slate-50/50 rounded-2xl border border-transparent hover:border-slate-100 transition-all">
+                                                            <div class="w-14 h-14 bg-white border border-slate-100 rounded-xl p-1 shrink-0 shadow-sm">
+                                                                <img src="/img/@item.MaSanPhamNavigation?.HinhAnh" class="w-full h-full object-contain" alt="IMG" onerror="this.src='/img/placeholder.jpg'">
+                                                            </div>
+                                                            <div class="flex-1 min-w-0">
+                                                                <p class="font-bold text-slate-800 line-clamp-1 text-sm mb-1.5">@item.MaSanPhamNavigation?.TenSanPham</p>
+                                                                <div class="flex justify-between items-center">
+                                                                    <p class="text-brand-cyan font-black text-xs">@((item.Gia ?? 0).ToString("N0")) đ</p>
+                                                                    <p class="text-[10px] font-black text-slate-400 bg-white border border-slate-100 px-2 py-0.5 rounded-md shadow-sm">x @item.SoLuong</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+
+                                                @{
+                                                    bool choPhepHuy = order.TrangThaiDonHang == "Chờ xử lý" && (!coLapDat || yeuCau?.TrangThaiLapDat == "Chưa lắp đặt");
+                                                }
+                                                @if (choPhepHuy)
                                                 {
-                                                    <div class="flex items-center gap-4 bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
-                                                        <div class="w-16 h-16 bg-slate-50 border border-slate-100 rounded-lg p-1 shrink-0">
-                                                            <img src="/img/@item.MaSanPhamNavigation?.HinhAnh" class="w-full h-full object-contain" alt="Hình ảnh" onerror="this.src='/img/placeholder.jpg'">
-                                                        </div>
-                                                        <div class="flex-1 min-w-0">
-                                                            <p class="font-bold text-brand-navy line-clamp-1 text-sm">@item.MaSanPhamNavigation?.TenSanPham</p>
-                                                            <p class="text-xs text-slate-500 mt-1">Đơn giá: @((item.Gia ?? 0).ToString("N0")) đ</p>
-                                                        </div>
-                                                        <div class="text-right shrink-0">
-                                                            <p class="text-sm font-bold text-slate-500">x @item.SoLuong</p>
-                                                        </div>
+                                                    <div class="mt-auto pt-5">
+                                                        <button type="button" onclick="confirmCancel(@order.MaDonHang, '@ViewBag.Phone')" class="w-full py-3.5 bg-white border border-rose-200 text-rose-500 hover:bg-rose-500 hover:text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-colors shadow-sm flex justify-center items-center gap-2 group">
+                                                            <i class="fa-solid fa-ban group-hover:rotate-90 transition-transform"></i> Hủy đơn hàng
+                                                        </button>
                                                     </div>
                                                 }
                                             </div>
 
-                                            @{
-                                                bool choPhepHuy = order.TrangThaiDonHang == "Chờ xử lý" && (!coLapDat || yeuCau?.TrangThaiLapDat == "Chưa lắp đặt");
-                                            }
-                                            @if (choPhepHuy)
-                                            {
-                                                <div class="mt-4 p-4 bg-rose-50 border border-rose-100 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                                                    <p class="text-xs text-rose-600 font-medium">
-                                                        <i class="fa-solid fa-triangle-exclamation mr-1"></i> Nếu bạn muốn thay đổi, có thể hủy đơn trước khi hệ thống xuất kho.
-                                                    </p>
-
-                                                    <button type="button" onclick="confirmCancel(@order.MaDonHang, '@ViewBag.Phone')" class="px-4 py-2 bg-white border border-rose-200 text-rose-600 hover:bg-rose-500 hover:text-white rounded-lg font-bold text-xs transition-colors shadow-sm whitespace-nowrap w-full sm:w-auto">
-                                                        Hủy đơn hàng
-                                                    </button>
-                                                </div>
-                                            }
                                         </div>
                                     </div>
 
                                     @if (coLapDat && yeuCau != null && !isCancelled)
                                     {
-                                        <div class="bg-cyan-50/80 p-4 sm:p-6 border-t border-cyan-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                                            <div class="flex items-start sm:items-center gap-3">
-                                                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-brand-cyan shadow-sm shrink-0">
-                                                    <i class="fa-solid fa-user-gear"></i>
+                                        <div class="bg-cyan-50/50 p-5 border-t border-cyan-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-10 h-10 bg-brand-cyan text-white rounded-xl flex items-center justify-center shadow-sm shrink-0">
+                                                    <i class="fa-solid fa-helmet-safety"></i>
                                                 </div>
                                                 <div>
-                                                    <p class="text-xs text-slate-500 uppercase tracking-wider font-bold mb-0.5">Tiến độ thi công lắp đặt</p>
-                                                    <strong class="text-brand-navy text-base">@yeuCau.TrangThaiLapDat</strong>
+                                                    <p class="text-[11px] text-slate-500 uppercase tracking-widest font-bold mb-0.5">Dịch vụ lắp đặt tại nhà</p>
+                                                    <strong class="text-brand-navy">@yeuCau.TrangThaiLapDat</strong>
                                                 </div>
                                             </div>
-                                            <div class="text-left sm:text-right bg-white px-4 py-2 rounded-xl shadow-sm border border-cyan-100 w-full sm:w-auto">
-                                                <span class="text-slate-500 text-xs block mb-0.5">Lịch hẹn kỹ thuật viên:</span>
 
+                                            <div class="bg-white px-5 py-2.5 rounded-xl shadow-sm border border-cyan-100/50 w-full sm:w-auto text-center sm:text-right">
+                                                <span class="text-slate-500 text-[10px] uppercase tracking-wider block mb-1">Lịch hẹn kỹ thuật viên</span>
                                                 @if (!daBaoGiaLapDat)
                                                 {
-                                                    <strong class="text-amber-600 text-sm flex items-center justify-start sm:justify-end gap-1.5">
-                                                        <i class="fa-solid fa-phone-volume animate-pulse"></i> Đang chờ liên hệ chốt lịch
-                                                    </strong>
+                                                    <strong class="text-amber-600 text-sm"><i class="fa-solid fa-headset animate-pulse mr-1"></i> CSKH sẽ gọi chốt lịch</strong>
                                                 }
                                                 else
                                                 {
-                                                    <strong class="text-brand-cyan text-sm">@(yeuCau.NgayLap?.ToString("dd/MM/yyyy - HH:mm"))</strong>
+                                                    <strong class="text-brand-cyan text-[15px]"><i class="fa-regular fa-calendar-check mr-1"></i> @(yeuCau.NgayLap?.ToString("dd/MM/yyyy - HH:mm"))</strong>
                                                 }
                                             </div>
                                         </div>
                                     }
                                 </div>
                             }
+        
+                        </div>
+                        <div id="empty-state" class="hidden bg-white rounded-3xl p-12 shadow-sm border border-slate-100 text-center">
+                            <div class="w-20 h-20 bg-slate-50 text-slate-300 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fa-solid fa-box-open text-3xl"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-700 mb-1">Không tìm thấy đơn hàng</h3>
+                            <p class="text-slate-500 text-sm">Không có đơn hàng nào khớp với bộ lọc hiện tại.</p>
                         </div>
 
                     </div>
@@ -356,6 +477,160 @@
 </div>
 
 @section Scripts {
+    <script>
+        let currentPhone = "";
+        let timerInterval;
+
+        function handleSendOTP(e) {
+            if(e) e.preventDefault();
+
+            const phoneInput = document.getElementById('tracking-phone');
+            const btnSend = document.getElementById('btn-send-otp');
+
+            if(!phoneInput.checkValidity()) {
+                phoneInput.reportValidity();
+                return;
+            }
+
+            currentPhone = phoneInput.value;
+
+            // Hiệu ứng loading nút bấm
+            const originalBtnHtml = btnSend.innerHTML;
+            btnSend.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang gửi...';
+            btnSend.disabled = true;
+
+            fetch(`/Customers/SendTrackingOTP?phone=${currentPhone}`)
+                .then(r => r.json())
+                .then(data => {
+                    btnSend.innerHTML = originalBtnHtml;
+                    btnSend.disabled = false;
+
+                    if (data.success) {
+                        switchToStep2(currentPhone, data.otp);
+                    } else {
+                        alert(data.message); // Có thể thay bằng thư viện toast nếu bạn có
+                    }
+                })
+                .catch(err => {
+                    btnSend.innerHTML = originalBtnHtml;
+                    btnSend.disabled = false;
+                    alert("Lỗi kết nối máy chủ!");
+                });
+        }
+
+        function switchToStep2(phone, otpCode) {
+            // Đổi Giao diện
+            document.getElementById('step-1-form').classList.add('hidden', 'opacity-0');
+            document.getElementById('step-2-form').classList.remove('hidden');
+
+            // Xử lý hiệu ứng mượt mà
+            setTimeout(() => {
+                document.getElementById('step-2-form').classList.remove('translate-y-4', 'opacity-0');
+            }, 50);
+
+            // Đổi Text & Icon
+            document.getElementById('form-title').innerText = "Nhập mã xác thực";
+            const maskedPhone = phone.substring(0, 4) + '***' + phone.substring(phone.length - 3);
+            document.getElementById('form-desc').innerHTML = `Mã gồm 6 chữ số đã được gửi đến <b class="text-brand-navy">${maskedPhone}</b>`;
+
+            const iconBox = document.getElementById('icon-container');
+            iconBox.classList.replace('bg-cyan-50', 'bg-emerald-50');
+            iconBox.classList.replace('text-brand-cyan', 'text-emerald-500');
+            document.getElementById('main-icon').className = "fa-solid fa-shield-halved text-4xl animate-bounce";
+
+            // Hiện Demo Toast (Góc phải trên)
+            const toast = document.getElementById('demo-otp-toast');
+            document.getElementById('demo-otp-text').innerText = otpCode;
+            toast.classList.remove('translate-x-full', 'opacity-0');
+
+            // Tự động ẩn Toast Demo sau 10s để đỡ vướng
+            setTimeout(() => {
+                toast.classList.add('translate-x-full', 'opacity-0');
+            }, 10000);
+
+            startInlineTimer();
+        }
+
+        function goBackToStep1() {
+            clearInterval(timerInterval);
+
+            document.getElementById('step-2-form').classList.add('translate-y-4', 'opacity-0');
+            setTimeout(() => {
+                document.getElementById('step-2-form').classList.add('hidden');
+                document.getElementById('step-1-form').classList.remove('hidden', 'opacity-0');
+            }, 300);
+
+            document.getElementById('form-title').innerText = "Tra cứu đơn hàng";
+            document.getElementById('form-desc').innerText = "Vui lòng nhập số điện thoại mua hàng để kiểm tra tình trạng giao hàng và tiến độ thi công.";
+
+            const iconBox = document.getElementById('icon-container');
+            iconBox.classList.replace('bg-emerald-50', 'bg-cyan-50');
+            iconBox.classList.replace('text-emerald-500', 'text-brand-cyan');
+            document.getElementById('main-icon').className = "fa-solid fa-magnifying-glass-location text-4xl";
+
+            document.getElementById('demo-otp-toast').classList.add('translate-x-full', 'opacity-0');
+        }
+
+        function startInlineTimer() {
+            let timeLeft = 30;
+            const resendBtn = document.getElementById('btn-resend-inline');
+
+            resendBtn.style.pointerEvents = 'none';
+            resendBtn.classList.replace('text-emerald-500', 'text-slate-400');
+            resendBtn.innerHTML = `Gửi lại (<span id="inline-timer">${timeLeft}</span>s)`;
+
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const tSpan = document.getElementById('inline-timer');
+                if(tSpan) tSpan.innerText = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    resendBtn.innerHTML = 'Gửi lại mã ngay';
+                    resendBtn.style.pointerEvents = 'auto';
+                    resendBtn.classList.replace('text-slate-400', 'text-emerald-500');
+                }
+            }, 1000);
+        }
+
+        function handleVerifyOTP(e) {
+            e.preventDefault();
+            const otpInput = document.getElementById('tracking-otp');
+            const btnVerify = document.getElementById('btn-verify-otp');
+
+            if(otpInput.value.length !== 6) {
+                alert("Vui lòng nhập đủ 6 số OTP");
+                return;
+            }
+
+            const originalBtnHtml = btnVerify.innerHTML;
+            btnVerify.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang xác thực...';
+            btnVerify.disabled = true;
+
+            fetch(`/Customers/VerifyTrackingOTP?phone=${currentPhone}&otp=${otpInput.value}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        btnVerify.innerHTML = 'Thành công <i class="fa-solid fa-check-double"></i>';
+                        btnVerify.classList.replace('bg-emerald-500', 'bg-green-500');
+                        // Chuyển hướng Form bằng GET
+                        window.location.href = `/Customers/OrderHistory?phone=${currentPhone}`;
+                    } else {
+                        btnVerify.innerHTML = originalBtnHtml;
+                        btnVerify.disabled = false;
+                        alert(data.message); // Có thể thay bằng hiệu ứng rung ô input
+                        otpInput.value = "";
+                        otpInput.focus();
+                    }
+                })
+                .catch(err => {
+                    btnVerify.innerHTML = originalBtnHtml;
+                    btnVerify.disabled = false;
+                    alert("Lỗi kết nối máy chủ!");
+                });
+        }
+    </script>
     <script>
         // Hàm lọc đơn hàng tức thì (Client-side)
         function filterOrders(status, clickedElement) {
@@ -375,7 +650,18 @@
 
             cards.forEach(card => {
                 const cardStatus = card.getAttribute('data-status');
-                if (status === 'All' || cardStatus === status) {
+                let isMatch = false;
+
+                // Logic kiểm tra thông minh gộp chung data
+                if (status === 'All') {
+                    isMatch = true;
+                } else if (status === 'Hoàn tất' && (cardStatus === 'Hoàn tất' || cardStatus === 'Hoàn thành')) {
+                    isMatch = true;
+                } else if (cardStatus === status) {
+                    isMatch = true;
+                }
+
+                if (isMatch) {
                     card.style.display = 'block';
                     visibleCount++;
                 } else {
@@ -384,13 +670,16 @@
             });
 
             // 3. Cập nhật số lượng và trạng thái rỗng
-            document.getElementById('visible-count').innerText = visibleCount;
-            const emptyState = document.getElementById('empty-state');
+            const countLabel = document.getElementById('visible-count');
+            if (countLabel) countLabel.innerText = visibleCount;
 
-            if (visibleCount === 0) {
-                emptyState.classList.remove('hidden');
-            } else {
-                emptyState.classList.add('hidden');
+            const emptyState = document.getElementById('empty-state');
+            if (emptyState) {
+                if (visibleCount === 0) {
+                    emptyState.classList.remove('hidden');
+                } else {
+                    emptyState.classList.add('hidden');
+                }
             }
         }
 
@@ -412,6 +701,21 @@
                 }
             });
         }
+
+        // Highlight đơn hàng khi nhảy từ link bên ngoài vào
+        document.addEventListener("DOMContentLoaded", function () {
+            const hash = window.location.hash; // Lấy cái #order-123 trên URL
+            if (hash) {
+                const element = document.querySelector(hash);
+                if (element) {
+                    setTimeout(() => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        element.style.outline = "4px solid #06b6d4";
+                        element.style.outlineOffset = "4px";
+                    }, 500);
+                }
+            }
+        });
     </script>
 
     @if (ViewBag.Error != null)

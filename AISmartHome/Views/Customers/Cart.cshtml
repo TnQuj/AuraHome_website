@@ -92,9 +92,15 @@
                                             <div class="flex items-center border border-slate-200 rounded-full overflow-hidden h-10 w-[110px] bg-white shadow-inner">
                                                 <button type="button" onclick="updateQty('@item.MaSanPham', -1)" class="w-9 h-full flex justify-center items-center text-slate-500 hover:bg-slate-100 hover:text-brand-cyan transition-colors"><i class="fa-solid fa-minus text-xs"></i></button>
 
-                                                <input id="qty-@item.MaSanPham" type="text" value="@item.SoLuong" readonly class="w-full h-full text-center border-none p-0 text-sm font-bold text-brand-navy focus:ring-0 bg-transparent pointer-events-none" />
-
-                                                <button type="button" onclick="updateQty('@item.MaSanPham', 1)" class="w-9 h-full flex justify-center items-center text-slate-500 hover:bg-slate-100 hover:text-brand-cyan transition-colors"><i class="fa-solid fa-plus text-xs"></i></button>
+                                                <input id="qty-@item.MaSanPham"
+                                                       type="text"
+                                                       value="@item.SoLuong"
+                                                       data-stock="@(sp?.SoLuong ?? 0)"
+                                                       data-name="@sp?.TenSanPham"
+                                                       readonly
+                                                       class="w-full h-full text-center border-none p-0 text-sm font-bold text-brand-navy focus:ring-0 bg-transparent pointer-events-none" />
+                                               
+                                                       <button type="button" onclick="updateQty('@item.MaSanPham', 1)" class="w-9 h-full flex justify-center items-center text-slate-500 hover:bg-slate-100 hover:text-brand-cyan transition-colors"><i class="fa-solid fa-plus text-xs"></i></button>
                                             </div>
 
                                             <div class="text-right flex flex-col md:min-w-[100px]">
@@ -151,7 +157,7 @@
                                     <span class="text-[11px] text-slate-400 font-medium">(Đã bao gồm VAT)</span>
                                 </div>
                             </div>
-
+                          
                             <button type="submit" id="btnCheckoutSubmit" class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-4 rounded-2xl font-bold text-[15px] hover:shadow-lg hover:shadow-cyan-500/30 hover:-translate-y-1 transition-all duration-300 uppercase tracking-wider mb-6 h-[56px]">
                                 Tiến hành thanh toán <i class="fa-solid fa-arrow-right-long ml-1"></i>
                             </button>
@@ -161,33 +167,101 @@
             </form>
         </div>
     </main>
+    <!--Thông báo số lượng sản phẩm khi mua lố-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <div id="custom-alert-modal" class="fixed inset-0 z-[99999] hidden items-center justify-center p-4 sm:p-6">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity opacity-0" id="custom-alert-overlay" onclick="closeCustomAlert()"></div>
+
+        <div id="custom-alert-content" class="relative w-full max-w-sm bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-6 md:p-8 transform scale-95 opacity-0 transition-all duration-300 flex flex-col items-center text-center z-10">
+
+            <div id="alert-icon-container" class="w-16 h-16 rounded-full bg-rose-100 text-rose-500 flex items-center justify-center mb-4 text-3xl shadow-inner">
+                <i id="alert-icon" class="fa-solid fa-circle-exclamation animate-pulse"></i>
+            </div>
+
+            <h3 id="alert-title" class="text-xl font-black text-slate-900 dark:text-white mb-2">Thông báo</h3>
+            <p id="alert-message" class="text-[15px] text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
+                Nội dung thông báo sẽ hiện ở đây.
+            </p>
+
+            <button onclick="closeCustomAlert()" class="w-full flex items-center justify-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold py-3.5 rounded-xl hover:shadow-lg hover:shadow-cyan-500/30 transition-all duration-300 active:scale-95 uppercase tracking-wider text-sm">
+                Đã hiểu
+            </button>
+        </div>
+    </div>
 </body>
 <script>
-    // 1. Hàm tính toán lại Tổng tiền và Số lượng dựa trên các ô đã đánh dấu
+    // 1. HÀM ĐIỀU KHIỂN HỘP THOẠI
+    function showCustomAlert(title, message, type = 'warning') {
+        const modal = document.getElementById('custom-alert-modal');
+        const overlay = document.getElementById('custom-alert-overlay');
+        const content = document.getElementById('custom-alert-content');
+
+        document.getElementById('alert-title').innerText = title;
+        document.getElementById('alert-message').innerText = message;
+
+        const iconContainer = document.getElementById('alert-icon-container');
+        const icon = document.getElementById('alert-icon');
+
+        if (type === 'error') {
+            iconContainer.className = "w-16 h-16 rounded-full bg-rose-100 text-rose-500 flex items-center justify-center mb-4 text-3xl shadow-inner";
+            icon.className = "fa-solid fa-circle-xmark animate-bounce";
+        } else {
+            iconContainer.className = "w-16 h-16 rounded-full bg-amber-100 text-amber-500 flex items-center justify-center mb-4 text-3xl shadow-inner";
+            icon.className = "fa-solid fa-triangle-exclamation animate-pulse";
+        }
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        setTimeout(() => {
+            overlay.classList.remove('opacity-0');
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        }, 10);
+    }
+
+    function closeCustomAlert() {
+        const modal = document.getElementById('custom-alert-modal');
+        const overlay = document.getElementById('custom-alert-overlay');
+        const content = document.getElementById('custom-alert-content');
+
+        overlay.classList.add('opacity-0');
+        content.classList.remove('scale-100', 'opacity-100');
+        content.classList.add('scale-95', 'opacity-0');
+
+        setTimeout(() => {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }, 300);
+    }
+
+    // 2. Tính toán tổng tiền
     function calculateSelectedTotal() {
         let totalAmount = 0;
         let totalQty = 0;
 
-        // Lấy tất cả các checkbox ĐANG ĐƯỢC TICK
         const checkboxes = document.querySelectorAll('.item-checkbox:checked');
 
         checkboxes.forEach(cb => {
             const price = parseFloat(cb.getAttribute('data-price')) || 0;
-            const id = cb.value; // Value chính là MaSanPham
+            const id = cb.value;
             const qty = parseInt(document.getElementById(`qty-${id}`).value) || 0;
 
             totalAmount += (price * qty);
             totalQty += qty;
         });
 
-        // Cập nhật lên Giao diện Tóm tắt
-        document.getElementById('total-selected-qty').innerText = totalQty;
+        const totalQtyElement = document.getElementById('total-selected-qty');
+        if(totalQtyElement) totalQtyElement.innerText = totalQty;
 
         const formattedAmount = totalAmount.toLocaleString('vi-VN') + ' ₫';
-        document.getElementById('subtotal-summary').innerText = formattedAmount;
-        document.getElementById('cart-total').innerText = formattedAmount;
 
-        // Xử lý Checkbox "Chọn tất cả"
+        const subtotalSummary = document.getElementById('subtotal-summary');
+        if(subtotalSummary) subtotalSummary.innerText = formattedAmount;
+
+        const cartTotal = document.getElementById('cart-total');
+        if(cartTotal) cartTotal.innerText = formattedAmount;
+
         const allCheckboxes = document.querySelectorAll('.item-checkbox');
         const selectAllCb = document.getElementById('selectAll');
         if(selectAllCb) {
@@ -195,42 +269,91 @@
         }
     }
 
-    // 2. Hàm Toggle "Chọn tất cả"
     function toggleAllCheckboxes(source) {
         const checkboxes = document.querySelectorAll('.item-checkbox');
         checkboxes.forEach(cb => cb.checked = source.checked);
         calculateSelectedTotal();
     }
 
-    // 3. Ràng buộc trước khi bấm Thanh Toán (Phải chọn ít nhất 1 sản phẩm)
+    // 3. KIỂM TRA TRƯỚC KHI THANH TOÁN (Đã dùng showCustomAlert)
+     // 1. KIỂM TRA TRƯỚC KHI THANH TOÁN
     function validateCheckout() {
-        const checkboxes = document.querySelectorAll('.item-checkbox:checked');
-        if (checkboxes.length === 0) {
-            Swal.fire('Chú ý', 'Vui lòng chọn ít nhất 1 sản phẩm để thanh toán!', 'warning');
-            return false; // Chặn không cho chuyển trang
+        const selectedCheckboxes = document.querySelectorAll('input[name="selectedProducts"]:checked');
+
+        if (selectedCheckboxes.length === 0) {
+            // 👇 Hộp thoại cảnh báo xịn sò
+            Swal.fire({
+                title: 'Chưa chọn sản phẩm!',
+                text: 'Vui lòng chọn ít nhất một thiết bị trong giỏ hàng để tiến hành thanh toán nhé.',
+                icon: 'warning',
+                confirmButtonText: 'Đã hiểu',
+                confirmButtonColor: '#06b6d4' // Màu cyan-500 chuẩn AuraHome
+            });
+            return false;
         }
-        return true; // Cho phép gửi Form
+
+        for (let i = 0; i < selectedCheckboxes.length; i++) {
+            const productId = selectedCheckboxes[i].value;
+            const qtyInput = document.getElementById('qty-' + productId);
+
+            if (qtyInput) {
+                const currentQty = parseInt(qtyInput.value) || 0;
+                const maxStock = parseInt(qtyInput.getAttribute('data-stock')) || 0;
+                const productName = qtyInput.getAttribute('data-name');
+
+                if (currentQty > maxStock) {
+                    // 👇 Hộp thoại lỗi xịn sò
+                    Swal.fire({
+                        title: 'Cháy hàng mất rồi!',
+                        text: `Sản phẩm "${productName}" hiện chỉ còn ${maxStock} chiếc trong kho. Vui lòng giảm số lượng.`,
+                        icon: 'error',
+                        confirmButtonText: 'Chỉnh sửa ngay',
+                        confirmButtonColor: '#e3001f' // Màu đỏ nổi bật
+                    });
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
-    // 4. Kết hợp với hàm tăng giảm số lượng (Sửa lại hàm hiện tại của bạn)
-       // 4. Kết hợp với hàm tăng giảm số lượng
+    // 4. HÀM TĂNG GIẢM SỐ LƯỢNG (Đã dùng showCustomAlert)
     function updateQty(id, change) {
         const input = document.getElementById(`qty-${id}`);
-        let currentVal = parseInt(input.value);
+        if (!input) return;
+
+        let currentVal = parseInt(input.value) || 0;
         let newVal = currentVal + change;
 
-        if (newVal < 1) newVal = 1; // Không cho giảm dưới 1
+        const maxStock = parseInt(input.getAttribute('data-stock')) || 0;
+        const productName = input.getAttribute('data-name') || "Sản phẩm này";
+
+        if (newVal < 1) newVal = 1;
+
+        if (newVal > maxStock) {
+        Swal.fire({
+            title: 'Vượt quá tồn kho!',
+            text: `Rất tiếc! "${productName}" hiện chỉ còn tối đa ${maxStock} chiếc trong kho.`,
+            icon: 'info',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#2b3a82' // Màu brand-navy
+        });
+        return;
+    }
+
         input.value = newVal;
 
-        // Tính tiền và cập nhật giao diện TRƯỚC cho mượt (Trang giỏ hàng chính)
         const checkbox = document.querySelector(`.item-checkbox[value="${id}"]`);
-        const price = parseFloat(checkbox.getAttribute('data-price')) || 0;
-        const subtotalStr = (price * newVal).toLocaleString('vi-VN') + ' ₫';
-        document.getElementById(`subtotal-${id}`).innerText = subtotalStr;
+        if (checkbox) {
+            const price = parseFloat(checkbox.getAttribute('data-price')) || 0;
+            const subtotalStr = (price * newVal).toLocaleString('vi-VN') + ' ₫';
+
+            const subtotalElement = document.getElementById(`subtotal-${id}`);
+            if(subtotalElement) subtotalElement.innerText = subtotalStr;
+        }
 
         calculateSelectedTotal();
 
-        // Gọi Ajax cập nhật Database
         fetch('/Customers/UpdateCart', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -239,21 +362,28 @@
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                // === ĐỒNG BỘ CỬA SỔ MINI CART ===
-                // Sau khi lưu DB thành công, gọi API cập nhật lại Mini Cart trên thanh Header
+                    const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 2000, // Tự tắt sau 2 giây
+                    timerProgressBar: true
+                });
+
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Đã cập nhật giỏ hàng'
+                });
                 fetch('/Customers/GetMiniCartAjax')
                     .then(r => r.json())
                     .then(miniData => {
                         if (miniData.success) {
-                            // Cập nhật số lượng đỏng đảnh trên Icon giỏ hàng (Bạn nhớ thay id/class cho khớp với web của bạn nhé)
-                            const cartBadge = document.getElementById('cartCountBadge'); // Ví dụ ID là cartCountBadge
+                            const cartBadge = document.getElementById('cartCountBadge');
                             if (cartBadge) cartBadge.innerText = miniData.totalItems;
-
-                            // Nếu bạn có hàm render lại HTML của Mini Cart thì gọi ở đây
-                            // Ví dụ: renderMiniCart(miniData);
                         }
                     });
             }
-        });
+        })
+        .catch(error => console.error('Lỗi khi cập nhật giỏ hàng:', error));
     }
 </script>
